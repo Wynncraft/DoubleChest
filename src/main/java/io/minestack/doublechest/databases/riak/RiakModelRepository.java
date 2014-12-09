@@ -10,16 +10,14 @@ import io.minestack.doublechest.model.Model;
 import java.util.concurrent.ExecutionException;
 
 
-public class RiakModelRepository<T extends Model> {
+public final class RiakModelRepository<T extends Model> {
 
     private final String bucketName;
     private final RiakDatabase database;
-    private final RiakModelConverter modelConverter;
 
-    public RiakModelRepository(String bucketName, RiakDatabase database, RiakModelConverter modelConverter) {
+    public RiakModelRepository(String bucketName, RiakDatabase database) {
         this.bucketName = bucketName;
         this.database = database;
-        this.modelConverter = modelConverter;
     }
 
     public T getModel(String key, Class<T> clazz) throws ExecutionException, InterruptedException {
