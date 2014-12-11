@@ -1,10 +1,18 @@
 package io.minestack.doublechest.databases.redis;
 
 import io.minestack.doublechest.model.Model;
+import lombok.Getter;
 
 public abstract class RedisModelRespository<T extends Model> {
 
-    public abstract T getModel(T model);
+    @Getter
+    private final RedisDatabase redisDatabase;
 
-    public abstract void saveModel(T model);
+    public RedisModelRespository(RedisDatabase redisDatabase) {
+        this.redisDatabase = redisDatabase;
+    }
+
+    public abstract T getModel(String modelKey);
+
+    public abstract void saveModel(T model) throws Exception;
 }
