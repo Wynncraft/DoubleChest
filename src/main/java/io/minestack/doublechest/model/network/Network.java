@@ -4,7 +4,7 @@ import io.minestack.doublechest.model.Model;
 import lombok.Getter;
 import lombok.Setter;
 
-public class Network implements Model {
+public class Network extends Model {
 
     @Getter
     @Setter

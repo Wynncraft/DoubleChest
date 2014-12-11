@@ -4,7 +4,7 @@ import io.minestack.doublechest.model.Model;
 import lombok.Getter;
 import lombok.Setter;
 
-public class ServerType implements Model {
+public class ServerType extends Model {
 
     @Getter
     @Setter

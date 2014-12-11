@@ -1,5 +1,12 @@
 package io.minestack.doublechest.model;
 
-public interface Model {
+import lombok.Getter;
+import lombok.Setter;
+
+public class Model {
+
+    @Getter
+    @Setter
+    private int id;
 
 }
