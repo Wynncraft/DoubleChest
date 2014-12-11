@@ -22,9 +22,4 @@ public class ServerType implements Model {
     @Setter
     private int players;
 
-    @Override
-    public String getKey() {
-        return name;
-    }
-
 }
