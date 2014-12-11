@@ -1,5 +1,7 @@
 package io.minestack.doublechest.model;
 
-public abstract class Model {
+public interface Model {
+
+    public abstract String getKey();
 
 }
