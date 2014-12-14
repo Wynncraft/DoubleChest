@@ -22,7 +22,7 @@ public class WorldVersion extends Model {
 
     @Override
     public String getKey() {
-        return null;
+        return getWorld().getKey()+":version:"+version;
     }
 
     @Override

@@ -12,11 +12,11 @@ public abstract class MySQLModelRepository<T extends Model> {
     @Getter
     private final MySQLDatabase mySQLDatabase;
 
-    public MySQLModelRepository(MySQLDatabase mySQLDatabase, String tableName) throws Exception {
+    public MySQLModelRepository(MySQLDatabase mySQLDatabase, String tableName) throws SQLException {
         this.mySQLDatabase = mySQLDatabase;
         mySQLDatabase.executeCommand(new MySQLCommand() {
             @Override
-            public Object command(Connection connection) throws SQLException {
+            public Object command(Connection connection) {
                 if (mySQLDatabase.isTable(connection, tableName) == false) {
                     createTable(connection, tableName);
                 }
@@ -31,8 +31,8 @@ public abstract class MySQLModelRepository<T extends Model> {
 
     public abstract T getModel(int modelId);
 
-    public abstract void saveModel(T model) throws Exception;
+    public abstract void saveModel(T model);
 
-    public abstract void removeModel(int modelId) throws Exception;
+    public abstract void removeModel(int modelId);
 
 }

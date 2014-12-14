@@ -4,7 +4,7 @@ import io.minestack.doublechest.databases.redis.RedisCommand;
 import io.minestack.doublechest.databases.redis.RedisDatabase;
 import io.minestack.doublechest.databases.redis.RedisModelRespository;
 import io.minestack.doublechest.model.network.Network;
-import io.minestack.doublechest.model.servertype.ServerType;
+import io.minestack.doublechest.model.type.servertype.ServerType;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.SortingParams;
 import redis.clients.jedis.exceptions.JedisException;
@@ -35,7 +35,7 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
     }
 
     @Override
-    public void saveModel(Server model) throws Exception {
+    public void saveModel(Server model) {
         getRedisDatabase().executeCommand(new RedisCommand() {
             @Override
             public Object command(Jedis jedis) throws JedisException {
@@ -44,8 +44,8 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
                     jedis.hset(model.getKey(), hashFields.getKey(), hashFields.getValue().toString());
                 }
 
-                if (jedis.sismember(listKey(model.getNetwork().getName(), model.getServerType().getName()), model.getId() + "") == false) {
-                    jedis.sadd(listKey(model.getNetwork().getName(), model.getServerType().getName()), model.getId() + "");
+                if (jedis.sismember(listKey(model.getNetwork().getName(), model.getServerType().getName()), model.getKey()) == false) {
+                    jedis.sadd(listKey(model.getNetwork().getName(), model.getServerType().getName()), model.getKey());
                 }
                 return 0;
             }
@@ -53,7 +53,7 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
     }
 
     @Override
-    public void removeModel(String modelKey) throws Exception {
+    public void removeModel(String modelKey) {
         getRedisDatabase().executeCommand(new RedisCommand() {
             @Override
             public Object command(Jedis jedis) throws JedisException {
@@ -62,17 +62,17 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
         });
     }
 
-    public int getNextNumber(Network network, ServerType serverType) throws Exception {
+    public int getNextNumber(Network network, ServerType serverType) {
         int nextNum = 1;
 
         List list = getRedisDatabase().executeCommand(new RedisCommand() {
             @Override
             public Object command(Jedis jedis) throws JedisException {
-                return jedis.sort(listKey(network.getName(), serverType.getName()), new SortingParams().by(network.getName() + ":servers:" + serverType.getName() + ":*->id"));
+                return jedis.sort(listKey(network.getName(), serverType.getName()), new SortingParams().by("*->id"));
             }
         }, List.class);
 
-        while (list.contains(nextNum+"")) {
+        while (list.contains(network.getName()+":server:"+serverType.getName()+":"+nextNum)) {
             nextNum += 1;
         }
 

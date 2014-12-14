@@ -2,9 +2,10 @@ package io.minestack.doublechest.model.network;
 
 import io.minestack.doublechest.model.Model;
 import io.minestack.doublechest.model.node.NodeInfo;
-import io.minestack.doublechest.model.servertype.ServerTypeInfo;
+import io.minestack.doublechest.model.type.servertype.ServerTypeInfo;
 import lombok.Getter;
 import lombok.Setter;
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +33,19 @@ public class Network extends Model {
 
     @Override
     public HashMap<String, Object> toHash() {
-        return null;
+        HashMap<String, Object> hash = new HashMap<>();
+        hash.put("name", name);
+        hash.put("description", description);
+        JSONArray nodes = new JSONArray();
+        for (NodeInfo nodeInfo : this.nodes) {
+            nodes.put(nodeInfo.getKey());
+        }
+        hash.put("nodes", nodes);
+        JSONArray serverTypes = new JSONArray();
+        for (ServerTypeInfo serverTypeInfo : this.serverTypes) {
+            serverTypes.put(serverTypeInfo.getKey());
+        }
+        hash.put("serverTypes", serverTypes);
+        return hash;
     }
 }

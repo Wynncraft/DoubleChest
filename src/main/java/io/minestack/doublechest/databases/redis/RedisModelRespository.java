@@ -16,7 +16,7 @@ public abstract class RedisModelRespository<T extends Model> {
 
     public abstract T getModel(String modelKey);
 
-    public abstract void saveModel(T model) throws Exception;
+    public abstract void saveModel(T model);
 
-    public abstract void removeModel(String modelKey) throws Exception;
+    public abstract void removeModel(String modelKey);
 }

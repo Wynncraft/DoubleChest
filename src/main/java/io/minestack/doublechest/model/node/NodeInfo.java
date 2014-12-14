@@ -1,7 +1,7 @@
 package io.minestack.doublechest.model.node;
 
 import io.minestack.doublechest.model.Model;
-import io.minestack.doublechest.model.bungeetype.BungeeType;
+import io.minestack.doublechest.model.type.bungeetype.BungeeType;
 import io.minestack.doublechest.model.network.Network;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,11 +28,18 @@ public class NodeInfo extends Model {
 
     @Override
     public String getKey() {
-        return null;
+        return getNetwork().getKey()+":node:"+node.getName();
     }
 
     @Override
     public HashMap<String, Object> toHash() {
-        return null;
+        HashMap<String, Object> hash = new HashMap<>();
+        hash.put("node", node.getName());
+        hash.put("network", network.getName());
+        if (bungeeType != null) {
+            hash.put("bungeeType", bungeeType.getName());
+            hash.put("publicAddress", nodePublicAddress.getPublicAddress());
+        }
+        return hash;
     }
 }

@@ -26,7 +26,7 @@ public class PluginConfig extends Model {
 
     @Override
     public String getKey() {
-        return null;
+        return getPlugin().getKey()+":config:"+name;
     }
 
     @Override

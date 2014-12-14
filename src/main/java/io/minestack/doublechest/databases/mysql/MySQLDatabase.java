@@ -54,11 +54,11 @@ public class MySQLDatabase implements Database {
         dataSource.setTestWhileIdle(true);
     }
 
-    public Object executeCommand(MySQLCommand command) throws Exception {
+    public Object executeCommand(MySQLCommand command) throws SQLException {
         return executeCommand(command, Object.class);
     }
 
-    public <T> T executeCommand(MySQLCommand command, Class<T> resultClass) throws Exception {
+    public <T> T executeCommand(MySQLCommand command, Class<T> resultClass) throws SQLException {
         Connection conn = getConnection();
         Object result = command.command(conn);
         closeConnection(conn);

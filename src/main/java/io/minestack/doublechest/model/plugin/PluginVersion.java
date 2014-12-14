@@ -22,7 +22,7 @@ public class PluginVersion extends Model {
 
     @Override
     public String getKey() {
-        return null;
+        return getPlugin().getKey()+":version:"+version;
     }
 
     @Override

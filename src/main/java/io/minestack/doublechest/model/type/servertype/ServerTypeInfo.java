@@ -1,4 +1,4 @@
-package io.minestack.doublechest.model.servertype;
+package io.minestack.doublechest.model.type.servertype;
 
 import io.minestack.doublechest.model.Model;
 import io.minestack.doublechest.model.network.Network;
@@ -27,11 +27,15 @@ public class ServerTypeInfo extends Model {
 
     @Override
     public String getKey() {
-        return null;
+        return getNetwork().getKey()+":servertype:"+serverType.getName();
     }
 
     @Override
     public HashMap<String, Object> toHash() {
-        return null;
+        HashMap<String, Object> hash = new HashMap<>();
+        hash.put("servertype", serverType.getName());
+        hash.put("amount", amount);
+        hash.put("default", defaultType);
+        return hash;
     }
 }

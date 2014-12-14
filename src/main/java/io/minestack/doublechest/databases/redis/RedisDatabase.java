@@ -27,11 +27,11 @@ public class RedisDatabase implements Database{
         pool = new JedisPool(config, jedisHost.getHost(), jedisHost.getPort());
     }
 
-    public Object executeCommand(RedisCommand command) throws Exception {
+    public Object executeCommand(RedisCommand command) {
         return executeCommand(command, Object.class);
     }
 
-    public <T> T executeCommand(RedisCommand command, Class<T> resultClass) throws Exception {
+    public <T> T executeCommand(RedisCommand command, Class<T> resultClass) {
         Jedis jedis = pool.getResource();
         Object result = command.command(jedis);
         pool.returnResource(jedis);

@@ -18,11 +18,14 @@ public class NodePublicAddress extends Model {
 
     @Override
     public String getKey() {
-        return null;
+        return node.getKey()+":public_address:"+publicAddress;
     }
 
     @Override
     public HashMap<String, Object> toHash() {
-        return null;
+        HashMap<String, Object> hash = new HashMap<>();
+        hash.put("node", node.getName());
+        hash.put("publicAddress", publicAddress);
+        return hash;
     }
 }
