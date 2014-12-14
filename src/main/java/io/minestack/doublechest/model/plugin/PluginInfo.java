@@ -1,5 +1,6 @@
 package io.minestack.doublechest.model.plugin;
 
+import io.minestack.doublechest.DoubleChest;
 import io.minestack.doublechest.model.Model;
 import io.minestack.doublechest.model.type.PluginHolder;
 import lombok.Getter;
@@ -31,12 +32,25 @@ public class PluginInfo extends Model {
     }
 
     @Override
-    public HashMap<String, Object> toHash() {
-        HashMap<String, Object> hash = new HashMap<>();
-        hash.put("pluginHolder", pluginHolder.getName());
-        hash.put("plugin", plugin.getName());
-        hash.put("version", version.getVersion());
-        hash.put("config", config.getName());
+    public HashMap<String, String> toHash() {
+        HashMap<String, String> hash = new HashMap<>();
+        hash.put("pluginHolder", pluginHolder.getKey());
+        hash.put("plugin", plugin.getKey());
+        hash.put("version", version.getKey());
+        hash.put("config", config.getKey());
         return hash;
+    }
+
+    @Override
+    public void fromHash(HashMap<String, String> hash) {
+        String pluginHolderKey = hash.get("pluginHolder");
+        if (pluginHolderKey.contains(":servertype:")) {
+            setPluginHolder(DoubleChest.INSTANCE.getRedisDatabase().getServerTypeRepository().getModel(pluginHolderKey));
+        } else if (pluginHolderKey.contains(":bungeetype:")) {
+            setPluginHolder(DoubleChest.INSTANCE.getRedisDatabase().getBungeeTypeRepository().getModel(pluginHolderKey));
+        }
+        setPlugin(DoubleChest.INSTANCE.getRedisDatabase().getPluginRepository().getModel(hash.get("plugin")));
+        setVersion(DoubleChest.INSTANCE.getRedisDatabase().getPluginVersionRepository().getModel(hash.get("version")));
+        setConfig(DoubleChest.INSTANCE.getRedisDatabase().getPluginConfigRepository().getModel(hash.get("config")));
     }
 }

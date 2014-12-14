@@ -1,5 +1,6 @@
 package io.minestack.doublechest.model.type.servertype;
 
+import io.minestack.doublechest.DoubleChest;
 import io.minestack.doublechest.model.Model;
 import io.minestack.doublechest.model.network.Network;
 import lombok.Getter;
@@ -31,11 +32,20 @@ public class ServerTypeInfo extends Model {
     }
 
     @Override
-    public HashMap<String, Object> toHash() {
-        HashMap<String, Object> hash = new HashMap<>();
-        hash.put("servertype", serverType.getName());
-        hash.put("amount", amount);
-        hash.put("default", defaultType);
+    public HashMap<String, String> toHash() {
+        HashMap<String, String> hash = new HashMap<>();
+        hash.put("network", network.getKey());
+        hash.put("servertype", serverType.getKey());
+        hash.put("amount", amount+"");
+        hash.put("default", defaultType+"");
         return hash;
+    }
+
+    @Override
+    public void fromHash(HashMap<String, String> hash) {
+        setNetwork(DoubleChest.INSTANCE.getRedisDatabase().getNetworkRepository().getModel(hash.get("network")));
+        setServerType(DoubleChest.INSTANCE.getRedisDatabase().getServerTypeRepository().getModel(hash.get("servertype")));
+        setAmount(Integer.parseInt(hash.get("amount")));
+        setDefaultType(Boolean.parseBoolean(hash.get("default")));
     }
 }

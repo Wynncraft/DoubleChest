@@ -1,5 +1,6 @@
 package io.minestack.doublechest.model.plugin;
 
+import io.minestack.doublechest.DoubleChest;
 import io.minestack.doublechest.model.Model;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,10 +27,18 @@ public class PluginVersion extends Model {
     }
 
     @Override
-    public HashMap<String, Object> toHash() {
-        HashMap<String, Object> hash = new HashMap<>();
+    public HashMap<String, String> toHash() {
+        HashMap<String, String> hash = new HashMap<>();
+        hash.put("plugin", plugin.getKey());
         hash.put("version", version);
         hash.put("description", description);
         return hash;
+    }
+
+    @Override
+    public void fromHash(HashMap<String, String> hash) {
+        setPlugin(DoubleChest.INSTANCE.getRedisDatabase().getPluginRepository().getModel(hash.get("plugin")));
+        setVersion(hash.get("version"));
+        setDescription(hash.get("description"));
     }
 }

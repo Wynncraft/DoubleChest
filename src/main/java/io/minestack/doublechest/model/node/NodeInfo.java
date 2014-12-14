@@ -1,8 +1,9 @@
 package io.minestack.doublechest.model.node;
 
+import io.minestack.doublechest.DoubleChest;
 import io.minestack.doublechest.model.Model;
-import io.minestack.doublechest.model.type.bungeetype.BungeeType;
 import io.minestack.doublechest.model.network.Network;
+import io.minestack.doublechest.model.type.bungeetype.BungeeType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,14 +33,24 @@ public class NodeInfo extends Model {
     }
 
     @Override
-    public HashMap<String, Object> toHash() {
-        HashMap<String, Object> hash = new HashMap<>();
-        hash.put("node", node.getName());
-        hash.put("network", network.getName());
+    public HashMap<String, String> toHash() {
+        HashMap<String, String> hash = new HashMap<>();
+        hash.put("node", node.getKey());
+        hash.put("network", network.getKey());
         if (bungeeType != null) {
-            hash.put("bungeeType", bungeeType.getName());
-            hash.put("publicAddress", nodePublicAddress.getPublicAddress());
+            hash.put("bungeeType", bungeeType.getKey());
+            hash.put("publicAddress", nodePublicAddress.getKey());
         }
         return hash;
+    }
+
+    @Override
+    public void fromHash(HashMap<String, String> hash) {
+        setNode(DoubleChest.INSTANCE.getRedisDatabase().getNodeRepository().getModel(hash.get("node")));
+        setNetwork(DoubleChest.INSTANCE.getRedisDatabase().getNetworkRepository().getModel(hash.get("network")));
+        if (hash.containsKey("bungeeType")) {
+            setBungeeType(DoubleChest.INSTANCE.getRedisDatabase().getBungeeTypeRepository().getModel(hash.get("bungeeType")));
+            setNodePublicAddress(DoubleChest.INSTANCE.getRedisDatabase().getNodePublicAddressRepository().getModel(hash.get("publicAddress")));
+        }
     }
 }

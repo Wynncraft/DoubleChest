@@ -26,10 +26,16 @@ public class WorldVersion extends Model {
     }
 
     @Override
-    public HashMap<String, Object> toHash() {
-        HashMap<String, Object> hash = new HashMap<>();
+    public HashMap<String, String> toHash() {
+        HashMap<String, String> hash = new HashMap<>();
         hash.put("version", version);
         hash.put("description", description);
         return hash;
+    }
+
+    @Override
+    public void fromHash(HashMap<String, String> hash) {
+        setVersion(hash.get("version"));
+        setDescription(hash.get("description"));
     }
 }

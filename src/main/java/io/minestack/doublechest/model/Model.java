@@ -13,6 +13,8 @@ public abstract class Model {
 
     public abstract String getKey();
 
-    public abstract HashMap<String, Object> toHash();
+    public abstract HashMap<String, String> toHash();
+
+    public abstract void fromHash(HashMap<String, String> hash);
 
 }

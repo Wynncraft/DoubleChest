@@ -1,5 +1,6 @@
 package io.minestack.doublechest.model.world;
 
+import io.minestack.doublechest.DoubleChest;
 import io.minestack.doublechest.model.Model;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,9 +32,8 @@ public class World extends Model {
     }
 
     @Override
-    public HashMap<String, Object> toHash() {
-        HashMap<String, Object> hash = new HashMap<>();
-        hash.put("id", getId());
+    public HashMap<String, String> toHash() {
+        HashMap<String, String> hash = new HashMap<>();
         hash.put("name", name);
         hash.put("description", description);
         hash.put("directory", directory);
@@ -43,5 +43,20 @@ public class World extends Model {
         }
         hash.put("versions", versions.toString());
         return hash;
+    }
+
+    @Override
+    public void fromHash(HashMap<String, String> hash) {
+        setName(hash.get("name"));
+        setDescription(hash.get("description"));
+        setDirectory(hash.get("directory"));
+        JSONArray versions = new JSONArray(hash.get("versions"));
+        for (int i = 0; i < versions.length(); i++) {
+            String version = versions.getString(i);
+            WorldVersion worldVersion = DoubleChest.INSTANCE.getRedisDatabase().getWorldVersionRepository().getModel(version);
+            if (worldVersion != null) {
+                this.versions.add(worldVersion);
+            }
+        }
     }
 }

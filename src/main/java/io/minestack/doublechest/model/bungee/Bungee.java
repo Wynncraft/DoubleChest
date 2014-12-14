@@ -1,5 +1,6 @@
 package io.minestack.doublechest.model.bungee;
 
+import io.minestack.doublechest.DoubleChest;
 import io.minestack.doublechest.model.Model;
 import io.minestack.doublechest.model.type.bungeetype.BungeeType;
 import io.minestack.doublechest.model.network.Network;
@@ -29,12 +30,20 @@ public class Bungee extends Model {
     }
 
     @Override
-    public HashMap<String, Object> toHash() {
-        HashMap<String, Object> hash = new HashMap<>();
-        hash.put("bungeetype", bungeeType.getName());
-        hash.put("network", network.getName());
-        hash.put("node", node.getName());
-        hash.put("lastUpdate", System.currentTimeMillis());
+    public HashMap<String, String> toHash() {
+        HashMap<String, String> hash = new HashMap<>();
+        hash.put("bungeetype", bungeeType.getKey());
+        hash.put("network", network.getKey());
+        hash.put("node", node.getKey());
+        hash.put("lastUpdate", System.currentTimeMillis()+60000+"");
         return hash;
+    }
+
+    @Override
+    public void fromHash(HashMap<String, String> hash) {
+        setBungeeType(DoubleChest.INSTANCE.getRedisDatabase().getBungeeTypeRepository().getModel(hash.get("bungeetype")));
+        setNetwork(DoubleChest.INSTANCE.getRedisDatabase().getNetworkRepository().getModel(hash.get("network")));
+        setNode(DoubleChest.INSTANCE.getRedisDatabase().getNodeRepository().getModel(hash.get("node")));
+
     }
 }

@@ -1,5 +1,6 @@
 package io.minestack.doublechest.model.node;
 
+import io.minestack.doublechest.DoubleChest;
 import io.minestack.doublechest.model.Model;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,10 +23,16 @@ public class NodePublicAddress extends Model {
     }
 
     @Override
-    public HashMap<String, Object> toHash() {
-        HashMap<String, Object> hash = new HashMap<>();
-        hash.put("node", node.getName());
+    public HashMap<String, String> toHash() {
+        HashMap<String, String> hash = new HashMap<>();
+        hash.put("node", node.getKey());
         hash.put("publicAddress", publicAddress);
         return hash;
+    }
+
+    @Override
+    public void fromHash(HashMap<String, String> hash) {
+        setNode(DoubleChest.INSTANCE.getRedisDatabase().getNodeRepository().getModel(hash.get("node")));
+        setPublicAddress(hash.get("publicAddress"));
     }
 }

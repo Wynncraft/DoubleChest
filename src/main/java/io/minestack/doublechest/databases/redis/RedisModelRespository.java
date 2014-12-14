@@ -18,5 +18,4 @@ public abstract class RedisModelRespository<T extends Model> {
 
     public abstract void saveModel(T model);
 
-    public abstract void removeModel(String modelKey);
 }
