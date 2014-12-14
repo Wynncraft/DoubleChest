@@ -4,39 +4,32 @@ import io.minestack.doublechest.model.Model;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-public class World extends Model {
+public class WorldVersion extends Model {
 
     @Getter
     @Setter
-    private String name;
+    private World world;
+
+    @Getter
+    @Setter
+    private String version;
 
     @Getter
     @Setter
     private String description;
 
-    @Getter
-    @Setter
-    private String directory;
-
-    @Getter
-    private ArrayList<WorldVersion> versions = new ArrayList<>();
-
     @Override
     public String getKey() {
-        return "world:"+name;
+        return world.getKey()+":version:"+version;
     }
 
     @Override
     public HashMap<String, Object> toHash() {
         HashMap<String, Object> hash = new HashMap<>();
-        hash.put("id", getId());
-        hash.put("name", name);
+        hash.put("version", version);
         hash.put("description", description);
-        hash.put("directory", directory);
-        hash.put("versions", versions);
         return hash;
     }
 }

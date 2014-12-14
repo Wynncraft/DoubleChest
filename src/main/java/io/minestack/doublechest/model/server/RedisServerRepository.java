@@ -10,11 +10,23 @@ import redis.clients.jedis.SortingParams;
 import redis.clients.jedis.exceptions.JedisException;
 
 import java.util.List;
+import java.util.Map;
 
 public class RedisServerRepository extends RedisModelRespository<Server> {
 
     public RedisServerRepository(RedisDatabase redisDatabase) {
         super(redisDatabase);
+    }
+
+    @Override
+    public String listKey(String... replace) {
+        String key = "allservers:{0}:{1}";
+        if (replace != null) {
+            for (int i = 0; i < replace.length; i++) {
+                key = key.replace("{" + i + "}", replace[i]);
+            }
+        }
+        return key;
     }
 
     @Override
@@ -27,31 +39,40 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
         getRedisDatabase().executeCommand(new RedisCommand() {
             @Override
             public Object command(Jedis jedis) throws JedisException {
-                String key = "server:" + model.getNetwork().getName() + ":" + model.getServerType().getName() + "" + model.getNumber();
-                jedis.hset(key, "number", model.getNumber() + "");
-                jedis.hset(key, "servertype", model.getServerType().getName());
-                jedis.hset(key, "network", model.getNetwork().getName());
-                jedis.hset(key, "lastUpdate", System.currentTimeMillis() + "");
 
-                if (jedis.sismember("allservers:" + model.getNetwork().getName() + ":" + model.getServerType().getName(), model.getNumber() + "") == false) {
-                    jedis.sadd("allservers:" + model.getNetwork().getName() + ":" + model.getServerType().getName(), model.getNumber() + "");
+                for (Map.Entry<String, Object> hashFields : model.toHash().entrySet()) {
+                    jedis.hset(model.getKey(), hashFields.getKey(), hashFields.getValue().toString());
+                }
+
+                if (jedis.sismember(listKey(model.getNetwork().getName(), model.getServerType().getName()), model.getId() + "") == false) {
+                    jedis.sadd(listKey(model.getNetwork().getName(), model.getServerType().getName()), model.getId() + "");
                 }
                 return 0;
             }
         });
     }
 
-    public int getNextNumber(ServerType serverType, Network network) throws Exception {
-        int nextNum = 1;
-
-        List<String> list = getRedisDatabase().executeCommand(new RedisCommand() {
+    @Override
+    public void removeModel(String modelKey) throws Exception {
+        getRedisDatabase().executeCommand(new RedisCommand() {
             @Override
             public Object command(Jedis jedis) throws JedisException {
-                return jedis.sort("allservers:" + network.getName() + ":" + serverType.getName(), new SortingParams().by("server:" + network.getName() + ":" + serverType.getName() + ":*->number"));
+                return jedis.del(modelKey);
+            }
+        });
+    }
+
+    public int getNextNumber(Network network, ServerType serverType) throws Exception {
+        int nextNum = 1;
+
+        List list = getRedisDatabase().executeCommand(new RedisCommand() {
+            @Override
+            public Object command(Jedis jedis) throws JedisException {
+                return jedis.sort(listKey(network.getName(), serverType.getName()), new SortingParams().by("server:" + network.getName() + ":" + serverType.getName() + ":*->id"));
             }
         }, List.class);
 
-        while (list.contains(network.getName() + ":" + serverType.getName() + ":" + nextNum)) {
+        while (list.contains(nextNum+"")) {
             nextNum += 1;
         }
 

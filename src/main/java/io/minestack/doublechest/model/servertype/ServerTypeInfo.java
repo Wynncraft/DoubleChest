@@ -1,29 +1,29 @@
-package io.minestack.doublechest.model.bungee;
+package io.minestack.doublechest.model.servertype;
 
 import io.minestack.doublechest.model.Model;
-import io.minestack.doublechest.model.plugin.PluginInfo;
+import io.minestack.doublechest.model.network.Network;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Bungee extends Model {
+public class ServerTypeInfo extends Model {
 
     @Getter
     @Setter
-    private String name;
+    private Network network;
 
     @Getter
     @Setter
-    private String description;
+    private ServerType serverType;
 
     @Getter
     @Setter
-    private int ram;
+    private int amount;
 
     @Getter
-    private ArrayList<PluginInfo> plugins = new ArrayList<>();
+    @Setter
+    private boolean defaultType;
 
     @Override
     public String getKey() {

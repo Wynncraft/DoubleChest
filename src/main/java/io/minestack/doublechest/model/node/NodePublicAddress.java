@@ -4,25 +4,17 @@ import io.minestack.doublechest.model.Model;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Node extends Model {
+public class NodePublicAddress extends Model {
 
     @Getter
     @Setter
-    private String name;
+    private Node node;
 
     @Getter
     @Setter
-    private String privateAddress;
-
-    @Getter
-    @Setter
-    private int ram;
-
-    @Getter
-    private ArrayList<NodePublicAddress> publicAddresses = new ArrayList<>();
+    private String publicAddress;
 
     @Override
     public String getKey() {

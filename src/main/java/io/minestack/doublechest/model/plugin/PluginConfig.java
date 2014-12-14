@@ -4,10 +4,13 @@ import io.minestack.doublechest.model.Model;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Plugin extends Model {
+public class PluginConfig extends Model {
+
+    @Getter
+    @Setter
+    private Plugin plugin;
 
     @Getter
     @Setter
@@ -19,21 +22,11 @@ public class Plugin extends Model {
 
     @Getter
     @Setter
-    private PluginType type;
-
-    @Getter
-    @Setter
     private String directory;
-
-    @Getter
-    private ArrayList<PluginVersion> versions = new ArrayList<>();
-
-    @Getter
-    private ArrayList<PluginConfig> configs = new ArrayList<>();
 
     @Override
     public String getKey() {
-        return "plugin:"+name;
+        return plugin.getKey()+":config:"+name;
     }
 
     @Override
@@ -41,10 +34,7 @@ public class Plugin extends Model {
         HashMap<String, Object> hash = new HashMap<>();
         hash.put("name", name);
         hash.put("description", description);
-        hash.put("type", type);
         hash.put("directory", directory);
-        hash.put("versions", versions);
-        hash.put("configs", configs);
         return hash;
     }
 }
