@@ -23,9 +23,4 @@ public class RedisNodeRepository extends RedisModelRespository<Node> {
     public void saveModel(Node model) {
 
     }
-
-    @Override
-    public void removeModel(String modelKey) {
-
-    }
 }

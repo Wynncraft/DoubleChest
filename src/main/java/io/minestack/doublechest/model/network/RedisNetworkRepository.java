@@ -23,9 +23,4 @@ public class RedisNetworkRepository extends RedisModelRespository<Network> {
     public void saveModel(Network model) {
 
     }
-
-    @Override
-    public void removeModel(String modelKey) {
-
-    }
 }
