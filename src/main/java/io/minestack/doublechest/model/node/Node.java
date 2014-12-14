@@ -26,7 +26,7 @@ public class Node extends Model {
 
     @Override
     public String getKey() {
-        return null;
+        return "node:"+name;
     }
 
     @Override

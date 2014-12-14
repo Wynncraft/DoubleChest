@@ -27,7 +27,7 @@ public class Network extends Model {
 
     @Override
     public String getKey() {
-        return null;
+        return "network:"+name;
     }
 
     @Override

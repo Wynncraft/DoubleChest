@@ -25,7 +25,7 @@ public class Server extends Model {
 
     @Override
     public String getKey() {
-        return "server:" + network.getName() + ":" + serverType.getName() + "" + getId();
+        return network.getName() + ":server:" + serverType.getName() + ":" + getId();
     }
 
     @Override
@@ -34,6 +34,7 @@ public class Server extends Model {
         hash.put("id", getId());
         hash.put("servertype", serverType.getName());
         hash.put("network", network.getName());
+        hash.put("node", node.getName());
         hash.put("lastUpdate", System.currentTimeMillis());
         return hash;
     }

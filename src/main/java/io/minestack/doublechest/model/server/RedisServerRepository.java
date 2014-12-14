@@ -20,7 +20,7 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
 
     @Override
     public String listKey(String... replace) {
-        String key = "allservers:{0}:{1}";
+        String key = "{0}:servers:{1}";
         if (replace != null) {
             for (int i = 0; i < replace.length; i++) {
                 key = key.replace("{" + i + "}", replace[i]);
@@ -68,7 +68,7 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
         List list = getRedisDatabase().executeCommand(new RedisCommand() {
             @Override
             public Object command(Jedis jedis) throws JedisException {
-                return jedis.sort(listKey(network.getName(), serverType.getName()), new SortingParams().by("server:" + network.getName() + ":" + serverType.getName() + ":*->id"));
+                return jedis.sort(listKey(network.getName(), serverType.getName()), new SortingParams().by(network.getName() + ":servers:" + serverType.getName() + ":*->id"));
             }
         }, List.class);
 

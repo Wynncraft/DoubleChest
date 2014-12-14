@@ -1,37 +1,40 @@
 package io.minestack.doublechest.model.bungee;
 
 import io.minestack.doublechest.model.Model;
-import io.minestack.doublechest.model.plugin.PluginInfo;
+import io.minestack.doublechest.model.bungeetype.BungeeType;
+import io.minestack.doublechest.model.network.Network;
+import io.minestack.doublechest.model.node.Node;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Bungee extends Model {
 
     @Getter
     @Setter
-    private String name;
+    private Network network;
 
     @Getter
     @Setter
-    private String description;
+    private BungeeType bungeeType;
 
     @Getter
     @Setter
-    private int ram;
-
-    @Getter
-    private ArrayList<PluginInfo> plugins = new ArrayList<>();
+    private Node node;
 
     @Override
     public String getKey() {
-        return null;
+        return network.getName() + ":bungee:" + bungeeType.getName() + ":" + node.getName();
     }
 
     @Override
     public HashMap<String, Object> toHash() {
-        return null;
+        HashMap<String, Object> hash = new HashMap<>();
+        hash.put("bungeetype", bungeeType.getName());
+        hash.put("network", network.getName());
+        hash.put("node", node.getName());
+        hash.put("lastUpdate", System.currentTimeMillis());
+        return hash;
     }
 }

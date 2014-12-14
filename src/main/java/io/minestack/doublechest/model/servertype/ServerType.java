@@ -35,7 +35,7 @@ public class ServerType extends Model {
 
     @Override
     public String getKey() {
-        return null;
+        return "servertype:"+name;
     }
 
     @Override
