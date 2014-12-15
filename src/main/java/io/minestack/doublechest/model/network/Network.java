@@ -3,7 +3,7 @@ package io.minestack.doublechest.model.network;
 import io.minestack.doublechest.DoubleChest;
 import io.minestack.doublechest.model.Model;
 import io.minestack.doublechest.model.node.NodeInfo;
-import io.minestack.doublechest.model.type.servertype.ServerTypeInfo;
+import io.minestack.doublechest.model.pluginhandler.servertype.ServerTypeInfo;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONArray;

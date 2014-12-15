@@ -1,26 +1,23 @@
 package io.minestack.doublechest.databases.redis;
 
 import io.minestack.doublechest.databases.Database;
-import io.minestack.doublechest.model.network.RedisNetworkRepository;
-import io.minestack.doublechest.model.node.RedisNodeInfoRepository;
-import io.minestack.doublechest.model.node.RedisNodePublicAddressRepository;
-import io.minestack.doublechest.model.node.RedisNodeRepository;
-import io.minestack.doublechest.model.plugin.RedisPluginConfigRepository;
-import io.minestack.doublechest.model.plugin.RedisPluginInfoRepository;
-import io.minestack.doublechest.model.plugin.RedisPluginRepository;
-import io.minestack.doublechest.model.plugin.RedisPluginVersionRepository;
-import io.minestack.doublechest.model.type.bungeetype.RedisBungeeTypeRepository;
-import io.minestack.doublechest.model.type.servertype.RedisServerTypeInfoRepository;
-import io.minestack.doublechest.model.type.servertype.RedisServerTypeRepository;
-import io.minestack.doublechest.model.world.RedisWorldInfoRepository;
-import io.minestack.doublechest.model.world.RedisWorldRepository;
-import io.minestack.doublechest.model.world.RedisWorldVersionRepository;
+import io.minestack.doublechest.model.network.repository.redis.RedisNetworkRepository;
+import io.minestack.doublechest.model.node.repository.redis.RedisNodeInfoRepository;
+import io.minestack.doublechest.model.node.repository.redis.RedisNodePublicAddressRepository;
+import io.minestack.doublechest.model.node.repository.redis.RedisNodeRepository;
+import io.minestack.doublechest.model.plugin.repository.redis.RedisPluginConfigRepository;
+import io.minestack.doublechest.model.plugin.repository.redis.RedisPluginInfoRepository;
+import io.minestack.doublechest.model.plugin.repository.redis.RedisPluginRepository;
+import io.minestack.doublechest.model.plugin.repository.redis.RedisPluginVersionRepository;
+import io.minestack.doublechest.model.pluginhandler.bungeetype.repository.redis.RedisBungeeTypeRepository;
+import io.minestack.doublechest.model.pluginhandler.servertype.repository.redis.RedisServerTypeInfoRepository;
+import io.minestack.doublechest.model.pluginhandler.servertype.repository.redis.RedisServerTypeRepository;
+import io.minestack.doublechest.model.world.repository.redis.RedisWorldInfoRepository;
+import io.minestack.doublechest.model.world.repository.redis.RedisWorldRepository;
+import io.minestack.doublechest.model.world.repository.redis.RedisWorldVersionRepository;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import redis.clients.jedis.HostAndPort;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.*;
 
 @Log4j2
 public class RedisDatabase implements Database{
@@ -104,7 +101,29 @@ public class RedisDatabase implements Database{
 
     public <T> T executeCommand(RedisCommand command, Class<T> resultClass) {
         Jedis jedis = pool.getResource();
-        Object result = command.command(jedis);
+
+        Object result = null;
+        Object execResponse = null;
+        int tryNumber = 1;
+
+        while (execResponse == null) {
+            log.info("Executing Redis Command "+command.getCommandName()+" Try Number: "+tryNumber);
+            jedis.watch(command.keysToWatch());
+            if (command.conditional(jedis)) {
+                Transaction transaction = jedis.multi();
+                command.command(transaction);
+                execResponse = transaction.exec();
+                if (execResponse != null) {
+                    result = command.response();
+                } else {
+                    log.warn("Error executing command "+command.getCommandName()+" trying again...");
+                }
+            } else {
+                jedis.unwatch();
+                break;
+            }
+        }
+
         pool.returnResource(jedis);
         return resultClass.cast(result);
     }

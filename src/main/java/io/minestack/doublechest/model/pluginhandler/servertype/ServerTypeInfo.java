@@ -1,4 +1,4 @@
-package io.minestack.doublechest.model.type.servertype;
+package io.minestack.doublechest.model.pluginhandler.servertype;
 
 import io.minestack.doublechest.DoubleChest;
 import io.minestack.doublechest.model.Model;

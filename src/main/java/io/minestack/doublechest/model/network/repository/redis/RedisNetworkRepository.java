@@ -1,7 +1,8 @@
-package io.minestack.doublechest.model.network;
+package io.minestack.doublechest.model.network.repository.redis;
 
 import io.minestack.doublechest.databases.redis.RedisDatabase;
 import io.minestack.doublechest.databases.redis.RedisModelRespository;
+import io.minestack.doublechest.model.network.Network;
 
 public class RedisNetworkRepository extends RedisModelRespository<Network> {
 

@@ -1,7 +1,8 @@
-package io.minestack.doublechest.model.plugin;
+package io.minestack.doublechest.model.plugin.repository.redis;
 
 import io.minestack.doublechest.databases.redis.RedisDatabase;
 import io.minestack.doublechest.databases.redis.RedisModelRespository;
+import io.minestack.doublechest.model.plugin.PluginConfig;
 
 public class RedisPluginConfigRepository extends RedisModelRespository<PluginConfig> {
 

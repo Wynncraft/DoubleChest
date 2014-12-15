@@ -2,7 +2,7 @@ package io.minestack.doublechest.model.plugin;
 
 import io.minestack.doublechest.DoubleChest;
 import io.minestack.doublechest.model.Model;
-import io.minestack.doublechest.model.type.PluginHolder;
+import io.minestack.doublechest.model.pluginhandler.PluginHolder;
 import lombok.Getter;
 import lombok.Setter;
 

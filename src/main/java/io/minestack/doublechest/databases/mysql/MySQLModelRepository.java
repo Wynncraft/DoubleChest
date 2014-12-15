@@ -33,6 +33,4 @@ public abstract class MySQLModelRepository<T extends Model> {
 
     public abstract void saveModel(T model);
 
-    public abstract void removeModel(int modelId);
-
 }

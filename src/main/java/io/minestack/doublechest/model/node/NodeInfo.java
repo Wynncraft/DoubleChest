@@ -3,7 +3,7 @@ package io.minestack.doublechest.model.node;
 import io.minestack.doublechest.DoubleChest;
 import io.minestack.doublechest.model.Model;
 import io.minestack.doublechest.model.network.Network;
-import io.minestack.doublechest.model.type.bungeetype.BungeeType;
+import io.minestack.doublechest.model.pluginhandler.bungeetype.BungeeType;
 import lombok.Getter;
 import lombok.Setter;
 

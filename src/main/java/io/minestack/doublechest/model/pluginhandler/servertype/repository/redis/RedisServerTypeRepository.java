@@ -1,7 +1,8 @@
-package io.minestack.doublechest.model.type.servertype;
+package io.minestack.doublechest.model.pluginhandler.servertype.repository.redis;
 
 import io.minestack.doublechest.databases.redis.RedisDatabase;
 import io.minestack.doublechest.databases.redis.RedisModelRespository;
+import io.minestack.doublechest.model.pluginhandler.servertype.ServerType;
 
 public class RedisServerTypeRepository extends RedisModelRespository<ServerType> {
 

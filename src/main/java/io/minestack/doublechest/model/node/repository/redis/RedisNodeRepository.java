@@ -1,11 +1,12 @@
-package io.minestack.doublechest.model.type.bungeetype;
+package io.minestack.doublechest.model.node.repository.redis;
 
 import io.minestack.doublechest.databases.redis.RedisDatabase;
 import io.minestack.doublechest.databases.redis.RedisModelRespository;
+import io.minestack.doublechest.model.node.Node;
 
-public class RedisBungeeTypeRepository extends RedisModelRespository<BungeeType> {
+public class RedisNodeRepository extends RedisModelRespository<Node> {
 
-    public RedisBungeeTypeRepository(RedisDatabase redisDatabase) {
+    public RedisNodeRepository(RedisDatabase redisDatabase) {
         super(redisDatabase);
     }
 
@@ -15,12 +16,12 @@ public class RedisBungeeTypeRepository extends RedisModelRespository<BungeeType>
     }
 
     @Override
-    public BungeeType getModel(String modelKey) {
+    public Node getModel(String modelKey) {
         return null;
     }
 
     @Override
-    public void saveModel(BungeeType model) {
+    public void saveModel(Node model) {
 
     }
 }

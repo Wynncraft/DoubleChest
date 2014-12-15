@@ -2,7 +2,7 @@ package io.minestack.doublechest.model.world;
 
 import io.minestack.doublechest.DoubleChest;
 import io.minestack.doublechest.model.Model;
-import io.minestack.doublechest.model.type.servertype.ServerType;
+import io.minestack.doublechest.model.pluginhandler.servertype.ServerType;
 import lombok.Getter;
 import lombok.Setter;
 
