@@ -106,7 +106,7 @@ public class RedisDatabase implements Database{
         Object execResponse = null;
         int tryNumber = 1;
 
-        while (execResponse == null) {
+        while (execResponse == null && tryNumber < 100) {
             log.info("Executing Redis Command "+command.getCommandName()+" Try Number: "+tryNumber);
             jedis.watch(command.keysToWatch());
             if (command.conditional(jedis)) {
@@ -116,12 +116,18 @@ public class RedisDatabase implements Database{
                 if (execResponse != null) {
                     result = command.response();
                 } else {
+                    tryNumber += 1;
                     log.warn("Error executing command "+command.getCommandName()+" trying again...");
                 }
             } else {
                 jedis.unwatch();
                 break;
             }
+        }
+
+        if (tryNumber == 100) {
+            log.error("Redis Command "+command.getCommandName()+" tried to execute 100 times exiting program.");
+            System.exit(1);
         }
 
         pool.returnResource(jedis);
