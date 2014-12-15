@@ -28,16 +28,28 @@ public class Node extends Model {
 
     @Override
     public String getKey() {
-        return "node:"+name;
+        return "node:"+getId();
     }
 
     @Override
     public HashMap<String, String> toHash() {
-        return null;
+        HashMap<String, String> hash = new HashMap<>();
+        hash.put("id", getId()+"");
+        hash.put("name", name);
+        hash.put("privateAddress", privateAddress);
+        hash.put("ram", ram+"");
+
+        JSONArray publicAddresses = new JSONArray();
+        for (NodePublicAddress publicAddress : this.publicAddresses) {
+            publicAddresses.put(publicAddress.getKey());
+        }
+        hash.put("publicAddresses", publicAddresses.toString());
+        return hash;
     }
 
     @Override
-    public void fromHash(HashMap<String, String> hash) {
+    public void fromHash(HashMap<String, String> hash) throws Exception {
+        setId(Integer.parseInt(hash.get("id")));
         setName(hash.get("name"));
         setPrivateAddress(hash.get("privateAddress"));
         setRam(Integer.parseInt("ram"));

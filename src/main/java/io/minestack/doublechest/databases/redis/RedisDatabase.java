@@ -18,6 +18,7 @@ import io.minestack.doublechest.model.world.repository.redis.RedisWorldVersionRe
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import redis.clients.jedis.*;
+import redis.clients.jedis.exceptions.JedisException;
 
 @Log4j2
 public class RedisDatabase implements Database{
@@ -95,26 +96,25 @@ public class RedisDatabase implements Database{
         pool = new JedisPool(config, jedisHost.getHost(), jedisHost.getPort());
     }
 
-    public Object executeCommand(RedisCommand command) {
+    public Object executeCommand(RedisCommand command) throws Exception {
         return executeCommand(command, Object.class);
     }
 
-    public <T> T executeCommand(RedisCommand command, Class<T> resultClass) {
+    public <T> T executeCommand(RedisCommand command, Class<T> resultClass) throws Exception {
         Jedis jedis = pool.getResource();
 
         Object result = null;
-        Object execResponse = null;
         int tryNumber = 1;
 
-        while (execResponse == null && tryNumber < 100) {
+        while (tryNumber < 100) {
             log.info("Executing Redis Command "+command.getCommandName()+" Try Number: "+tryNumber);
             jedis.watch(command.keysToWatch());
             if (command.conditional(jedis)) {
                 Transaction transaction = jedis.multi();
                 command.command(transaction);
-                execResponse = transaction.exec();
-                if (execResponse != null) {
+                if (transaction.exec() != null) {
                     result = command.response();
+                    break;
                 } else {
                     tryNumber += 1;
                     log.warn("Error executing command "+command.getCommandName()+" trying again...");
@@ -126,8 +126,7 @@ public class RedisDatabase implements Database{
         }
 
         if (tryNumber == 100) {
-            log.error("Redis Command "+command.getCommandName()+" tried to execute 100 times exiting program.");
-            System.exit(1);
+            throw new JedisException("Redis Command " + command.getCommandName() + " tried to execute 100 times.");
         }
 
         pool.returnResource(jedis);

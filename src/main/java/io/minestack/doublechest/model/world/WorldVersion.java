@@ -22,12 +22,13 @@ public class WorldVersion extends Model {
 
     @Override
     public String getKey() {
-        return getWorld().getKey()+":version:"+version;
+        return getWorld().getKey()+":version:"+getId();
     }
 
     @Override
     public HashMap<String, String> toHash() {
         HashMap<String, String> hash = new HashMap<>();
+        hash.put("id", getId()+"");
         hash.put("version", version);
         hash.put("description", description);
         return hash;
@@ -35,6 +36,7 @@ public class WorldVersion extends Model {
 
     @Override
     public void fromHash(HashMap<String, String> hash) {
+        setId(Integer.parseInt(hash.get("id")));
         setVersion(hash.get("version"));
         setDescription(hash.get("description"));
     }

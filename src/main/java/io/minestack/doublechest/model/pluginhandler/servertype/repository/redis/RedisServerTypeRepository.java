@@ -1,8 +1,13 @@
 package io.minestack.doublechest.model.pluginhandler.servertype.repository.redis;
 
+import io.minestack.doublechest.databases.redis.RedisCommand;
 import io.minestack.doublechest.databases.redis.RedisDatabase;
 import io.minestack.doublechest.databases.redis.RedisModelRespository;
 import io.minestack.doublechest.model.pluginhandler.servertype.ServerType;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Transaction;
+
+import java.util.HashMap;
 
 public class RedisServerTypeRepository extends RedisModelRespository<ServerType> {
 
@@ -11,17 +16,64 @@ public class RedisServerTypeRepository extends RedisModelRespository<ServerType>
     }
 
     @Override
-    public String listKey(String... replace) {
+    public String listKey(int... replace) {
+        return "servertypes";
+    }
+
+    @Override
+    public ServerType getModel(String modelKey) throws Exception {
+        HashMap hashMap = getRedisDatabase().executeCommand(new RedisCommand("getServerTypeModel") {
+            @Override
+            public String[] keysToWatch() {
+                return new String[]{modelKey};
+            }
+
+            @Override
+            public boolean conditional(Jedis jedis) {
+                return jedis.exists(modelKey);
+            }
+
+            @Override
+            public void command(Transaction transaction) {
+                getResponses().put("hash", transaction.hgetAll(modelKey));
+            }
+
+            @Override
+            public Object response() {
+                return getResponses().get("hash").get();
+            }
+        }, HashMap.class);
+        if (hashMap != null) {
+            ServerType serverType = new ServerType();
+            serverType.fromHash(hashMap);
+            return serverType;
+        }
         return null;
     }
 
     @Override
-    public ServerType getModel(String modelKey) {
-        return null;
-    }
+    public void saveModel(ServerType model) throws Exception {
+        getRedisDatabase().executeCommand(new RedisCommand("saveServerTypeModel") {
+            @Override
+            public String[] keysToWatch() {
+                return new String[0];
+            }
 
-    @Override
-    public void saveModel(ServerType model) {
+            @Override
+            public boolean conditional(Jedis jedis) {
+                return jedis.exists(model.getKey()) == false;
+            }
 
+            @Override
+            public void command(Transaction transaction) {
+                transaction.hmset(model.getKey(), model.toHash());
+                transaction.sadd(listKey(), model.getKey());
+            }
+
+            @Override
+            public Object response() {
+                return null;
+            }
+        });
     }
 }

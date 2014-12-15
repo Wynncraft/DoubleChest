@@ -28,12 +28,13 @@ public class PluginInfo extends Model {
 
     @Override
     public String getKey() {
-        return pluginHolder.getKey()+":plugin:"+plugin.getName();
+        return pluginHolder.getKey()+":plugin:"+plugin.getId();
     }
 
     @Override
     public HashMap<String, String> toHash() {
         HashMap<String, String> hash = new HashMap<>();
+        hash.put("id", getId()+"");
         hash.put("pluginHolder", pluginHolder.getKey());
         hash.put("plugin", plugin.getKey());
         hash.put("version", version.getKey());
@@ -42,7 +43,8 @@ public class PluginInfo extends Model {
     }
 
     @Override
-    public void fromHash(HashMap<String, String> hash) {
+    public void fromHash(HashMap<String, String> hash) throws Exception {
+        setId(Integer.parseInt(hash.get("id")));
         String pluginHolderKey = hash.get("pluginHolder");
         if (pluginHolderKey.contains(":servertype:")) {
             setPluginHolder(DoubleChest.INSTANCE.getRedisDatabase().getServerTypeRepository().getModel(pluginHolderKey));

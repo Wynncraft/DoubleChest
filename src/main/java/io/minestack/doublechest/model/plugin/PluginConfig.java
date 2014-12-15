@@ -26,12 +26,13 @@ public class PluginConfig extends Model {
 
     @Override
     public String getKey() {
-        return getPlugin().getKey()+":config:"+name;
+        return getPlugin().getKey()+":config:"+getId();
     }
 
     @Override
     public HashMap<String, String> toHash() {
         HashMap<String, String> hash = new HashMap<>();
+        hash.put("id", getId()+"");
         hash.put("name", name);
         hash.put("description", description);
         hash.put("directory", directory);
@@ -40,6 +41,7 @@ public class PluginConfig extends Model {
 
     @Override
     public void fromHash(HashMap<String, String> hash) {
+        setId(Integer.parseInt(hash.get("id")));
         setName(hash.get("name"));
         setDescription(hash.get("description"));
         setDirectory(hash.get("directory"));

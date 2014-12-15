@@ -4,7 +4,6 @@ import lombok.Getter;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.Transaction;
-import redis.clients.jedis.exceptions.JedisException;
 
 import java.util.HashMap;
 
@@ -23,9 +22,9 @@ public abstract class RedisCommand {
 
     public abstract String[] keysToWatch();
 
-    public abstract boolean conditional(Jedis jedis) throws JedisException;
+    public abstract boolean conditional(Jedis jedis);
 
-    public abstract void command(Transaction transaction) throws JedisException;
+    public abstract void command(Transaction transaction);
 
-    public abstract Object response() throws JedisException;
+    public abstract Object response();
 }

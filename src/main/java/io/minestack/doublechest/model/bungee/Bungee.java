@@ -26,12 +26,13 @@ public class Bungee extends Model {
 
     @Override
     public String getKey() {
-        return network.getName() + ":bungee:" + bungeeType.getName() + ":" + node.getName();
+        return network.getKey() + ":bungee:" + bungeeType.getId() + ":" + node.getId();
     }
 
     @Override
     public HashMap<String, String> toHash() {
         HashMap<String, String> hash = new HashMap<>();
+        hash.put("id", getId()+"");
         hash.put("bungeetype", bungeeType.getKey());
         hash.put("network", network.getKey());
         hash.put("node", node.getKey());
@@ -40,10 +41,10 @@ public class Bungee extends Model {
     }
 
     @Override
-    public void fromHash(HashMap<String, String> hash) {
+    public void fromHash(HashMap<String, String> hash) throws Exception {
+        setId(Integer.parseInt(hash.get("id")));
         setBungeeType(DoubleChest.INSTANCE.getRedisDatabase().getBungeeTypeRepository().getModel(hash.get("bungeetype")));
         setNetwork(DoubleChest.INSTANCE.getRedisDatabase().getNetworkRepository().getModel(hash.get("network")));
         setNode(DoubleChest.INSTANCE.getRedisDatabase().getNodeRepository().getModel(hash.get("node")));
-
     }
 }

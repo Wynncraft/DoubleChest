@@ -30,12 +30,13 @@ public class ServerType extends PluginHolder {
 
     @Override
     public String getKey() {
-        return "servertype:"+getName();
+        return "servertype:"+getId();
     }
 
     @Override
     public HashMap<String, String> toHash() {
         HashMap<String, String> hash = new HashMap<>();
+        hash.put("id", getId()+"");
         hash.put("name", getName());
         hash.put("description", description);
         hash.put("ram", ram+"");
@@ -54,7 +55,8 @@ public class ServerType extends PluginHolder {
     }
 
     @Override
-    public void fromHash(HashMap<String, String> hash) {
+    public void fromHash(HashMap<String, String> hash) throws Exception {
+        setId(Integer.parseInt("id"));
         setName(hash.get("name"));
         setDescription(hash.get("description"));
         setRam(Integer.parseInt(hash.get("ram")));

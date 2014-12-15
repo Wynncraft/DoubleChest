@@ -35,12 +35,13 @@ public class Plugin extends Model {
 
     @Override
     public String getKey() {
-        return "plugin:"+name;
+        return "plugin:"+getId();
     }
 
     @Override
     public HashMap<String, String> toHash() {
         HashMap<String, String> hash = new HashMap<>();
+        hash.put("id", getId()+"");
         hash.put("name", name);
         hash.put("description", description);
         hash.put("type", type.name());
@@ -59,7 +60,8 @@ public class Plugin extends Model {
     }
 
     @Override
-    public void fromHash(HashMap<String, String> hash) {
+    public void fromHash(HashMap<String, String> hash) throws Exception {
+        setId(Integer.parseInt(hash.get("id")));
         setName(hash.get("name"));
         setDescription(hash.get("description"));
         setType(PluginType.valueOf(hash.get("type")));

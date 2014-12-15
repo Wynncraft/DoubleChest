@@ -23,12 +23,13 @@ public class PluginVersion extends Model {
 
     @Override
     public String getKey() {
-        return getPlugin().getKey()+":version:"+version;
+        return getPlugin().getKey()+":version:"+getId();
     }
 
     @Override
     public HashMap<String, String> toHash() {
         HashMap<String, String> hash = new HashMap<>();
+        hash.put("id", getId()+"");
         hash.put("plugin", plugin.getKey());
         hash.put("version", version);
         hash.put("description", description);
@@ -36,7 +37,8 @@ public class PluginVersion extends Model {
     }
 
     @Override
-    public void fromHash(HashMap<String, String> hash) {
+    public void fromHash(HashMap<String, String> hash) throws Exception {
+        setId(Integer.parseInt(hash.get("id")));
         setPlugin(DoubleChest.INSTANCE.getRedisDatabase().getPluginRepository().getModel(hash.get("plugin")));
         setVersion(hash.get("version"));
         setDescription(hash.get("description"));

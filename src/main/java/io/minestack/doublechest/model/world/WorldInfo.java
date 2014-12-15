@@ -24,12 +24,13 @@ public class WorldInfo extends Model {
 
     @Override
     public String getKey() {
-        return serverType.getKey()+":world:"+getWorld().getName();
+        return serverType.getKey()+":world:"+getId();
     }
 
     @Override
     public HashMap<String, String> toHash() {
         HashMap<String, String> hash = new HashMap<>();
+        hash.put("id", getId()+"");
         hash.put("servertyype", serverType.getKey());
         hash.put("world", world.getKey());
         hash.put("version", version.getKey());
@@ -37,7 +38,8 @@ public class WorldInfo extends Model {
     }
 
     @Override
-    public void fromHash(HashMap<String, String> hash) {
+    public void fromHash(HashMap<String, String> hash) throws Exception {
+        setId(Integer.parseInt("id"));
         setServerType(DoubleChest.INSTANCE.getRedisDatabase().getServerTypeRepository().getModel(hash.get("servertype")));
         setWorld(DoubleChest.INSTANCE.getRedisDatabase().getWorldRepository().getModel(hash.get("world")));
         setVersion(DoubleChest.INSTANCE.getRedisDatabase().getWorldVersionRepository().getModel("version"));

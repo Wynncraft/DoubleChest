@@ -29,12 +29,13 @@ public class NodeInfo extends Model {
 
     @Override
     public String getKey() {
-        return getNetwork().getKey()+":node:"+node.getName();
+        return getNetwork().getKey()+":node:"+node.getId();
     }
 
     @Override
     public HashMap<String, String> toHash() {
         HashMap<String, String> hash = new HashMap<>();
+        hash.put("id", getId()+"");
         hash.put("node", node.getKey());
         hash.put("network", network.getKey());
         if (bungeeType != null) {
@@ -45,7 +46,8 @@ public class NodeInfo extends Model {
     }
 
     @Override
-    public void fromHash(HashMap<String, String> hash) {
+    public void fromHash(HashMap<String, String> hash) throws Exception {
+        setId(Integer.parseInt("id"));
         setNode(DoubleChest.INSTANCE.getRedisDatabase().getNodeRepository().getModel(hash.get("node")));
         setNetwork(DoubleChest.INSTANCE.getRedisDatabase().getNetworkRepository().getModel(hash.get("network")));
         if (hash.containsKey("bungeeType")) {

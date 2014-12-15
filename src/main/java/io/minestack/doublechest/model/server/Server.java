@@ -24,9 +24,13 @@ public class Server extends Model {
     @Setter
     private Node node;
 
+    @Getter
+    @Setter
+    private long lastUpdate;
+
     @Override
     public String getKey() {
-        return network.getName() + ":server:" + serverType.getName() + ":" + getId();
+        return network.getKey() + ":server:" + serverType.getId() + ":" + getId();
     }
 
     @Override
@@ -36,15 +40,16 @@ public class Server extends Model {
         hash.put("servertype", serverType.getKey());
         hash.put("network", network.getKey());
         hash.put("node", node.getKey());
-        hash.put("lastUpdate", System.currentTimeMillis()+60000+"");
+        hash.put("lastUpdate", lastUpdate+"");
         return hash;
     }
 
     @Override
-    public void fromHash(HashMap<String, String> hash) {
+    public void fromHash(HashMap<String, String> hash) throws Exception {
         setId(Integer.parseInt(hash.get("id")));
         setServerType(DoubleChest.INSTANCE.getRedisDatabase().getServerTypeRepository().getModel(hash.get("servertype")));
         setNetwork(DoubleChest.INSTANCE.getRedisDatabase().getNetworkRepository().getModel(hash.get("network")));
         setNode(DoubleChest.INSTANCE.getRedisDatabase().getNodeRepository().getModel(hash.get("node")));
+        setLastUpdate(Long.parseLong(hash.get("lastUpdate")));
     }
 }

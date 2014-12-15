@@ -15,6 +15,6 @@ public abstract class Model {
 
     public abstract HashMap<String, String> toHash();
 
-    public abstract void fromHash(HashMap<String, String> hash);
+    public abstract void fromHash(HashMap<String, String> hash) throws Exception;
 
 }

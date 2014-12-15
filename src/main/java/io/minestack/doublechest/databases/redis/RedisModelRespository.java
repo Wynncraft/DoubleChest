@@ -12,10 +12,10 @@ public abstract class RedisModelRespository<T extends Model> {
         this.redisDatabase = redisDatabase;
     }
 
-    public abstract String listKey(String... replace);
+    public abstract String listKey(int... replace);
 
-    public abstract T getModel(String modelKey);
+    public abstract T getModel(String modelKey) throws Exception;
 
-    public abstract void saveModel(T model);
+    public abstract void saveModel(T model) throws Exception;
 
 }

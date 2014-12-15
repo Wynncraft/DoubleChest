@@ -7,15 +7,16 @@ import io.minestack.doublechest.model.network.Network;
 import io.minestack.doublechest.model.pluginhandler.servertype.ServerType;
 import io.minestack.doublechest.model.pluginhandler.servertype.ServerTypeInfo;
 import io.minestack.doublechest.model.server.Server;
+import lombok.extern.log4j.Log4j2;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.SortingParams;
 import redis.clients.jedis.Transaction;
-import redis.clients.jedis.exceptions.JedisException;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+@Log4j2
 public class RedisServerRepository extends RedisModelRespository<Server> {
 
     public RedisServerRepository(RedisDatabase redisDatabase) {
@@ -23,18 +24,18 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
     }
 
     @Override
-    public String listKey(String... replace) {
-        String key = "{0}:servers:{1}";
+    public String listKey(int... replace) {
+        String key = "network:{0}:servertype:{1}:servers";
         if (replace != null) {
             for (int i = 0; i < replace.length; i++) {
-                key = key.replace("{" + i + "}", replace[i]);
+                key = key.replace("{" + i + "}", replace[i] + "");
             }
         }
         return key;
     }
 
     @Override
-    public Server getModel(String modelKey) {
+    public Server getModel(String modelKey) throws Exception {
         HashMap hashMap = getRedisDatabase().executeCommand(new RedisCommand("getServerModel") {
             @Override
             public String[] keysToWatch() {
@@ -42,17 +43,17 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
             }
 
             @Override
-            public boolean conditional(Jedis jedis) throws JedisException {
+            public boolean conditional(Jedis jedis) {
                 return jedis.exists(modelKey);
             }
 
             @Override
-            public void command(Transaction transaction) throws JedisException {
+            public void command(Transaction transaction) {
                 getResponses().put("hash", transaction.hgetAll(modelKey));
             }
 
             @Override
-            public Object response() throws JedisException {
+            public Object response() {
                 return getResponses().get("hash").get();
             }
         }, HashMap.class);
@@ -65,7 +66,7 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
     }
 
     @Override
-    public void saveModel(Server model) {
+    public void saveModel(Server model) throws Exception {
         getRedisDatabase().executeCommand(new RedisCommand("saveServerModel") {
             @Override
             public String[] keysToWatch() {
@@ -73,25 +74,25 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
             }
 
             @Override
-            public boolean conditional(Jedis jedis) throws JedisException {
+            public boolean conditional(Jedis jedis) {
                 return jedis.exists(model.getKey()) == false;
             }
 
             @Override
-            public void command(Transaction transaction) throws JedisException {
+            public void command(Transaction transaction) {
                 transaction.hmset(model.getKey(), model.toHash());
-                transaction.sadd(listKey(model.getNetwork().getName(), model.getServerType().getName()), model.getKey());
+                transaction.sadd(listKey(model.getNetwork().getId(), model.getServerType().getId()), model.getKey());
             }
 
             @Override
-            public Object response() throws JedisException {
+            public Object response() {
                 return null;
             }
         });
     }
 
-    public void removeModel(Server server, Network network, ServerType serverType) {
-        String listKey = listKey(network.getName(), serverType.getName());
+    public void removeModel(Server server, Network network, ServerType serverType) throws Exception {
+        String listKey = listKey(network.getId(), serverType.getId());
         getRedisDatabase().executeCommand(new RedisCommand("removeServerModel") {
             @Override
             public String[] keysToWatch() {
@@ -99,52 +100,26 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
             }
 
             @Override
-            public boolean conditional(Jedis jedis) throws JedisException {
+            public boolean conditional(Jedis jedis) {
                 return jedis.exists(listKey) && jedis.exists(server.getKey());
             }
 
             @Override
-            public void command(Transaction transaction) throws JedisException {
+            public void command(Transaction transaction) {
                 transaction.srem(listKey, server.getKey());
                 transaction.del(server.getKey());
             }
 
             @Override
-            public Object response() throws JedisException {
+            public Object response() {
                 return null;
             }
         });
     }
 
-    public void removeModel(String serverKey, Network network, ServerType serverType) {
-        String listKey = listKey(network.getName(), serverType.getName());
-        getRedisDatabase().executeCommand(new RedisCommand("removeServerModel") {
-            @Override
-            public String[] keysToWatch() {
-                return new String[]{listKey, serverKey};
-            }
-
-            @Override
-            public boolean conditional(Jedis jedis) throws JedisException {
-                return jedis.exists(listKey) && jedis.exists(serverKey);
-            }
-
-            @Override
-            public void command(Transaction transaction) throws JedisException {
-                transaction.srem(listKey, serverKey);
-                transaction.del(serverKey);
-            }
-
-            @Override
-            public Object response() throws JedisException {
-                return null;
-            }
-        });
-    }
-
-    public void removeTimedOut(Network network) {
+    public void removeTimedOut(Network network) throws Exception {
         for (ServerTypeInfo serverTypeInfo : network.getServerTypes()) {
-            String listKey = listKey(network.getName(), serverTypeInfo.getServerType().getName());
+            String listKey = listKey(network.getId(), serverTypeInfo.getServerType().getId());
             getRedisDatabase().executeCommand(new RedisCommand("removeTimedOutServers") {
                 @Override
                 public String[] keysToWatch() {
@@ -152,43 +127,28 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
                 }
 
                 @Override
-                public boolean conditional(Jedis jedis) throws JedisException {
+                public boolean conditional(Jedis jedis) {
                     return jedis.exists(listKey);
                 }
 
                 @Override
-                public void command(Transaction transaction) throws JedisException {
+                public void command(Transaction transaction) {
                     getResponses().put("serverKeys", transaction.smembers(listKey));
                 }
 
                 @Override
-                public Object response() throws JedisException {
+                public Object response() {
                     for (String serverKey : (Set<String>) getResponses().get("serverTypes").get()) {
-                        getRedisDatabase().executeCommand(new RedisCommand("getTimedOutServer") {
-                            @Override
-                            public String[] keysToWatch() {
-                                return new String[]{serverKey};
-                            }
-
-                            @Override
-                            public boolean conditional(Jedis jedis) throws JedisException {
-                                return jedis.exists(serverKey);
-                            }
-
-                            @Override
-                            public void command(Transaction transaction) throws JedisException {
-                                getResponses().put("lastUpdate", transaction.hget(serverKey, "lastUpdate"));
-                            }
-
-                            @Override
-                            public Object response() throws JedisException {
-                                Long lastUpdate = Long.parseLong((String)getResponses().get("lastUpdate").get());
-                                if (lastUpdate + 30000 < System.currentTimeMillis()) {
-                                    removeModel(serverKey, network, serverTypeInfo.getServerType());
+                        try {
+                            Server server = getModel(serverKey);
+                            if (server != null) {
+                                if (server.getLastUpdate() + 30000 < System.currentTimeMillis()) {
+                                    removeModel(server, network, serverTypeInfo.getServerType());
                                 }
-                                return null;
                             }
-                        });
+                        } catch (Exception e) {
+                            log.error("Threw a Exception in RedisServerRepository::removeTimedOut::RedisCommand::response, full stack trace follows: ", e);
+                        }
                     }
                     return null;
                 }
@@ -196,9 +156,9 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
         }
     }
 
-    public int getNextNumber(Network network, ServerType serverType) {
+    public int getNextNumber(Network network, ServerType serverType) throws Exception {
         int nextNum = 1;
-        String listKey = listKey(network.getName(), serverType.getName());
+        String listKey = listKey(network.getId(), serverType.getId());
 
         List list = getRedisDatabase().executeCommand(new RedisCommand("getNextNumber") {
             @Override
@@ -207,20 +167,24 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
             }
 
             @Override
-            public boolean conditional(Jedis jedis) throws JedisException {
+            public boolean conditional(Jedis jedis) {
                 return jedis.exists(listKey);
             }
 
             @Override
-            public void command(Transaction transaction) throws JedisException {
+            public void command(Transaction transaction) {
                 getResponses().put("sortedKeys", transaction.sort(listKey, new SortingParams().by("*->id")));
             }
 
             @Override
-            public Object response() throws JedisException {
+            public Object response() {
                 return getResponses().get("sortedKeys").get();
             }
         }, List.class);
+
+        if (list == null) {
+            return -1;
+        }
 
         while (list.contains(network.getName()+":server:"+serverType.getName()+":"+nextNum)) {
             nextNum += 1;

@@ -28,12 +28,13 @@ public class ServerTypeInfo extends Model {
 
     @Override
     public String getKey() {
-        return getNetwork().getKey()+":servertype:"+serverType.getName();
+        return getNetwork().getKey()+":servertype:"+getId();
     }
 
     @Override
     public HashMap<String, String> toHash() {
         HashMap<String, String> hash = new HashMap<>();
+        hash.put("id", getId()+"");
         hash.put("network", network.getKey());
         hash.put("servertype", serverType.getKey());
         hash.put("amount", amount+"");
@@ -42,7 +43,8 @@ public class ServerTypeInfo extends Model {
     }
 
     @Override
-    public void fromHash(HashMap<String, String> hash) {
+    public void fromHash(HashMap<String, String> hash) throws Exception {
+        setId(Integer.parseInt(hash.get("id")));
         setNetwork(DoubleChest.INSTANCE.getRedisDatabase().getNetworkRepository().getModel(hash.get("network")));
         setServerType(DoubleChest.INSTANCE.getRedisDatabase().getServerTypeRepository().getModel(hash.get("servertype")));
         setAmount(Integer.parseInt(hash.get("amount")));
