@@ -7,17 +7,13 @@ import redis.clients.jedis.HostAndPort;
 
 public class DoubleChest {
 
-    public static DoubleChest INSTANCE;
+    public static DoubleChest INSTANCE = new DoubleChest();
 
     @Getter
     private RedisDatabase redisDatabase;
 
     @Getter
     private MySQLDatabase mySQLDatabase;
-
-    public DoubleChest() {
-        DoubleChest.INSTANCE = this;
-    }
 
     public void initRedisDatabase(HostAndPort jedisHost) {
         redisDatabase = new RedisDatabase(jedisHost);
