@@ -57,6 +57,7 @@ public class World extends Model {
             String version = versions.getString(i);
             WorldVersion worldVersion = DoubleChest.INSTANCE.getRedisDatabase().getWorldVersionRepository().getModel(version);
             if (worldVersion != null) {
+                worldVersion.setWorld(this);
                 this.versions.add(worldVersion);
             }
         }

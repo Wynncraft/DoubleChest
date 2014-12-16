@@ -5,7 +5,7 @@ import io.minestack.doublechest.databases.redis.RedisDatabase;
 import io.minestack.doublechest.databases.redis.RedisModelRespository;
 import io.minestack.doublechest.model.network.Network;
 import io.minestack.doublechest.model.pluginhandler.servertype.ServerType;
-import io.minestack.doublechest.model.pluginhandler.servertype.ServerTypeInfo;
+import io.minestack.doublechest.model.pluginhandler.servertype.NetworkServerType;
 import io.minestack.doublechest.model.server.Server;
 import lombok.extern.log4j.Log4j2;
 import redis.clients.jedis.Jedis;
@@ -118,8 +118,8 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
     }
 
     public void removeTimedOut(Network network) throws Exception {
-        for (ServerTypeInfo serverTypeInfo : network.getServerTypes()) {
-            String listKey = listKey(network.getId(), serverTypeInfo.getServerType().getId());
+        for (NetworkServerType networkServerType : network.getServerTypes()) {
+            String listKey = listKey(network.getId(), networkServerType.getServerType().getId());
             getRedisDatabase().executeCommand(new RedisCommand("removeTimedOutServers") {
                 @Override
                 public String[] keysToWatch() {
@@ -138,12 +138,12 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
 
                 @Override
                 public Object response() {
-                    for (String serverKey : (Set<String>) getResponses().get("serverTypes").get()) {
+                    for (String serverKey : (Set<String>) getResponses().get("serverKeys").get()) {
                         try {
                             Server server = getModel(serverKey);
                             if (server != null) {
                                 if (server.getLastUpdate() + 30000 < System.currentTimeMillis()) {
-                                    removeModel(server, network, serverTypeInfo.getServerType());
+                                    removeModel(server, network, networkServerType.getServerType());
                                 }
                             }
                         } catch (Exception e) {

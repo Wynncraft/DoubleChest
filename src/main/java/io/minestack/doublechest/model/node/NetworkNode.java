@@ -9,7 +9,7 @@ import lombok.Setter;
 
 import java.util.HashMap;
 
-public class NodeInfo extends Model {
+public class NetworkNode extends Model {
 
     @Getter
     @Setter
@@ -49,7 +49,7 @@ public class NodeInfo extends Model {
     public void fromHash(HashMap<String, String> hash) throws Exception {
         setId(Integer.parseInt("id"));
         setNode(DoubleChest.INSTANCE.getRedisDatabase().getNodeRepository().getModel(hash.get("node")));
-        setNetwork(DoubleChest.INSTANCE.getRedisDatabase().getNetworkRepository().getModel(hash.get("network")));
+        //setNetwork(DoubleChest.INSTANCE.getRedisDatabase().getNetworkRepository().getModel(hash.get("network")));
         if (hash.containsKey("bungeeType")) {
             setBungeeType(DoubleChest.INSTANCE.getRedisDatabase().getBungeeTypeRepository().getModel(hash.get("bungeeType")));
             setNodePublicAddress(DoubleChest.INSTANCE.getRedisDatabase().getNodePublicAddressRepository().getModel(hash.get("publicAddress")));

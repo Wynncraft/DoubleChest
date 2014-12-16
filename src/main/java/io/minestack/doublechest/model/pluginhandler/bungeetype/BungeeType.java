@@ -1,7 +1,7 @@
 package io.minestack.doublechest.model.pluginhandler.bungeetype;
 
 import io.minestack.doublechest.DoubleChest;
-import io.minestack.doublechest.model.plugin.PluginInfo;
+import io.minestack.doublechest.model.plugin.PluginHolderPlugin;
 import io.minestack.doublechest.model.pluginhandler.PluginHolder;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,8 +32,8 @@ public class BungeeType extends PluginHolder {
         hash.put("description", description);
         hash.put("ram", ram+"");
         JSONArray plugins = new JSONArray();
-        for (PluginInfo pluginInfo : getPlugins()) {
-            plugins.put(pluginInfo.getKey());
+        for (PluginHolderPlugin pluginHolderPlugin : getPlugins()) {
+            plugins.put(pluginHolderPlugin.getKey());
         }
         hash.put("plugins", plugins.toString());
         return hash;
@@ -48,9 +48,10 @@ public class BungeeType extends PluginHolder {
         JSONArray plugins = new JSONArray(hash.get("plugins"));
         for (int i = 0; i < plugins.length(); i++) {
             String pluginKey = plugins.getString(i);
-            PluginInfo pluginInfo = DoubleChest.INSTANCE.getRedisDatabase().getPluginInfoRepository().getModel(pluginKey);
-            if (pluginInfo != null) {
-                getPlugins().add(pluginInfo);
+            PluginHolderPlugin pluginHolderPlugin = DoubleChest.INSTANCE.getRedisDatabase().getPluginInfoRepository().getModel(pluginKey);
+            if (pluginHolderPlugin != null) {
+                pluginHolderPlugin.setPluginHolder(this);
+                getPlugins().add(pluginHolderPlugin);
             }
         }
     }

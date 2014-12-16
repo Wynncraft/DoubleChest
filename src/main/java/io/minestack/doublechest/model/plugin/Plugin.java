@@ -72,6 +72,7 @@ public class Plugin extends Model {
             String versionKey = versions.getString(i);
             PluginVersion version = DoubleChest.INSTANCE.getRedisDatabase().getPluginVersionRepository().getModel(versionKey);
             if (version != null) {
+                version.setPlugin(this);
                 this.versions.add(version);
             }
         }
@@ -81,6 +82,7 @@ public class Plugin extends Model {
             String configKey = configs.getString(i);
             PluginConfig config = DoubleChest.INSTANCE.getRedisDatabase().getPluginConfigRepository().getModel(configKey);
             if (config != null) {
+                config.setPlugin(this);
                 this.configs.add(config);
             }
         }

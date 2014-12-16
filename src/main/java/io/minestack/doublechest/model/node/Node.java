@@ -59,6 +59,7 @@ public class Node extends Model {
             String publicAddressKey = publicAddresses.getString(i);
             NodePublicAddress publicAddress = DoubleChest.INSTANCE.getRedisDatabase().getNodePublicAddressRepository().getModel(publicAddressKey);
             if (publicAddress != null) {
+                publicAddress.setNode(this);
                 this.publicAddresses.add(publicAddress);
             }
         }

@@ -1,23 +1,23 @@
-package io.minestack.doublechest.model.node.repository.redis;
+package io.minestack.doublechest.model.plugin.repository.redis;
 
 import io.minestack.doublechest.databases.redis.RedisCommand;
 import io.minestack.doublechest.databases.redis.RedisDatabase;
 import io.minestack.doublechest.databases.redis.RedisModelRespository;
-import io.minestack.doublechest.model.node.NodeInfo;
+import io.minestack.doublechest.model.plugin.PluginHolderPlugin;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
 import java.util.HashMap;
 
-public class RedisNodeInfoRepository extends RedisModelRespository<NodeInfo> {
+public class RedisPluginHolderPluginRepository extends RedisModelRespository<PluginHolderPlugin> {
 
-    public RedisNodeInfoRepository(RedisDatabase redisDatabase) {
+    public RedisPluginHolderPluginRepository(RedisDatabase redisDatabase) {
         super(redisDatabase);
     }
 
     @Override
     public String listKey(int... replace) {
-        String key = "network:{0}:nodes";
+        String key = "pluginholder:{0}:plugins";
         if (replace != null) {
             for (int i = 0; i < replace.length; i++) {
                 key = key.replace("{" + i + "}", replace[i]+"");
@@ -27,8 +27,8 @@ public class RedisNodeInfoRepository extends RedisModelRespository<NodeInfo> {
     }
 
     @Override
-    public NodeInfo getModel(String modelKey) throws Exception {
-        HashMap hashMap = getRedisDatabase().executeCommand(new RedisCommand("getNodeInfoModel") {
+    public PluginHolderPlugin getModel(String modelKey) throws Exception {
+        HashMap hashMap = getRedisDatabase().executeCommand(new RedisCommand("getPluginInfoModel") {
             @Override
             public String[] keysToWatch() {
                 return new String[]{modelKey};
@@ -50,16 +50,16 @@ public class RedisNodeInfoRepository extends RedisModelRespository<NodeInfo> {
             }
         }, HashMap.class);
         if (hashMap != null) {
-            NodeInfo nodeInfo = new NodeInfo();
-            nodeInfo.fromHash(hashMap);
-            return nodeInfo;
+            PluginHolderPlugin pluginHolderPlugin = new PluginHolderPlugin();
+            pluginHolderPlugin.fromHash(hashMap);
+            return pluginHolderPlugin;
         }
         return null;
     }
 
     @Override
-    public void saveModel(NodeInfo model) throws Exception {
-        getRedisDatabase().executeCommand(new RedisCommand("saveNodeInfoModel") {
+    public void saveModel(PluginHolderPlugin model) throws Exception {
+        getRedisDatabase().executeCommand(new RedisCommand("savePluginInfoModel") {
             @Override
             public String[] keysToWatch() {
                 return new String[0];
@@ -73,7 +73,7 @@ public class RedisNodeInfoRepository extends RedisModelRespository<NodeInfo> {
             @Override
             public void command(Transaction transaction) {
                 transaction.hmset(model.getKey(), model.toHash());
-                transaction.sadd(listKey(model.getNetwork().getId()), model.getKey());
+                transaction.sadd(listKey(model.getPluginHolder().getId()), model.getKey());
             }
 
             @Override

@@ -1,9 +1,9 @@
 package io.minestack.doublechest.model.pluginhandler.servertype;
 
 import io.minestack.doublechest.DoubleChest;
-import io.minestack.doublechest.model.plugin.PluginInfo;
+import io.minestack.doublechest.model.plugin.PluginHolderPlugin;
 import io.minestack.doublechest.model.pluginhandler.PluginHolder;
-import io.minestack.doublechest.model.world.WorldInfo;
+import io.minestack.doublechest.model.world.ServerTypeWorld;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONArray;
@@ -26,7 +26,7 @@ public class ServerType extends PluginHolder {
     private int players;
 
     @Getter
-    private ArrayList<WorldInfo> worlds = new ArrayList<>();
+    private ArrayList<ServerTypeWorld> worlds = new ArrayList<>();
 
     @Override
     public String getKey() {
@@ -42,13 +42,13 @@ public class ServerType extends PluginHolder {
         hash.put("ram", ram+"");
         hash.put("players", players+"");
         JSONArray plugins = new JSONArray();
-        for (PluginInfo pluginInfo : getPlugins()) {
-            plugins.put(pluginInfo.getKey());
+        for (PluginHolderPlugin pluginHolderPlugin : getPlugins()) {
+            plugins.put(pluginHolderPlugin.getKey());
         }
         hash.put("plugins", plugins.toString());
         JSONArray worlds = new JSONArray();
-        for (WorldInfo worldInfo : this.worlds) {
-            worlds.put(worldInfo.getKey());
+        for (ServerTypeWorld serverTypeWorld : this.worlds) {
+            worlds.put(serverTypeWorld.getKey());
         }
         hash.put("worlds", worlds.toString());
         return hash;
@@ -64,17 +64,19 @@ public class ServerType extends PluginHolder {
         JSONArray plugins = new JSONArray(hash.get("plugins"));
         for (int i = 0; i < plugins.length(); i++) {
             String pluginKey = plugins.getString(i);
-            PluginInfo pluginInfo = DoubleChest.INSTANCE.getRedisDatabase().getPluginInfoRepository().getModel(pluginKey);
-            if (pluginInfo != null) {
-                getPlugins().add(pluginInfo);
+            PluginHolderPlugin pluginHolderPlugin = DoubleChest.INSTANCE.getRedisDatabase().getPluginInfoRepository().getModel(pluginKey);
+            if (pluginHolderPlugin != null) {
+                pluginHolderPlugin.setPluginHolder(this);
+                getPlugins().add(pluginHolderPlugin);
             }
         }
         JSONArray worlds = new JSONArray(hash.get("worlds"));
         for (int i = 0; i < worlds.length(); i++) {
             String worldKey = worlds.getString(i);
-            WorldInfo worldInfo = DoubleChest.INSTANCE.getRedisDatabase().getWorldInfoRepository().getModel(worldKey);
-            if (worldInfo != null) {
-                this.worlds.add(worldInfo);
+            ServerTypeWorld serverTypeWorld = DoubleChest.INSTANCE.getRedisDatabase().getWorldInfoRepository().getModel(worldKey);
+            if (serverTypeWorld != null) {
+                serverTypeWorld.setServerType(this);
+                this.worlds.add(serverTypeWorld);
             }
         }
     }

@@ -2,17 +2,17 @@ package io.minestack.doublechest.databases.redis;
 
 import io.minestack.doublechest.databases.Database;
 import io.minestack.doublechest.model.network.repository.redis.RedisNetworkRepository;
-import io.minestack.doublechest.model.node.repository.redis.RedisNodeInfoRepository;
+import io.minestack.doublechest.model.node.repository.redis.RedisNetworkNodeRepository;
 import io.minestack.doublechest.model.node.repository.redis.RedisNodePublicAddressRepository;
 import io.minestack.doublechest.model.node.repository.redis.RedisNodeRepository;
 import io.minestack.doublechest.model.plugin.repository.redis.RedisPluginConfigRepository;
-import io.minestack.doublechest.model.plugin.repository.redis.RedisPluginInfoRepository;
+import io.minestack.doublechest.model.plugin.repository.redis.RedisPluginHolderPluginRepository;
 import io.minestack.doublechest.model.plugin.repository.redis.RedisPluginRepository;
 import io.minestack.doublechest.model.plugin.repository.redis.RedisPluginVersionRepository;
 import io.minestack.doublechest.model.pluginhandler.bungeetype.repository.redis.RedisBungeeTypeRepository;
-import io.minestack.doublechest.model.pluginhandler.servertype.repository.redis.RedisServerTypeInfoRepository;
+import io.minestack.doublechest.model.pluginhandler.servertype.repository.redis.RedisNetworkServerTypeRepository;
 import io.minestack.doublechest.model.pluginhandler.servertype.repository.redis.RedisServerTypeRepository;
-import io.minestack.doublechest.model.world.repository.redis.RedisWorldInfoRepository;
+import io.minestack.doublechest.model.world.repository.redis.RedisServerTypeWorldRepository;
 import io.minestack.doublechest.model.world.repository.redis.RedisWorldRepository;
 import io.minestack.doublechest.model.world.repository.redis.RedisWorldVersionRepository;
 import lombok.Getter;
@@ -36,13 +36,13 @@ public class RedisDatabase implements Database{
     private final RedisNodePublicAddressRepository nodePublicAddressRepository;
 
     @Getter
-    private final RedisNodeInfoRepository nodeInfoRepository;
+    private final RedisNetworkNodeRepository nodeInfoRepository;
 
     @Getter
     private final RedisServerTypeRepository serverTypeRepository;
 
     @Getter
-    private final RedisServerTypeInfoRepository serverTypeInfoRepository;
+    private final RedisNetworkServerTypeRepository serverTypeInfoRepository;
 
     @Getter
     private final RedisWorldRepository worldRepository;
@@ -51,7 +51,7 @@ public class RedisDatabase implements Database{
     private final RedisWorldVersionRepository worldVersionRepository;
 
     @Getter
-    private final RedisWorldInfoRepository worldInfoRepository;
+    private final RedisServerTypeWorldRepository worldInfoRepository;
 
     @Getter
     private final RedisPluginRepository pluginRepository;
@@ -63,7 +63,7 @@ public class RedisDatabase implements Database{
     private final RedisPluginVersionRepository pluginVersionRepository;
 
     @Getter
-    private final RedisPluginInfoRepository pluginInfoRepository;
+    private final RedisPluginHolderPluginRepository pluginInfoRepository;
 
     @Getter
     private final RedisBungeeTypeRepository bungeeTypeRepository;
@@ -72,17 +72,17 @@ public class RedisDatabase implements Database{
         this.jedisHost = jedisHost;
         networkRepository = new RedisNetworkRepository(this);
         nodeRepository = new RedisNodeRepository(this);
-        nodeInfoRepository = new RedisNodeInfoRepository(this);
+        nodeInfoRepository = new RedisNetworkNodeRepository(this);
         nodePublicAddressRepository = new RedisNodePublicAddressRepository(this);
         serverTypeRepository = new RedisServerTypeRepository(this);
-        serverTypeInfoRepository = new RedisServerTypeInfoRepository(this);
+        serverTypeInfoRepository = new RedisNetworkServerTypeRepository(this);
         worldRepository = new RedisWorldRepository(this);
         worldVersionRepository = new RedisWorldVersionRepository(this);
-        worldInfoRepository = new RedisWorldInfoRepository(this);
+        worldInfoRepository = new RedisServerTypeWorldRepository(this);
         pluginRepository = new RedisPluginRepository(this);
         pluginConfigRepository = new RedisPluginConfigRepository(this);
         pluginVersionRepository = new RedisPluginVersionRepository(this);
-        pluginInfoRepository = new RedisPluginInfoRepository(this);
+        pluginInfoRepository = new RedisPluginHolderPluginRepository(this);
         bungeeTypeRepository = new RedisBungeeTypeRepository(this);
     }
 

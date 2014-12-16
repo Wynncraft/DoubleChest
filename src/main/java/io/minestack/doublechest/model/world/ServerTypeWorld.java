@@ -8,7 +8,7 @@ import lombok.Setter;
 
 import java.util.HashMap;
 
-public class WorldInfo extends Model {
+public class ServerTypeWorld extends Model {
 
     @Getter
     @Setter
@@ -22,6 +22,10 @@ public class WorldInfo extends Model {
     @Setter
     private WorldVersion version;
 
+    @Getter
+    @Setter
+    private boolean defaultWorld;
+
     @Override
     public String getKey() {
         return serverType.getKey()+":world:"+getId();
@@ -34,14 +38,16 @@ public class WorldInfo extends Model {
         hash.put("servertyype", serverType.getKey());
         hash.put("world", world.getKey());
         hash.put("version", version.getKey());
+        hash.put("defaultWorld", defaultWorld+"");
         return hash;
     }
 
     @Override
     public void fromHash(HashMap<String, String> hash) throws Exception {
         setId(Integer.parseInt("id"));
-        setServerType(DoubleChest.INSTANCE.getRedisDatabase().getServerTypeRepository().getModel(hash.get("servertype")));
+        //setServerType(DoubleChest.INSTANCE.getRedisDatabase().getServerTypeRepository().getModel(hash.get("servertype")));
         setWorld(DoubleChest.INSTANCE.getRedisDatabase().getWorldRepository().getModel(hash.get("world")));
         setVersion(DoubleChest.INSTANCE.getRedisDatabase().getWorldVersionRepository().getModel("version"));
+        setDefaultWorld(Boolean.parseBoolean(hash.get("defaultWorld")));
     }
 }

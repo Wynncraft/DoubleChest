@@ -5,13 +5,16 @@ import io.minestack.doublechest.databases.redis.RedisDatabase;
 import io.minestack.doublechest.databases.redis.RedisModelRespository;
 import io.minestack.doublechest.model.bungee.Bungee;
 import io.minestack.doublechest.model.network.Network;
+import io.minestack.doublechest.model.node.NetworkNode;
 import io.minestack.doublechest.model.pluginhandler.bungeetype.BungeeType;
-import io.minestack.doublechest.model.server.Server;
+import lombok.extern.log4j.Log4j2;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
 import java.util.HashMap;
+import java.util.Set;
 
+@Log4j2
 public class RedisBungeeRepository extends RedisModelRespository<Bungee> {
 
     public RedisBungeeRepository(RedisDatabase redisDatabase) {
@@ -86,23 +89,23 @@ public class RedisBungeeRepository extends RedisModelRespository<Bungee> {
         });
     }
 
-    public void removeModel(Server server, Network network, BungeeType bungeeType) throws Exception {
+    public void removeModel(Bungee bungee, Network network, BungeeType bungeeType) throws Exception {
         String listKey = listKey(network.getId(), bungeeType.getId());
         getRedisDatabase().executeCommand(new RedisCommand("removeBungeeModel") {
             @Override
             public String[] keysToWatch() {
-                return new String[]{listKey, server.getKey()};
+                return new String[]{listKey, bungee.getKey()};
             }
 
             @Override
             public boolean conditional(Jedis jedis) {
-                return jedis.exists(listKey) && jedis.exists(server.getKey());
+                return jedis.exists(listKey) && jedis.exists(bungee.getKey());
             }
 
             @Override
             public void command(Transaction transaction) {
-                transaction.srem(listKey, server.getKey());
-                transaction.del(server.getKey());
+                transaction.srem(listKey, bungee.getKey());
+                transaction.del(bungee.getKey());
             }
 
             @Override
@@ -110,5 +113,48 @@ public class RedisBungeeRepository extends RedisModelRespository<Bungee> {
                 return null;
             }
         });
+    }
+
+    public void removeTimedOut(Network network) throws Exception {
+        for (NetworkNode networkNode : network.getNodes()) {
+            BungeeType bungeeType = networkNode.getBungeeType();
+            if (bungeeType == null) {
+                continue;
+            }
+            String listKey = listKey(network.getId(), bungeeType.getId());
+            getRedisDatabase().executeCommand(new RedisCommand("removeTimedOutServers") {
+                @Override
+                public String[] keysToWatch() {
+                    return new String[]{listKey};
+                }
+
+                @Override
+                public boolean conditional(Jedis jedis) {
+                    return jedis.exists(listKey);
+                }
+
+                @Override
+                public void command(Transaction transaction) {
+                    getResponses().put("bungeeKeys", transaction.smembers(listKey));
+                }
+
+                @Override
+                public Object response() {
+                    for (String bungeeKey : (Set<String>) getResponses().get("bungeeKeys").get()) {
+                        try {
+                            Bungee bungee = getModel(bungeeKey);
+                            if (bungee != null) {
+                                if (bungee.getLastUpdate() + 30000 < System.currentTimeMillis()) {
+                                    removeModel(bungee, network, bungeeType);
+                                }
+                            }
+                        } catch (Exception e) {
+                            log.error("Threw a Exception in RedisServerRepository::removeTimedOut::RedisCommand::response, full stack trace follows: ", e);
+                        }
+                    }
+                    return null;
+                }
+            });
+        }
     }
 }

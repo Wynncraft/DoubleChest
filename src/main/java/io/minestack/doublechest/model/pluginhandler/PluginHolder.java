@@ -1,7 +1,7 @@
 package io.minestack.doublechest.model.pluginhandler;
 
 import io.minestack.doublechest.model.Model;
-import io.minestack.doublechest.model.plugin.PluginInfo;
+import io.minestack.doublechest.model.plugin.PluginHolderPlugin;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +14,6 @@ public abstract class PluginHolder extends Model {
     private String name;
 
     @Getter
-    private ArrayList<PluginInfo> plugins = new ArrayList<>();
+    private ArrayList<PluginHolderPlugin> plugins = new ArrayList<>();
 
 }

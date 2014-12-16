@@ -8,7 +8,7 @@ import lombok.Setter;
 
 import java.util.HashMap;
 
-public class PluginInfo extends Model {
+public class PluginHolderPlugin extends Model {
 
     @Getter
     @Setter
@@ -46,11 +46,11 @@ public class PluginInfo extends Model {
     public void fromHash(HashMap<String, String> hash) throws Exception {
         setId(Integer.parseInt(hash.get("id")));
         String pluginHolderKey = hash.get("pluginHolder");
-        if (pluginHolderKey.contains(":servertype:")) {
+        /*if (pluginHolderKey.contains(":servertype:")) {
             setPluginHolder(DoubleChest.INSTANCE.getRedisDatabase().getServerTypeRepository().getModel(pluginHolderKey));
         } else if (pluginHolderKey.contains(":bungeetype:")) {
             setPluginHolder(DoubleChest.INSTANCE.getRedisDatabase().getBungeeTypeRepository().getModel(pluginHolderKey));
-        }
+        }*/
         setPlugin(DoubleChest.INSTANCE.getRedisDatabase().getPluginRepository().getModel(hash.get("plugin")));
         setVersion(DoubleChest.INSTANCE.getRedisDatabase().getPluginVersionRepository().getModel(hash.get("version")));
         setConfig(DoubleChest.INSTANCE.getRedisDatabase().getPluginConfigRepository().getModel(hash.get("config")));

@@ -29,14 +29,16 @@ public class WorldVersion extends Model {
     public HashMap<String, String> toHash() {
         HashMap<String, String> hash = new HashMap<>();
         hash.put("id", getId()+"");
+        hash.put("world", world.getKey());
         hash.put("version", version);
         hash.put("description", description);
         return hash;
     }
 
     @Override
-    public void fromHash(HashMap<String, String> hash) {
+    public void fromHash(HashMap<String, String> hash) throws Exception {
         setId(Integer.parseInt(hash.get("id")));
+        //setWorld(DoubleChest.INSTANCE.getRedisDatabase().getWorldRepository().getModel(hash.get("world")));
         setVersion(hash.get("version"));
         setDescription(hash.get("description"));
     }

@@ -1,23 +1,23 @@
-package io.minestack.doublechest.model.pluginhandler.servertype.repository.redis;
+package io.minestack.doublechest.model.world.repository.redis;
 
 import io.minestack.doublechest.databases.redis.RedisCommand;
 import io.minestack.doublechest.databases.redis.RedisDatabase;
 import io.minestack.doublechest.databases.redis.RedisModelRespository;
-import io.minestack.doublechest.model.pluginhandler.servertype.ServerTypeInfo;
+import io.minestack.doublechest.model.world.ServerTypeWorld;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
 import java.util.HashMap;
 
-public class RedisServerTypeInfoRepository extends RedisModelRespository<ServerTypeInfo> {
+public class RedisServerTypeWorldRepository extends RedisModelRespository<ServerTypeWorld> {
 
-    public RedisServerTypeInfoRepository(RedisDatabase redisDatabase) {
+    public RedisServerTypeWorldRepository(RedisDatabase redisDatabase) {
         super(redisDatabase);
     }
 
     @Override
     public String listKey(int... replace) {
-        String key = "network:{0}:servertypes";
+        String key = "servertype:{0}:worlds";
         if (replace != null) {
             for (int i = 0; i < replace.length; i++) {
                 key = key.replace("{" + i + "}", replace[i]+"");
@@ -27,8 +27,8 @@ public class RedisServerTypeInfoRepository extends RedisModelRespository<ServerT
     }
 
     @Override
-    public ServerTypeInfo getModel(String modelKey) throws Exception {
-        HashMap hashMap = getRedisDatabase().executeCommand(new RedisCommand("getServerTypeInfoModel") {
+    public ServerTypeWorld getModel(String modelKey) throws Exception {
+        HashMap hashMap = getRedisDatabase().executeCommand(new RedisCommand("getWorldInfoModel") {
             @Override
             public String[] keysToWatch() {
                 return new String[]{modelKey};
@@ -50,16 +50,16 @@ public class RedisServerTypeInfoRepository extends RedisModelRespository<ServerT
             }
         }, HashMap.class);
         if (hashMap != null) {
-            ServerTypeInfo serverTypeInfo = new ServerTypeInfo();
-            serverTypeInfo.fromHash(hashMap);
-            return serverTypeInfo;
+            ServerTypeWorld serverTypeWorld = new ServerTypeWorld();
+            serverTypeWorld.fromHash(hashMap);
+            return serverTypeWorld;
         }
         return null;
     }
 
     @Override
-    public void saveModel(ServerTypeInfo model) throws Exception {
-        getRedisDatabase().executeCommand(new RedisCommand("saveServerTypeInfoModel") {
+    public void saveModel(ServerTypeWorld model) throws Exception {
+        getRedisDatabase().executeCommand(new RedisCommand("saveWorldInfoModel") {
             @Override
             public String[] keysToWatch() {
                 return new String[0];
@@ -73,7 +73,7 @@ public class RedisServerTypeInfoRepository extends RedisModelRespository<ServerT
             @Override
             public void command(Transaction transaction) {
                 transaction.hmset(model.getKey(), model.toHash());
-                transaction.sadd(listKey(model.getNetwork().getId()), model.getKey());
+                transaction.sadd(listKey(model.getServerType().getId()), model.getKey());
             }
 
             @Override
