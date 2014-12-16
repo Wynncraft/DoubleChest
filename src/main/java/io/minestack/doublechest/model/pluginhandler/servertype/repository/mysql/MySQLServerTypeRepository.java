@@ -21,7 +21,7 @@ public class MySQLServerTypeRepository extends MySQLModelRepository<ServerType> 
         ArrayList<ServerType> serverTypes = getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                return getMySQLDatabase().getBeansInfo(connection, "select id, name, description, ram, players from servertypes", ServerType.class);
+                return getMySQLDatabase().getBeansInfo(connection, "select id, name, description, ram, players, updated_at from servertypes", ServerType.class);
             }
         }, ArrayList.class);
 
@@ -38,7 +38,7 @@ public class MySQLServerTypeRepository extends MySQLModelRepository<ServerType> 
         ServerType serverType = getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                return getMySQLDatabase().getBeanInfo(connection, "select id, name, description, ram, players from servertypes where id='"+modelId+"'", ServerType.class);
+                return getMySQLDatabase().getBeanInfo(connection, "select id, name, description, ram, players, updated_at from servertypes where id='"+modelId+"'", ServerType.class);
             }
         }, ServerType.class);
 

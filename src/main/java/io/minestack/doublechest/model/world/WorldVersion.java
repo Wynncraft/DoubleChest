@@ -4,6 +4,7 @@ import io.minestack.doublechest.model.Model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 
 public class WorldVersion extends Model {
@@ -32,6 +33,7 @@ public class WorldVersion extends Model {
         hash.put("world", world.getKey());
         hash.put("version", version);
         hash.put("description", description);
+        hash.put("updated_at", getUpdated_at().getTime()+"");
         return hash;
     }
 
@@ -41,5 +43,6 @@ public class WorldVersion extends Model {
         //setWorld(DoubleChest.INSTANCE.getRedisDatabase().getWorldRepository().getModel(hash.get("world")));
         setVersion(hash.get("version"));
         setDescription(hash.get("description"));
+        setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
     }
 }

@@ -25,7 +25,7 @@ public class MySQLPluginVersionRepository extends MySQLModelRepository<PluginVer
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                ArrayList<PluginVersion> pluginVersions = getMySQLDatabase().getBeansInfo(connection, "select id, version, description from plugin_versions", PluginVersion.class);
+                ArrayList<PluginVersion> pluginVersions = getMySQLDatabase().getBeansInfo(connection, "select id, version, description, updated_at from plugin_versions", PluginVersion.class);
 
                 for (PluginVersion pluginVersion : pluginVersions) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select plugin_id from plugin_versions where id='"+pluginVersion.getId()+"'");
@@ -46,7 +46,7 @@ public class MySQLPluginVersionRepository extends MySQLModelRepository<PluginVer
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                PluginVersion pluginVersion = getMySQLDatabase().getBeanInfo(connection, "select id, version, description from plugin_versions where id='"+modelId+"'", PluginVersion.class);
+                PluginVersion pluginVersion = getMySQLDatabase().getBeanInfo(connection, "select id, version, description, updated_at from plugin_versions where id='"+modelId+"'", PluginVersion.class);
 
                 if (pluginVersion != null) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select plugin_id from plugin_versions where id='"+modelId+"'");
@@ -68,7 +68,7 @@ public class MySQLPluginVersionRepository extends MySQLModelRepository<PluginVer
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                ArrayList<PluginVersion> pluginVersions = getMySQLDatabase().getBeansInfo(connection, "select id, version, description from plugin_versions where plugin_id='"+plugin.getId()+"'", PluginVersion.class);
+                ArrayList<PluginVersion> pluginVersions = getMySQLDatabase().getBeansInfo(connection, "select id, version, description, updated_at from plugin_versions where plugin_id='"+plugin.getId()+"'", PluginVersion.class);
 
                 for (PluginVersion pluginVersion : pluginVersions) {
                     pluginVersion.setPlugin(plugin);

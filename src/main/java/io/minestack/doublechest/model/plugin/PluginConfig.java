@@ -4,6 +4,7 @@ import io.minestack.doublechest.model.Model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 
 public class PluginConfig extends Model {
@@ -37,6 +38,7 @@ public class PluginConfig extends Model {
         hash.put("name", name);
         hash.put("description", description);
         hash.put("directory", directory);
+        hash.put("updated_at", getUpdated_at().getTime()+"");
         return hash;
     }
 
@@ -47,5 +49,6 @@ public class PluginConfig extends Model {
         setName(hash.get("name"));
         setDescription(hash.get("description"));
         setDirectory(hash.get("directory"));
+        setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
     }
 }

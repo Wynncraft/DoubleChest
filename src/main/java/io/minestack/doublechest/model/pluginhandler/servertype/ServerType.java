@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONArray;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -51,6 +52,7 @@ public class ServerType extends PluginHolder {
             worlds.put(serverTypeWorld.getKey());
         }
         hash.put("worlds", worlds.toString());
+        hash.put("updated_at", getUpdated_at().getTime()+"");
         return hash;
     }
 
@@ -79,5 +81,6 @@ public class ServerType extends PluginHolder {
                 this.worlds.add(serverTypeWorld);
             }
         }
+        setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
     }
 }

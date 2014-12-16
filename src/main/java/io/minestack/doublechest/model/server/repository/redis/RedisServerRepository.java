@@ -12,6 +12,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.SortingParams;
 import redis.clients.jedis.Transaction;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -142,7 +143,7 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
                         try {
                             Server server = getModel(serverKey);
                             if (server != null) {
-                                if (server.getLastUpdate() + 30000 < System.currentTimeMillis()) {
+                                if (server.getUpdated_at().after(new Timestamp(System.currentTimeMillis() - 30000)) == false) {
                                     removeModel(server, network, networkServerType.getServerType());
                                 }
                             }

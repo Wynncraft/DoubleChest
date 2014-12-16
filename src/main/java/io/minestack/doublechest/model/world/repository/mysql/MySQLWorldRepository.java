@@ -24,7 +24,7 @@ public class MySQLWorldRepository extends MySQLModelRepository<World> {
         ArrayList<World> worlds = getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                return getMySQLDatabase().getBeansInfo(connection, "select id, name, description, directory from worlds", World.class);
+                return getMySQLDatabase().getBeansInfo(connection, "select id, name, description, directory, updated_at from worlds", World.class);
             }
         }, ArrayList.class);
 
@@ -45,7 +45,7 @@ public class MySQLWorldRepository extends MySQLModelRepository<World> {
         World world = getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                return getMySQLDatabase().getBeanInfo(connection, "select id, name, description, directory from worlds where id='"+modelId+"'", World.class);
+                return getMySQLDatabase().getBeanInfo(connection, "select id, name, description, directory, updated_at from worlds where id='"+modelId+"'", World.class);
             }
         }, World.class);
 

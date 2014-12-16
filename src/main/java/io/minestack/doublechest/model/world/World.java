@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONArray;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -43,6 +44,7 @@ public class World extends Model {
             versions.put(version.getKey());
         }
         hash.put("versions", versions.toString());
+        hash.put("updated_at", getUpdated_at().getTime()+"");
         return hash;
     }
 
@@ -61,5 +63,6 @@ public class World extends Model {
                 this.versions.add(worldVersion);
             }
         }
+        setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
     }
 }

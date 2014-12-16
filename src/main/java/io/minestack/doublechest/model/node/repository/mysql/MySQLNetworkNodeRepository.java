@@ -23,7 +23,7 @@ public class MySQLNetworkNodeRepository extends MySQLModelRepository<NetworkNode
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                ArrayList<NetworkNode> networkNodes = getMySQLDatabase().getBeansInfo(connection, "select id from network_nodes", NetworkNode.class);
+                ArrayList<NetworkNode> networkNodes = getMySQLDatabase().getBeansInfo(connection, "select id, updated_at from network_nodes", NetworkNode.class);
 
                 for (NetworkNode networkNode : networkNodes) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select network_id, node_id, node_public_address_id, bungee_type_id where id='"+networkNode.getId()+"'");
@@ -49,7 +49,7 @@ public class MySQLNetworkNodeRepository extends MySQLModelRepository<NetworkNode
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                NetworkNode networkNode = getMySQLDatabase().getBeanInfo(connection, "select id from network_nodes where id='"+modelId+"'", NetworkNode.class);
+                NetworkNode networkNode = getMySQLDatabase().getBeanInfo(connection, "select id, updated_at from network_nodes where id='"+modelId+"'", NetworkNode.class);
 
                 if (networkNode != null) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select network_id, node_id, node_public_address_id, bungee_type_id where id='"+modelId+"'");
@@ -80,7 +80,7 @@ public class MySQLNetworkNodeRepository extends MySQLModelRepository<NetworkNode
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                ArrayList<NetworkNode> networkNodes = getMySQLDatabase().getBeansInfo(connection, "select id from network_nodes", NetworkNode.class);
+                ArrayList<NetworkNode> networkNodes = getMySQLDatabase().getBeansInfo(connection, "select id, updated_at from network_nodes", NetworkNode.class);
 
                 for (NetworkNode networkNode : networkNodes) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select node_id, node_public_address_id, bungee_type_id where id='"+networkNode.getId()+"'");

@@ -23,7 +23,7 @@ public class MySQLNodeRepository extends MySQLModelRepository<Node> {
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                ArrayList<Node> nodes = getMySQLDatabase().getBeansInfo(connection, "select id, name, privateAddress, ram from nodes", Node.class);
+                ArrayList<Node> nodes = getMySQLDatabase().getBeansInfo(connection, "select id, name, privateAddress, ram, updated_at from nodes", Node.class);
 
                 for (Node node : nodes) {
                     try {
@@ -42,7 +42,7 @@ public class MySQLNodeRepository extends MySQLModelRepository<Node> {
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                Node node = getMySQLDatabase().getBeanInfo(connection, "select id, name, privateAddress, ram from nodes where id='"+modelId+"'", Node.class);
+                Node node = getMySQLDatabase().getBeanInfo(connection, "select id, name, privateAddress, ram, updated_at from nodes where id='"+modelId+"'", Node.class);
 
                 if (node != null) {
                     try {

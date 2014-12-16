@@ -6,6 +6,7 @@ import io.minestack.doublechest.model.network.Network;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 
 public class NetworkServerType extends Model {
@@ -39,6 +40,7 @@ public class NetworkServerType extends Model {
         hash.put("servertype", serverType.getKey());
         hash.put("amount", amount+"");
         hash.put("defaultServerType", defaultType+"");
+        hash.put("updated_at", getUpdated_at().getTime()+"");
         return hash;
     }
 
@@ -49,5 +51,6 @@ public class NetworkServerType extends Model {
         setServerType(DoubleChest.INSTANCE.getRedisDatabase().getServerTypeRepository().getModel(hash.get("servertype")));
         setAmount(Integer.parseInt(hash.get("amount")));
         setDefaultType(Boolean.parseBoolean(hash.get("defaultServerType")));
+        setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
     }
 }

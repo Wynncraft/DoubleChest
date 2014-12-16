@@ -27,7 +27,7 @@ public class MySQLServerTypeWorldRepostiroy extends MySQLModelRepository<ServerT
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                ArrayList<ServerTypeWorld> serverTypeWorlds = getMySQLDatabase().getBeansInfo(connection, "select id, defaultWorld from servertype_worlds", ServerTypeWorld.class);
+                ArrayList<ServerTypeWorld> serverTypeWorlds = getMySQLDatabase().getBeansInfo(connection, "select id, defaultWorld, updated_at from servertype_worlds", ServerTypeWorld.class);
 
                 for (ServerTypeWorld serverTypeWorld : serverTypeWorlds) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select servertype_id, world_id, worldversion_id from servertype_worlds where id='"+ serverTypeWorld.getId()+"'");
@@ -55,7 +55,7 @@ public class MySQLServerTypeWorldRepostiroy extends MySQLModelRepository<ServerT
             public Object command(Connection connection) {
                 ServerTypeWorld serverTypeWorld;
 
-                serverTypeWorld = getMySQLDatabase().getBeanInfo(connection, "select id, defaultWorld from servertype_worlds where id='"+modelId+"'", ServerTypeWorld.class);
+                serverTypeWorld = getMySQLDatabase().getBeanInfo(connection, "select id, defaultWorld, updated_at from servertype_worlds where id='"+modelId+"'", ServerTypeWorld.class);
 
                 if (serverTypeWorld != null) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select servertype_id, world_id, worldversion_id from servertype_worlds where id='"+modelId+"'");
@@ -84,7 +84,7 @@ public class MySQLServerTypeWorldRepostiroy extends MySQLModelRepository<ServerT
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                ArrayList<ServerTypeWorld> serverTypeWorlds = getMySQLDatabase().getBeansInfo(connection, "select id, defaultWorld from servertype_worlds where servertype_id='"+serverType.getId()+"'", ServerTypeWorld.class);
+                ArrayList<ServerTypeWorld> serverTypeWorlds = getMySQLDatabase().getBeansInfo(connection, "select id, defaultWorld, updated_at from servertype_worlds where servertype_id='"+serverType.getId()+"'", ServerTypeWorld.class);
 
                 for (ServerTypeWorld serverTypeWorld : serverTypeWorlds) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select world_id, worldversion_id from servertype_worlds where id='"+ serverTypeWorld.getId()+"'");

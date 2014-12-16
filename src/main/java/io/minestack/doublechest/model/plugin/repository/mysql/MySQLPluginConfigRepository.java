@@ -25,7 +25,7 @@ public class MySQLPluginConfigRepository extends MySQLModelRepository<PluginConf
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                ArrayList<PluginConfig> pluginConfigs = getMySQLDatabase().getBeansInfo(connection, "select id, name, description from plugin_configs", PluginConfig.class);
+                ArrayList<PluginConfig> pluginConfigs = getMySQLDatabase().getBeansInfo(connection, "select id, name, description, updated_at from plugin_configs", PluginConfig.class);
 
                 for (PluginConfig pluginConfig : pluginConfigs) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select plugin_id from plugin_configs where id='"+pluginConfig.getId()+"'");
@@ -46,7 +46,7 @@ public class MySQLPluginConfigRepository extends MySQLModelRepository<PluginConf
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                PluginConfig pluginConfig = getMySQLDatabase().getBeanInfo(connection, "select id, name, description from plugin_configs where id='"+modelId+"'", PluginConfig.class);
+                PluginConfig pluginConfig = getMySQLDatabase().getBeanInfo(connection, "select id, name, description, updated_at from plugin_configs where id='"+modelId+"'", PluginConfig.class);
 
                 if (pluginConfig != null) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select plugin_id from plugin_configs where id='"+modelId+"'");
@@ -68,7 +68,7 @@ public class MySQLPluginConfigRepository extends MySQLModelRepository<PluginConf
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                ArrayList<PluginConfig> pluginConfigs = getMySQLDatabase().getBeansInfo(connection, "select id, name, description from plugin_configs where plugin_id='"+plugin.getId()+"'", PluginConfig.class);
+                ArrayList<PluginConfig> pluginConfigs = getMySQLDatabase().getBeansInfo(connection, "select id, name, description, updated_at from plugin_configs where plugin_id='"+plugin.getId()+"'", PluginConfig.class);
 
                 for (PluginConfig pluginConfig : pluginConfigs) {
                     pluginConfig.setPlugin(plugin);

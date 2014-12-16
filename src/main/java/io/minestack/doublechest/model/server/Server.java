@@ -8,6 +8,7 @@ import io.minestack.doublechest.model.pluginhandler.servertype.ServerType;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 
 public class Server extends Model {
@@ -24,10 +25,6 @@ public class Server extends Model {
     @Setter
     private Node node;
 
-    @Getter
-    @Setter
-    private long lastUpdate;
-
     @Override
     public String getKey() {
         return network.getKey() + ":server:" + serverType.getId() + ":" + getId();
@@ -40,7 +37,7 @@ public class Server extends Model {
         hash.put("servertype", serverType.getKey());
         hash.put("network", network.getKey());
         hash.put("node", node.getKey());
-        hash.put("lastUpdate", lastUpdate+"");
+        hash.put("updated_at", getUpdated_at().getTime()+"");
         return hash;
     }
 
@@ -50,6 +47,6 @@ public class Server extends Model {
         setServerType(DoubleChest.INSTANCE.getRedisDatabase().getServerTypeRepository().getModel(hash.get("servertype")));
         setNetwork(DoubleChest.INSTANCE.getRedisDatabase().getNetworkRepository().getModel(hash.get("network")));
         setNode(DoubleChest.INSTANCE.getRedisDatabase().getNodeRepository().getModel(hash.get("node")));
-        setLastUpdate(Long.parseLong(hash.get("lastUpdate")));
+        setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
     }
 }

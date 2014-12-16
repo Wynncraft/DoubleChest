@@ -25,7 +25,7 @@ public class MySQLWorldVersionRepository extends MySQLModelRepository<WorldVersi
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                ArrayList<WorldVersion> worldVersions = getMySQLDatabase().getBeansInfo(connection, "select id, version, description from world_versions", WorldVersion.class);
+                ArrayList<WorldVersion> worldVersions = getMySQLDatabase().getBeansInfo(connection, "select id, version, description, updated_at from world_versions", WorldVersion.class);
 
                 for (WorldVersion worldVersion : worldVersions) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select world_id from world_versions where id='"+worldVersion.getId()+"'");
@@ -48,7 +48,7 @@ public class MySQLWorldVersionRepository extends MySQLModelRepository<WorldVersi
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                WorldVersion worldVersion = getMySQLDatabase().getBeanInfo(connection, "select id, version, description from world_versions where id='"+modelId+"'", WorldVersion.class);
+                WorldVersion worldVersion = getMySQLDatabase().getBeanInfo(connection, "select id, version, description, updated_at from world_versions where id='"+modelId+"'", WorldVersion.class);
 
                 Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select world_id from world_versions where id='"+modelId+"'");
 
@@ -72,7 +72,7 @@ public class MySQLWorldVersionRepository extends MySQLModelRepository<WorldVersi
         ArrayList<WorldVersion> worldVersions = getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                return getMySQLDatabase().getBeansInfo(connection, "select id, version, description from world_versions where world_id='"+world.getId()+"'", WorldVersion.class);
+                return getMySQLDatabase().getBeansInfo(connection, "select id, version, description, updated_at from world_versions where world_id='"+world.getId()+"'", WorldVersion.class);
             }
         }, ArrayList.class);
 

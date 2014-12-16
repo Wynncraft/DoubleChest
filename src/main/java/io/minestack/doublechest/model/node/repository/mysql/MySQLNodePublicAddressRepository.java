@@ -25,7 +25,7 @@ public class MySQLNodePublicAddressRepository extends MySQLModelRepository<NodeP
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                ArrayList<NodePublicAddress> publicAddresses = getMySQLDatabase().getBeansInfo(connection, "select id, publicAddress from node_public_addresses", NodePublicAddress.class);
+                ArrayList<NodePublicAddress> publicAddresses = getMySQLDatabase().getBeansInfo(connection, "select id, publicAddress, updated_at from node_public_addresses", NodePublicAddress.class);
 
                 for (NodePublicAddress publicAddress : publicAddresses) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select node_id from node_public_addresses where id='"+publicAddress.getId()+"'");
@@ -46,7 +46,7 @@ public class MySQLNodePublicAddressRepository extends MySQLModelRepository<NodeP
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                NodePublicAddress publicAddress = getMySQLDatabase().getBeanInfo(connection, "select id, publicAddress from node_public_addresses where id='"+modelId+"'", NodePublicAddress.class);
+                NodePublicAddress publicAddress = getMySQLDatabase().getBeanInfo(connection, "select id, publicAddress, updated_at from node_public_addresses where id='"+modelId+"'", NodePublicAddress.class);
 
                 if (publicAddress != null) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select node_id from node_public_addresses where id='"+modelId+"'");
@@ -71,7 +71,7 @@ public class MySQLNodePublicAddressRepository extends MySQLModelRepository<NodeP
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                ArrayList<NodePublicAddress> publicAddresses = getMySQLDatabase().getBeansInfo(connection, "select id, publicAddress from node_public_addresses where node_id='"+node.getId()+"'", NodePublicAddress.class);
+                ArrayList<NodePublicAddress> publicAddresses = getMySQLDatabase().getBeansInfo(connection, "select id, publicAddress, updated_at from node_public_addresses where node_id='"+node.getId()+"'", NodePublicAddress.class);
 
                 for (NodePublicAddress publicAddress : publicAddresses) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select node_id from node_public_addresses where id='"+publicAddress.getId()+"'");

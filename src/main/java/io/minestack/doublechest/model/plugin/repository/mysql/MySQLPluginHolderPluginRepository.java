@@ -25,7 +25,7 @@ public class MySQLPluginHolderPluginRepository extends MySQLModelRepository<Plug
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                ArrayList<PluginHolderPlugin> pluginHolderPlugins = getMySQLDatabase().getBeansInfo(connection, "select id from pluginholder_plugins", PluginHolderPlugin.class);
+                ArrayList<PluginHolderPlugin> pluginHolderPlugins = getMySQLDatabase().getBeansInfo(connection, "select id, updated_at from pluginholder_plugins", PluginHolderPlugin.class);
 
                 for (PluginHolderPlugin pluginHolderPlugin : pluginHolderPlugins) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select pluginholder_id, pluginholder_type, " +
@@ -58,7 +58,7 @@ public class MySQLPluginHolderPluginRepository extends MySQLModelRepository<Plug
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                PluginHolderPlugin pluginHolderPlugin = getMySQLDatabase().getBeanInfo(connection, "select id from pluginholder_plugins where id='"+modelId+"'", PluginHolderPlugin.class);
+                PluginHolderPlugin pluginHolderPlugin = getMySQLDatabase().getBeanInfo(connection, "select id, updated_at from pluginholder_plugins where id='"+modelId+"'", PluginHolderPlugin.class);
 
                 if (pluginHolderPlugin != null) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select pluginholder_id, pluginholder_type, " +
@@ -92,7 +92,7 @@ public class MySQLPluginHolderPluginRepository extends MySQLModelRepository<Plug
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                ArrayList<PluginHolderPlugin> pluginHolderPlugins = getMySQLDatabase().getBeansInfo(connection, "select id from pluginholder_plugins where pluginholder_id='"+pluginHolder.getId()+"' and pluginholder_type='"+pluginHolderType+"'", PluginHolderPlugin.class);
+                ArrayList<PluginHolderPlugin> pluginHolderPlugins = getMySQLDatabase().getBeansInfo(connection, "select id, updated_at from pluginholder_plugins where pluginholder_id='"+pluginHolder.getId()+"' and pluginholder_type='"+pluginHolderType+"'", PluginHolderPlugin.class);
 
                 for (PluginHolderPlugin pluginHolderPlugin : pluginHolderPlugins) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select plugin_id, pluginversion_id, pluginconfig_id from pluginholder_plugins where id='"+pluginHolderPlugin.getId()+"'");

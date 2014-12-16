@@ -21,7 +21,7 @@ public class MySQLBungeeTypeRepository extends MySQLModelRepository<BungeeType> 
         ArrayList<BungeeType> bungeeTypes = getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                return getMySQLDatabase().getBeansInfo(connection, "select id, name, description, ram from bungeetypes", BungeeType.class);
+                return getMySQLDatabase().getBeansInfo(connection, "select id, name, description, ram, updated_at from bungeetypes", BungeeType.class);
             }
         }, ArrayList.class);
 
@@ -37,7 +37,7 @@ public class MySQLBungeeTypeRepository extends MySQLModelRepository<BungeeType> 
         BungeeType bungeeType = getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                return getMySQLDatabase().getBeanInfo(connection, "select id, name, description, ram from bungeetypes where id='"+modelId+"'", BungeeType.class);
+                return getMySQLDatabase().getBeanInfo(connection, "select id, name, description, ram, updated_at from bungeetypes where id='"+modelId+"'", BungeeType.class);
             }
         }, BungeeType.class);
 

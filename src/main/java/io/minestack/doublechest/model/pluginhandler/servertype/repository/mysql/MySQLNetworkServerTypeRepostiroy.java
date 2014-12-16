@@ -25,7 +25,7 @@ public class MySQLNetworkServerTypeRepostiroy extends MySQLModelRepository<Netwo
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                ArrayList<NetworkServerType> networkServerTypes = getMySQLDatabase().getBeansInfo(connection, "select id, amount, defaultServerType from network_servertypes", NetworkServerType.class);
+                ArrayList<NetworkServerType> networkServerTypes = getMySQLDatabase().getBeansInfo(connection, "select id, amount, defaultServerType, updated_at from network_servertypes", NetworkServerType.class);
 
                 for (NetworkServerType networkServerType : networkServerTypes) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select network_id, server_type_id from network_servertypes where id='"+networkServerType.getId()+"'");
@@ -47,7 +47,7 @@ public class MySQLNetworkServerTypeRepostiroy extends MySQLModelRepository<Netwo
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                NetworkServerType networkServerType = getMySQLDatabase().getBeanInfo(connection, "select id, amount, defaultServerType from network_servertypes where id='"+modelId+"'", NetworkServerType.class);
+                NetworkServerType networkServerType = getMySQLDatabase().getBeanInfo(connection, "select id, amount, defaultServerType, updated_at from network_servertypes where id='"+modelId+"'", NetworkServerType.class);
 
                 if (networkServerType != null) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select network_id, server_type_id from network_servertypes where id='"+modelId+"'");
@@ -70,7 +70,7 @@ public class MySQLNetworkServerTypeRepostiroy extends MySQLModelRepository<Netwo
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                ArrayList<NetworkServerType> networkServerTypes = getMySQLDatabase().getBeansInfo(connection, "select id, amount, defaultServerType from network_servertypes", NetworkServerType.class);
+                ArrayList<NetworkServerType> networkServerTypes = getMySQLDatabase().getBeansInfo(connection, "select id, amount, defaultServerType, updated_at from network_servertypes", NetworkServerType.class);
 
                 for (NetworkServerType networkServerType : networkServerTypes) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select server_type_id from network_servertypes where id='"+networkServerType.getId()+"'");

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONArray;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 
 public class BungeeType extends PluginHolder {
@@ -36,6 +37,7 @@ public class BungeeType extends PluginHolder {
             plugins.put(pluginHolderPlugin.getKey());
         }
         hash.put("plugins", plugins.toString());
+        hash.put("updated_at", getUpdated_at().getTime()+"");
         return hash;
     }
 
@@ -54,5 +56,6 @@ public class BungeeType extends PluginHolder {
                 getPlugins().add(pluginHolderPlugin);
             }
         }
+        setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
     }
 }

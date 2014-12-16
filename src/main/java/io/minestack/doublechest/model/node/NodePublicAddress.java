@@ -4,6 +4,7 @@ import io.minestack.doublechest.model.Model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 
 public class NodePublicAddress extends Model {
@@ -27,6 +28,7 @@ public class NodePublicAddress extends Model {
         hash.put("id", node.getId()+"");
         hash.put("node", node.getKey());
         hash.put("publicAddress", publicAddress);
+        hash.put("updated_at", getUpdated_at().getTime()+"");
         return hash;
     }
 
@@ -35,5 +37,6 @@ public class NodePublicAddress extends Model {
         setId(Integer.parseInt(hash.get("id")));
         //setNode(DoubleChest.INSTANCE.getRedisDatabase().getNodeRepository().getModel(hash.get("node")));
         setPublicAddress(hash.get("publicAddress"));
+        setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
     }
 }

@@ -21,7 +21,7 @@ public class MySQLPluginRepository extends MySQLModelRepository<Plugin> {
         ArrayList<Plugin> plugins = getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                return getMySQLDatabase().getBeansInfo(connection, "select id, name, description, type, directory from plugins", Plugin.class);
+                return getMySQLDatabase().getBeansInfo(connection, "select id, name, description, type, directory, updated_at from plugins", Plugin.class);
             }
         }, ArrayList.class);
 
@@ -38,7 +38,7 @@ public class MySQLPluginRepository extends MySQLModelRepository<Plugin> {
         Plugin plugin = getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                return getMySQLDatabase().getBeanInfo(connection, "select id, name, description, type, directory from plugins where id='"+modelId+"'", Plugin.class);
+                return getMySQLDatabase().getBeanInfo(connection, "select id, name, description, type, directory, updated_at from plugins where id='"+modelId+"'", Plugin.class);
             }
         }, Plugin.class);
 

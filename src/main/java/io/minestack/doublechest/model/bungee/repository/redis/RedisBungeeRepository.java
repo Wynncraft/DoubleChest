@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -144,7 +145,7 @@ public class RedisBungeeRepository extends RedisModelRespository<Bungee> {
                         try {
                             Bungee bungee = getModel(bungeeKey);
                             if (bungee != null) {
-                                if (bungee.getLastUpdate() + 30000 < System.currentTimeMillis()) {
+                                if (bungee.getUpdated_at().after(new Timestamp(System.currentTimeMillis() - 30000)) == false) {
                                     removeModel(bungee, network, bungeeType);
                                 }
                             }

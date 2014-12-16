@@ -8,6 +8,7 @@ import io.minestack.doublechest.model.node.Node;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 
 public class Bungee extends Model {
@@ -24,10 +25,6 @@ public class Bungee extends Model {
     @Setter
     private Node node;
 
-    @Getter
-    @Setter
-    private long lastUpdate;
-
     @Override
     public String getKey() {
         return network.getKey() + ":bungee:" + bungeeType.getId() + ":" + node.getId();
@@ -39,7 +36,7 @@ public class Bungee extends Model {
         hash.put("bungeetype", bungeeType.getKey());
         hash.put("network", network.getKey());
         hash.put("node", node.getKey());
-        hash.put("lastUpdate", lastUpdate+"");
+        hash.put("updated_at", getUpdated_at().getTime()+"");
         return hash;
     }
 
@@ -48,6 +45,6 @@ public class Bungee extends Model {
         setBungeeType(DoubleChest.INSTANCE.getRedisDatabase().getBungeeTypeRepository().getModel(hash.get("bungeetype")));
         setNetwork(DoubleChest.INSTANCE.getRedisDatabase().getNetworkRepository().getModel(hash.get("network")));
         setNode(DoubleChest.INSTANCE.getRedisDatabase().getNodeRepository().getModel(hash.get("node")));
-        setLastUpdate(Long.parseLong("lastUpdate"));
+        setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
     }
 }

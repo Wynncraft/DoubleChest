@@ -6,6 +6,7 @@ import io.minestack.doublechest.model.pluginhandler.PluginHolder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 
 public class PluginHolderPlugin extends Model {
@@ -39,6 +40,7 @@ public class PluginHolderPlugin extends Model {
         hash.put("plugin", plugin.getKey());
         hash.put("version", version.getKey());
         hash.put("config", config.getKey());
+        hash.put("updated_at", getUpdated_at().getTime()+"");
         return hash;
     }
 
@@ -54,5 +56,6 @@ public class PluginHolderPlugin extends Model {
         setPlugin(DoubleChest.INSTANCE.getRedisDatabase().getPluginRepository().getModel(hash.get("plugin")));
         setVersion(DoubleChest.INSTANCE.getRedisDatabase().getPluginVersionRepository().getModel(hash.get("version")));
         setConfig(DoubleChest.INSTANCE.getRedisDatabase().getPluginConfigRepository().getModel(hash.get("config")));
+        setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
     }
 }

@@ -7,6 +7,7 @@ import io.minestack.doublechest.model.pluginhandler.bungeetype.BungeeType;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 
 public class NetworkNode extends Model {
@@ -42,6 +43,7 @@ public class NetworkNode extends Model {
             hash.put("bungeeType", bungeeType.getKey());
             hash.put("publicAddress", nodePublicAddress.getKey());
         }
+        hash.put("updated_at", getUpdated_at().getTime()+"");
         return hash;
     }
 
@@ -54,5 +56,6 @@ public class NetworkNode extends Model {
             setBungeeType(DoubleChest.INSTANCE.getRedisDatabase().getBungeeTypeRepository().getModel(hash.get("bungeeType")));
             setNodePublicAddress(DoubleChest.INSTANCE.getRedisDatabase().getNodePublicAddressRepository().getModel(hash.get("publicAddress")));
         }
+        setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
     }
 }

@@ -21,7 +21,7 @@ public class MySQLNetworkRepository extends MySQLModelRepository<Network> {
         ArrayList<Network> networks = getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                return getMySQLDatabase().getBeansInfo(connection, "select id, name, description from networks", Network.class);
+                return getMySQLDatabase().getBeansInfo(connection, "select id, name, description, updated_at from networks", Network.class);
             }
         }, ArrayList.class);
 
@@ -39,7 +39,7 @@ public class MySQLNetworkRepository extends MySQLModelRepository<Network> {
             @Override
             public Object command(Connection connection) {
 
-                return getMySQLDatabase().getBeanInfo(connection, "select id, name, description from networks where id='"+modelId+"'", Network.class);
+                return getMySQLDatabase().getBeanInfo(connection, "select id, name, description, updated_at from networks where id='"+modelId+"'", Network.class);
             }
         }, Network.class);
 
