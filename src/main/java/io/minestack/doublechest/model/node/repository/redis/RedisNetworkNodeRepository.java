@@ -28,7 +28,7 @@ public class RedisNetworkNodeRepository extends RedisModelRespository<NetworkNod
 
     @Override
     public NetworkNode getModel(String modelKey) throws Exception {
-        HashMap hashMap = getRedisDatabase().executeCommand(new RedisCommand("getNodeInfoModel") {
+        HashMap hashMap = getRedisDatabase().executeCommand(new RedisCommand("getNetworkNodeModel") {
             @Override
             public String[] keysToWatch() {
                 return new String[]{modelKey};
@@ -59,7 +59,7 @@ public class RedisNetworkNodeRepository extends RedisModelRespository<NetworkNod
 
     @Override
     public void saveModel(NetworkNode model) throws Exception {
-        getRedisDatabase().executeCommand(new RedisCommand("saveNodeInfoModel") {
+        getRedisDatabase().executeCommand(new RedisCommand("saveNetworkNodeModel") {
             @Override
             public String[] keysToWatch() {
                 return new String[0];

@@ -28,7 +28,7 @@ public class RedisNetworkServerTypeRepository extends RedisModelRespository<Netw
 
     @Override
     public NetworkServerType getModel(String modelKey) throws Exception {
-        HashMap hashMap = getRedisDatabase().executeCommand(new RedisCommand("getServerTypeInfoModel") {
+        HashMap hashMap = getRedisDatabase().executeCommand(new RedisCommand("getNetworkServerTypeModel") {
             @Override
             public String[] keysToWatch() {
                 return new String[]{modelKey};
@@ -59,7 +59,7 @@ public class RedisNetworkServerTypeRepository extends RedisModelRespository<Netw
 
     @Override
     public void saveModel(NetworkServerType model) throws Exception {
-        getRedisDatabase().executeCommand(new RedisCommand("saveServerTypeInfoModel") {
+        getRedisDatabase().executeCommand(new RedisCommand("saveNetworkServerTypeModel") {
             @Override
             public String[] keysToWatch() {
                 return new String[0];

@@ -28,7 +28,7 @@ public class RedisPluginHolderPluginRepository extends RedisModelRespository<Plu
 
     @Override
     public PluginHolderPlugin getModel(String modelKey) throws Exception {
-        HashMap hashMap = getRedisDatabase().executeCommand(new RedisCommand("getPluginInfoModel") {
+        HashMap hashMap = getRedisDatabase().executeCommand(new RedisCommand("getPluginHolderPluginModel") {
             @Override
             public String[] keysToWatch() {
                 return new String[]{modelKey};
@@ -59,7 +59,7 @@ public class RedisPluginHolderPluginRepository extends RedisModelRespository<Plu
 
     @Override
     public void saveModel(PluginHolderPlugin model) throws Exception {
-        getRedisDatabase().executeCommand(new RedisCommand("savePluginInfoModel") {
+        getRedisDatabase().executeCommand(new RedisCommand("savePluginHolderPluginModel") {
             @Override
             public String[] keysToWatch() {
                 return new String[0];

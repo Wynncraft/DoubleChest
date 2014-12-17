@@ -28,7 +28,7 @@ public class RedisServerTypeWorldRepository extends RedisModelRespository<Server
 
     @Override
     public ServerTypeWorld getModel(String modelKey) throws Exception {
-        HashMap hashMap = getRedisDatabase().executeCommand(new RedisCommand("getWorldInfoModel") {
+        HashMap hashMap = getRedisDatabase().executeCommand(new RedisCommand("getServerTypeWorldModel") {
             @Override
             public String[] keysToWatch() {
                 return new String[]{modelKey};
@@ -59,7 +59,7 @@ public class RedisServerTypeWorldRepository extends RedisModelRespository<Server
 
     @Override
     public void saveModel(ServerTypeWorld model) throws Exception {
-        getRedisDatabase().executeCommand(new RedisCommand("saveWorldInfoModel") {
+        getRedisDatabase().executeCommand(new RedisCommand("saveServerTypeWorldModel") {
             @Override
             public String[] keysToWatch() {
                 return new String[0];
