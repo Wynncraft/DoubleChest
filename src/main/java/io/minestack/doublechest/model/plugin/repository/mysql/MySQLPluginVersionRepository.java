@@ -30,7 +30,7 @@ public class MySQLPluginVersionRepository extends MySQLModelRepository<PluginVer
                 for (PluginVersion pluginVersion : pluginVersions) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select plugin_id from plugin_versions where id='"+pluginVersion.getId()+"'");
                     try {
-                        pluginVersion.setPlugin(getMySQLDatabase().getPluginRepository().getModel((int) relations.get("plugin_id")));
+                        pluginVersion.setPlugin(getMySQLDatabase().getPluginRepository().getModel((long) relations.get("plugin_id")));
                     } catch (SQLException e) {
                         log.error("Threw a Exception in MySQLPluginVersionRepository::getModels::MySQLCommand::command, full stack trace follows: ", e);
                     }
@@ -42,7 +42,7 @@ public class MySQLPluginVersionRepository extends MySQLModelRepository<PluginVer
     }
 
     @Override
-    public PluginVersion getModel(int modelId) throws SQLException {
+    public PluginVersion getModel(long modelId) throws SQLException {
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
@@ -51,7 +51,7 @@ public class MySQLPluginVersionRepository extends MySQLModelRepository<PluginVer
                 if (pluginVersion != null) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select plugin_id from plugin_versions where id='"+modelId+"'");
                     try {
-                        pluginVersion.setPlugin(getMySQLDatabase().getPluginRepository().getModel((int) relations.get("plugin_id")));
+                        pluginVersion.setPlugin(getMySQLDatabase().getPluginRepository().getModel((long) relations.get("plugin_id")));
                         return pluginVersion;
                     } catch (SQLException e) {
                         log.error("Threw a Exception in MySQLPluginVersionRepository::getModel::MySQLCommand::command, full stack trace follows: ", e);

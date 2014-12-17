@@ -50,7 +50,7 @@ public class BungeeType extends PluginHolder {
         JSONArray plugins = new JSONArray(hash.get("plugins"));
         for (int i = 0; i < plugins.length(); i++) {
             String pluginKey = plugins.getString(i);
-            PluginHolderPlugin pluginHolderPlugin = DoubleChest.INSTANCE.getRedisDatabase().getPluginInfoRepository().getModel(pluginKey);
+            PluginHolderPlugin pluginHolderPlugin = DoubleChest.INSTANCE.getRedisDatabase().getPluginHolderPluginRepository().getModel(pluginKey);
             if (pluginHolderPlugin != null) {
                 pluginHolderPlugin.setPluginHolder(this);
                 getPlugins().add(pluginHolderPlugin);

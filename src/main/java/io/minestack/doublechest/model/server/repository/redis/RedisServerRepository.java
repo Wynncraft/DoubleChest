@@ -169,7 +169,7 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
 
             @Override
             public boolean conditional(Jedis jedis) {
-                return jedis.exists(listKey);
+                return true;
             }
 
             @Override
@@ -187,7 +187,7 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
             return -1;
         }
 
-        while (list.contains(network.getName()+":server:"+serverType.getName()+":"+nextNum)) {
+        while (list.contains(network.getKey()+":server:"+serverType.getId()+":"+nextNum)) {
             nextNum += 1;
         }
 

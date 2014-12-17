@@ -35,14 +35,14 @@ public class MySQLPluginHolderPluginRepository extends MySQLModelRepository<Plug
                     try {
                         PluginHolder pluginHolder = null;
                         if (pluginHolderType.equals("ServerType")) {
-                            pluginHolder = getMySQLDatabase().getServerTypeRepository().getModel((int) relations.get("pluginholder_id"));
+                            pluginHolder = getMySQLDatabase().getServerTypeRepository().getModel((long) relations.get("pluginholder_id"));
                         } else if (pluginHolderType.equals("BungeeType")) {
-                            pluginHolder = getMySQLDatabase().getBungeeTypeRepository().getModel((int) relations.get("pluginholder_id"));
+                            pluginHolder = getMySQLDatabase().getBungeeTypeRepository().getModel((long) relations.get("pluginholder_id"));
                         }
                         pluginHolderPlugin.setPluginHolder(pluginHolder);
-                        pluginHolderPlugin.setPlugin(getMySQLDatabase().getPluginRepository().getModel((int) relations.get("plugin_id")));
-                        pluginHolderPlugin.setVersion(getMySQLDatabase().getPluginVersionRepository().getModel((int) relations.get("pluginversion_id")));
-                        pluginHolderPlugin.setConfig(getMySQLDatabase().getPluginConfigRepository().getModel((int) relations.get("pluginconfig_id")));
+                        pluginHolderPlugin.setPlugin(getMySQLDatabase().getPluginRepository().getModel((long) relations.get("plugin_id")));
+                        pluginHolderPlugin.setVersion(getMySQLDatabase().getPluginVersionRepository().getModel((long) relations.get("pluginversion_id")));
+                        pluginHolderPlugin.setConfig(getMySQLDatabase().getPluginConfigRepository().getModel((long) relations.get("pluginconfig_id")));
                     } catch (SQLException e) {
                         log.error("Threw a Exception in MySQLPluginHolderPluginRepository::getModel::MySQLCommand::command, full stack trace follows: ", e);
                     }
@@ -54,7 +54,7 @@ public class MySQLPluginHolderPluginRepository extends MySQLModelRepository<Plug
     }
 
     @Override
-    public PluginHolderPlugin getModel(int modelId) throws SQLException {
+    public PluginHolderPlugin getModel(long modelId) throws SQLException {
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
@@ -68,14 +68,14 @@ public class MySQLPluginHolderPluginRepository extends MySQLModelRepository<Plug
                     try {
                         PluginHolder pluginHolder = null;
                         if (pluginHolderType.equals("ServerType")) {
-                            pluginHolder = getMySQLDatabase().getServerTypeRepository().getModel((int) relations.get("pluginholder_id"));
+                            pluginHolder = getMySQLDatabase().getServerTypeRepository().getModel((long) relations.get("pluginholder_id"));
                         } else if (pluginHolderType.equals("BungeeType")) {
-                            pluginHolder = getMySQLDatabase().getBungeeTypeRepository().getModel((int) relations.get("pluginholder_id"));
+                            pluginHolder = getMySQLDatabase().getBungeeTypeRepository().getModel((long) relations.get("pluginholder_id"));
                         }
                         pluginHolderPlugin.setPluginHolder(pluginHolder);
-                        pluginHolderPlugin.setPlugin(getMySQLDatabase().getPluginRepository().getModel((int) relations.get("plugin_id")));
-                        pluginHolderPlugin.setVersion(getMySQLDatabase().getPluginVersionRepository().getModel((int) relations.get("pluginversion_id")));
-                        pluginHolderPlugin.setConfig(getMySQLDatabase().getPluginConfigRepository().getModel((int) relations.get("pluginconfig_id")));
+                        pluginHolderPlugin.setPlugin(getMySQLDatabase().getPluginRepository().getModel((long) relations.get("plugin_id")));
+                        pluginHolderPlugin.setVersion(getMySQLDatabase().getPluginVersionRepository().getModel((long) relations.get("pluginversion_id")));
+                        pluginHolderPlugin.setConfig(getMySQLDatabase().getPluginConfigRepository().getModel((long) relations.get("pluginconfig_id")));
                     } catch (SQLException e) {
                         log.error("Threw a Exception in MySQLPluginHolderPluginRepository::getModel::MySQLCommand::command, full stack trace follows: ", e);
                     }
@@ -99,9 +99,11 @@ public class MySQLPluginHolderPluginRepository extends MySQLModelRepository<Plug
 
                     try {
                         pluginHolderPlugin.setPluginHolder(pluginHolder);
-                        pluginHolderPlugin.setPlugin(getMySQLDatabase().getPluginRepository().getModel((int) relations.get("plugin_id")));
-                        pluginHolderPlugin.setVersion(getMySQLDatabase().getPluginVersionRepository().getModel((int) relations.get("pluginversion_id")));
-                        pluginHolderPlugin.setConfig(getMySQLDatabase().getPluginConfigRepository().getModel((int) relations.get("pluginconfig_id")));
+                        pluginHolderPlugin.setPlugin(getMySQLDatabase().getPluginRepository().getModel((long) relations.get("plugin_id")));
+                        pluginHolderPlugin.setVersion(getMySQLDatabase().getPluginVersionRepository().getModel((long) relations.get("pluginversion_id")));
+                        if (relations.get("pluginconfig_id") != null) {
+                            pluginHolderPlugin.setConfig(getMySQLDatabase().getPluginConfigRepository().getModel((long) relations.get("pluginconfig_id")));
+                        }
                     } catch (SQLException e) {
                         log.error("Threw a Exception in MySQLPluginHolderPluginRepository::getModel::MySQLCommand::command, full stack trace follows: ", e);
                     }

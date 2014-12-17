@@ -62,7 +62,7 @@ public class Network extends Model {
         JSONArray nodes = new JSONArray(hash.get("nodes"));
         for (int i = 0; i < nodes.length(); i++) {
             String nodeKey = nodes.getString(i);
-            NetworkNode networkNode = DoubleChest.INSTANCE.getRedisDatabase().getNodeInfoRepository().getModel(nodeKey);
+            NetworkNode networkNode = DoubleChest.INSTANCE.getRedisDatabase().getNetworkNodeRepository().getModel(nodeKey);
             if (networkNode != null) {
                 this.nodes.add(networkNode);
             }
@@ -71,7 +71,7 @@ public class Network extends Model {
         JSONArray serverTypes = new JSONArray(hash.get("serverTypes"));
         for (int i = 0; i < serverTypes.length(); i++) {
             String serverTypeKey = serverTypes.getString(i);
-            NetworkServerType networkServerType = DoubleChest.INSTANCE.getRedisDatabase().getServerTypeInfoRepository().getModel(serverTypeKey);
+            NetworkServerType networkServerType = DoubleChest.INSTANCE.getRedisDatabase().getNetworkServerTypeRepository().getModel(serverTypeKey);
             if (networkServerType != null) {
                 this.serverTypes.add(networkServerType);
             }

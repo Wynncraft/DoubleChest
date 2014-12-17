@@ -27,7 +27,7 @@ public class Bungee extends Model {
 
     @Override
     public String getKey() {
-        return network.getKey() + ":bungee:" + bungeeType.getId() + ":" + node.getId();
+        return network.getKey() + ":bungeetype:" + bungeeType.getId() + ":" + node.getId();
     }
 
     @Override

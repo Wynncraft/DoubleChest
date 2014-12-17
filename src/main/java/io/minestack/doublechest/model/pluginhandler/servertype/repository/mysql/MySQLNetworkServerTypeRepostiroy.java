@@ -30,8 +30,8 @@ public class MySQLNetworkServerTypeRepostiroy extends MySQLModelRepository<Netwo
                 for (NetworkServerType networkServerType : networkServerTypes) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select network_id, server_type_id from network_servertypes where id='"+networkServerType.getId()+"'");
                     try {
-                        networkServerType.setNetwork(getMySQLDatabase().getNetworkRepository().getModel((int) relations.get("network_id")));
-                        networkServerType.setServerType(getMySQLDatabase().getServerTypeRepository().getModel((int) relations.get("server_type_id")));
+                        networkServerType.setNetwork(getMySQLDatabase().getNetworkRepository().getModel((long) relations.get("network_id")));
+                        networkServerType.setServerType(getMySQLDatabase().getServerTypeRepository().getModel((long) relations.get("server_type_id")));
                     } catch (SQLException e) {
                         log.error("Threw a Exception in MySQLNetworkServerTypeRepostiroy::getModels::MySQLCommand::command, full stack trace follows: ", e);
                     }
@@ -43,7 +43,7 @@ public class MySQLNetworkServerTypeRepostiroy extends MySQLModelRepository<Netwo
     }
 
     @Override
-    public NetworkServerType getModel(int modelId) throws SQLException {
+    public NetworkServerType getModel(long modelId) throws SQLException {
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
@@ -52,8 +52,8 @@ public class MySQLNetworkServerTypeRepostiroy extends MySQLModelRepository<Netwo
                 if (networkServerType != null) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select network_id, server_type_id from network_servertypes where id='"+modelId+"'");
                     try {
-                        networkServerType.setNetwork(getMySQLDatabase().getNetworkRepository().getModel((int) relations.get("network_id")));
-                        networkServerType.setServerType(getMySQLDatabase().getServerTypeRepository().getModel((int) relations.get("server_type_id")));
+                        networkServerType.setNetwork(getMySQLDatabase().getNetworkRepository().getModel((long) relations.get("network_id")));
+                        networkServerType.setServerType(getMySQLDatabase().getServerTypeRepository().getModel((long) relations.get("server_type_id")));
                         return networkServerType;
                     } catch (SQLException e) {
                         log.error("Threw a Exception in MySQLNetworkServerTypeRepostiroy::getModel::MySQLCommand::command, full stack trace follows: ", e);
@@ -76,7 +76,7 @@ public class MySQLNetworkServerTypeRepostiroy extends MySQLModelRepository<Netwo
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select server_type_id from network_servertypes where id='"+networkServerType.getId()+"'");
                     try {
                         networkServerType.setNetwork(network);
-                        networkServerType.setServerType(getMySQLDatabase().getServerTypeRepository().getModel((int) relations.get("server_type_id")));
+                        networkServerType.setServerType(getMySQLDatabase().getServerTypeRepository().getModel((long) relations.get("server_type_id")));
                     } catch (SQLException e) {
                         log.error("Threw a Exception in MySQLNetworkServerTypeRepostiroy::getNetworkServerTypesForNetwork::MySQLCommand::command, full stack trace follows: ", e);
                     }

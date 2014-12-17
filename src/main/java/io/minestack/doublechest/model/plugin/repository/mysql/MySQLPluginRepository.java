@@ -34,7 +34,7 @@ public class MySQLPluginRepository extends MySQLModelRepository<Plugin> {
     }
 
     @Override
-    public Plugin getModel(int modelId) throws SQLException {
+    public Plugin getModel(long modelId) throws SQLException {
         Plugin plugin = getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {

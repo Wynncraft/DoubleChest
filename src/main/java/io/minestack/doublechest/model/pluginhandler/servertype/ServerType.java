@@ -66,7 +66,7 @@ public class ServerType extends PluginHolder {
         JSONArray plugins = new JSONArray(hash.get("plugins"));
         for (int i = 0; i < plugins.length(); i++) {
             String pluginKey = plugins.getString(i);
-            PluginHolderPlugin pluginHolderPlugin = DoubleChest.INSTANCE.getRedisDatabase().getPluginInfoRepository().getModel(pluginKey);
+            PluginHolderPlugin pluginHolderPlugin = DoubleChest.INSTANCE.getRedisDatabase().getPluginHolderPluginRepository().getModel(pluginKey);
             if (pluginHolderPlugin != null) {
                 pluginHolderPlugin.setPluginHolder(this);
                 getPlugins().add(pluginHolderPlugin);
@@ -75,7 +75,7 @@ public class ServerType extends PluginHolder {
         JSONArray worlds = new JSONArray(hash.get("worlds"));
         for (int i = 0; i < worlds.length(); i++) {
             String worldKey = worlds.getString(i);
-            ServerTypeWorld serverTypeWorld = DoubleChest.INSTANCE.getRedisDatabase().getWorldInfoRepository().getModel(worldKey);
+            ServerTypeWorld serverTypeWorld = DoubleChest.INSTANCE.getRedisDatabase().getServerTypeWorldRepository().getModel(worldKey);
             if (serverTypeWorld != null) {
                 serverTypeWorld.setServerType(this);
                 this.worlds.add(serverTypeWorld);

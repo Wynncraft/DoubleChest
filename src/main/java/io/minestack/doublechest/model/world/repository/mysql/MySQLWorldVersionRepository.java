@@ -31,7 +31,7 @@ public class MySQLWorldVersionRepository extends MySQLModelRepository<WorldVersi
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select world_id from world_versions where id='"+worldVersion.getId()+"'");
 
                     try {
-                        World world = getMySQLDatabase().getWorldRepository().getModel((int)relations.get("world_id"));
+                        World world = getMySQLDatabase().getWorldRepository().getModel((long)relations.get("world_id"));
                         worldVersion.setWorld(world);
                     } catch (SQLException e) {
                         log.error("Threw a Exception in MySQLWorldVersionRepository::getModels::MySQLCommand::command, full stack trace follows: ", e);
@@ -44,7 +44,7 @@ public class MySQLWorldVersionRepository extends MySQLModelRepository<WorldVersi
     }
 
     @Override
-    public WorldVersion getModel(int modelId) throws SQLException {
+    public WorldVersion getModel(long modelId) throws SQLException {
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
@@ -54,7 +54,7 @@ public class MySQLWorldVersionRepository extends MySQLModelRepository<WorldVersi
 
                 if (worldVersion != null) {
                     try {
-                        World world = getMySQLDatabase().getWorldRepository().getModel((int) relations.get("world_id"));
+                        World world = getMySQLDatabase().getWorldRepository().getModel((long) relations.get("world_id"));
                         worldVersion.setWorld(world);
                         return worldVersion;
                     } catch (SQLException e) {

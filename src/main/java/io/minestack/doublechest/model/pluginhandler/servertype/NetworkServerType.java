@@ -25,7 +25,7 @@ public class NetworkServerType extends Model {
 
     @Getter
     @Setter
-    private boolean defaultType;
+    private boolean defaultServerType;
 
     @Override
     public String getKey() {
@@ -39,7 +39,7 @@ public class NetworkServerType extends Model {
         hash.put("network", network.getKey());
         hash.put("servertype", serverType.getKey());
         hash.put("amount", amount+"");
-        hash.put("defaultServerType", defaultType+"");
+        hash.put("defaultServerType", defaultServerType +"");
         hash.put("updated_at", getUpdated_at().getTime()+"");
         return hash;
     }
@@ -50,7 +50,7 @@ public class NetworkServerType extends Model {
         //setNetwork(DoubleChest.INSTANCE.getRedisDatabase().getNetworkRepository().getModel(hash.get("network")));
         setServerType(DoubleChest.INSTANCE.getRedisDatabase().getServerTypeRepository().getModel(hash.get("servertype")));
         setAmount(Integer.parseInt(hash.get("amount")));
-        setDefaultType(Boolean.parseBoolean(hash.get("defaultServerType")));
+        this.setDefaultServerType(Boolean.parseBoolean(hash.get("defaultServerType")));
         setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
     }
 }

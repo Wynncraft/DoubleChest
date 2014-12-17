@@ -17,6 +17,6 @@ public abstract class MySQLModelRepository<T extends Model> {
 
     public abstract ArrayList<T> getModels() throws SQLException;
 
-    public abstract T getModel(int modelId) throws SQLException;
+    public abstract T getModel(long modelId) throws SQLException;
 
 }

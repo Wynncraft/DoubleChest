@@ -4,11 +4,13 @@ import io.minestack.doublechest.databases.mysql.MySQLCommand;
 import io.minestack.doublechest.databases.mysql.MySQLDatabase;
 import io.minestack.doublechest.databases.mysql.MySQLModelRepository;
 import io.minestack.doublechest.model.network.Network;
+import lombok.extern.log4j.Log4j2;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+@Log4j2
 public class MySQLNetworkRepository extends MySQLModelRepository<Network> {
 
     public MySQLNetworkRepository(MySQLDatabase mySQLDatabase) {
@@ -34,7 +36,7 @@ public class MySQLNetworkRepository extends MySQLModelRepository<Network> {
     }
 
     @Override
-    public Network getModel(int modelId) throws SQLException {
+    public Network getModel(long modelId) throws SQLException {
         Network network = getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {

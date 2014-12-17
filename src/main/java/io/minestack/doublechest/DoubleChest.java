@@ -17,10 +17,12 @@ public class DoubleChest {
 
     public void initRedisDatabase(HostAndPort jedisHost) {
         redisDatabase = new RedisDatabase(jedisHost);
+        redisDatabase.setupDatabase();
     }
 
     public void initMySQLDatabase(String userName, String password, String database, String address, int port) {
         mySQLDatabase = new MySQLDatabase(userName, password, database, address, port);
+        mySQLDatabase.setupDatabase();
     }
 
 }

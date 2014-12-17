@@ -34,7 +34,7 @@ public class MySQLServerTypeRepository extends MySQLModelRepository<ServerType> 
     }
 
     @Override
-    public ServerType getModel(int modelId) throws SQLException {
+    public ServerType getModel(long modelId) throws SQLException {
         ServerType serverType = getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {

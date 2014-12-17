@@ -30,7 +30,7 @@ public class MySQLNodePublicAddressRepository extends MySQLModelRepository<NodeP
                 for (NodePublicAddress publicAddress : publicAddresses) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select node_id from node_public_addresses where id='"+publicAddress.getId()+"'");
                     try {
-                        publicAddress.setNode(getMySQLDatabase().getNodeRepository().getModel((int) relations.get("node_id")));
+                        publicAddress.setNode(getMySQLDatabase().getNodeRepository().getModel((long) relations.get("node_id")));
                     } catch (SQLException e) {
                         log.error("Threw a Exception in NodePublicAddress::getModels::MySQLCommand::command, full stack trace follows: ", e);
                     }
@@ -42,7 +42,7 @@ public class MySQLNodePublicAddressRepository extends MySQLModelRepository<NodeP
     }
 
     @Override
-    public NodePublicAddress getModel(int modelId) throws SQLException {
+    public NodePublicAddress getModel(long modelId) throws SQLException {
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
@@ -52,7 +52,7 @@ public class MySQLNodePublicAddressRepository extends MySQLModelRepository<NodeP
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select node_id from node_public_addresses where id='"+modelId+"'");
 
                     try {
-                        publicAddress.setNode(getMySQLDatabase().getNodeRepository().getModel((int) relations.get("node_id")));
+                        publicAddress.setNode(getMySQLDatabase().getNodeRepository().getModel((long) relations.get("node_id")));
                         return publicAddress;
                     } catch (SQLException e) {
                         log.error("Threw a Exception in NodePublicAddress::getModel::MySQLCommand::command, full stack trace follows: ", e);
@@ -74,12 +74,7 @@ public class MySQLNodePublicAddressRepository extends MySQLModelRepository<NodeP
                 ArrayList<NodePublicAddress> publicAddresses = getMySQLDatabase().getBeansInfo(connection, "select id, publicAddress, updated_at from node_public_addresses where node_id='"+node.getId()+"'", NodePublicAddress.class);
 
                 for (NodePublicAddress publicAddress : publicAddresses) {
-                    Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select node_id from node_public_addresses where id='"+publicAddress.getId()+"'");
-                    try {
-                        publicAddress.setNode(getMySQLDatabase().getNodeRepository().getModel((int) relations.get("node_id")));
-                    } catch (SQLException e) {
-                        log.error("Threw a Exception in NodePublicAddress::getModels::MySQLCommand::command, full stack trace follows: ", e);
-                    }
+                    publicAddress.setNode(node);
                 }
 
                 return publicAddresses;

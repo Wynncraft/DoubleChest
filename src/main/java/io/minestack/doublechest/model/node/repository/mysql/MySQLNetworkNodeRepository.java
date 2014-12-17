@@ -5,12 +5,14 @@ import io.minestack.doublechest.databases.mysql.MySQLDatabase;
 import io.minestack.doublechest.databases.mysql.MySQLModelRepository;
 import io.minestack.doublechest.model.network.Network;
 import io.minestack.doublechest.model.node.NetworkNode;
+import lombok.extern.log4j.Log4j2;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 
+@Log4j2
 public class MySQLNetworkNodeRepository extends MySQLModelRepository<NetworkNode> {
 
     public MySQLNetworkNodeRepository(MySQLDatabase mySQLDatabase) {
@@ -26,16 +28,16 @@ public class MySQLNetworkNodeRepository extends MySQLModelRepository<NetworkNode
                 ArrayList<NetworkNode> networkNodes = getMySQLDatabase().getBeansInfo(connection, "select id, updated_at from network_nodes", NetworkNode.class);
 
                 for (NetworkNode networkNode : networkNodes) {
-                    Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select network_id, node_id, node_public_address_id, bungee_type_id where id='"+networkNode.getId()+"'");
+                    Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select network_id, node_id, node_public_address_id, bungee_type_id from network_nodes where id='"+networkNode.getId()+"'");
                     try {
-                        networkNode.setNetwork(getMySQLDatabase().getNetworkRepository().getModel((int) relations.get("network_id")));
-                        networkNode.setNode(getMySQLDatabase().getNodeRepository().getModel((int) relations.get("node_id")));
+                        networkNode.setNetwork(getMySQLDatabase().getNetworkRepository().getModel((long) relations.get("network_id")));
+                        networkNode.setNode(getMySQLDatabase().getNodeRepository().getModel((long) relations.get("node_id")));
                         if (relations.get("node_public_address_id") != null) {
-                            networkNode.setNodePublicAddress(getMySQLDatabase().getNodePublicAddressRepository().getModel((int) relations.get("node_public_address_id")));
-                            networkNode.setBungeeType(getMySQLDatabase().getBungeeTypeRepository().getModel((int) relations.get("bungee_type_id")));
+                            networkNode.setNodePublicAddress(getMySQLDatabase().getNodePublicAddressRepository().getModel((long) relations.get("node_public_address_id")));
+                            networkNode.setBungeeType(getMySQLDatabase().getBungeeTypeRepository().getModel((long) relations.get("bungee_type_id")));
                         }
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        log.error("Threw a Exception in MySQLNetworkNodeRepository::getModels::MySQLCommand::command, full stack trace follows: ", e);
                     }
                 }
 
@@ -45,27 +47,27 @@ public class MySQLNetworkNodeRepository extends MySQLModelRepository<NetworkNode
     }
 
     @Override
-    public NetworkNode getModel(int modelId) throws SQLException {
+    public NetworkNode getModel(long modelId) throws SQLException {
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
                 NetworkNode networkNode = getMySQLDatabase().getBeanInfo(connection, "select id, updated_at from network_nodes where id='"+modelId+"'", NetworkNode.class);
 
                 if (networkNode != null) {
-                    Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select network_id, node_id, node_public_address_id, bungee_type_id where id='"+modelId+"'");
+                    Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select network_id, node_id, node_public_address_id, bungee_type_id from network_nodes where id='"+modelId+"'");
 
                     try {
-                        networkNode.setNetwork(getMySQLDatabase().getNetworkRepository().getModel((int) relations.get("network_id")));
-                        networkNode.setNode(getMySQLDatabase().getNodeRepository().getModel((int) relations.get("node_id")));
+                        networkNode.setNetwork(getMySQLDatabase().getNetworkRepository().getModel((long) relations.get("network_id")));
+                        networkNode.setNode(getMySQLDatabase().getNodeRepository().getModel((long) relations.get("node_id")));
 
                         if (relations.get("node_public_address_id") != null) {
-                            networkNode.setNodePublicAddress(getMySQLDatabase().getNodePublicAddressRepository().getModel((int) relations.get("node_public_address_id")));
-                            networkNode.setBungeeType(getMySQLDatabase().getBungeeTypeRepository().getModel((int) relations.get("bungee_type_id")));
+                            networkNode.setNodePublicAddress(getMySQLDatabase().getNodePublicAddressRepository().getModel((long) relations.get("node_public_address_id")));
+                            networkNode.setBungeeType(getMySQLDatabase().getBungeeTypeRepository().getModel((long) relations.get("bungee_type_id")));
                         }
 
                         return networkNode;
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        log.error("Threw a Exception in MySQLNetworkNodeRepository::getModel::MySQLCommand::command, full stack trace follows: ", e);
                     }
                     return null;
                 }
@@ -80,19 +82,19 @@ public class MySQLNetworkNodeRepository extends MySQLModelRepository<NetworkNode
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
-                ArrayList<NetworkNode> networkNodes = getMySQLDatabase().getBeansInfo(connection, "select id, updated_at from network_nodes", NetworkNode.class);
+                ArrayList<NetworkNode> networkNodes = getMySQLDatabase().getBeansInfo(connection, "select id, updated_at from network_nodes where network_id='"+network.getId()+"'", NetworkNode.class);
 
                 for (NetworkNode networkNode : networkNodes) {
-                    Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select node_id, node_public_address_id, bungee_type_id where id='"+networkNode.getId()+"'");
+                    Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select node_id, node_public_address_id, bungee_type_id from network_nodes where id='"+networkNode.getId()+"'");
                     try {
                         networkNode.setNetwork(network);
-                        networkNode.setNode(getMySQLDatabase().getNodeRepository().getModel((int) relations.get("node_id")));
+                        networkNode.setNode(getMySQLDatabase().getNodeRepository().getModel((long) relations.get("node_id")));
                         if (relations.get("node_public_address_id") != null) {
-                            networkNode.setNodePublicAddress(getMySQLDatabase().getNodePublicAddressRepository().getModel((int) relations.get("node_public_address_id")));
-                            networkNode.setBungeeType(getMySQLDatabase().getBungeeTypeRepository().getModel((int) relations.get("bungee_type_id")));
+                            networkNode.setNodePublicAddress(getMySQLDatabase().getNodePublicAddressRepository().getModel((long) relations.get("node_public_address_id")));
+                            networkNode.setBungeeType(getMySQLDatabase().getBungeeTypeRepository().getModel((long) relations.get("bungee_type_id")));
                         }
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        log.error("Threw a Exception in MySQLNetworkNodeRepository::getNetworkNodeForNetwork::MySQLCommand::command, full stack trace follows: ", e);
                     }
                 }
 

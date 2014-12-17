@@ -27,7 +27,7 @@ public class Server extends Model {
 
     @Override
     public String getKey() {
-        return network.getKey() + ":server:" + serverType.getId() + ":" + getId();
+        return network.getKey() + ":servertype:" + serverType.getId() + ":" + getId();
     }
 
     @Override

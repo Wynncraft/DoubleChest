@@ -30,7 +30,7 @@ public class MySQLPluginConfigRepository extends MySQLModelRepository<PluginConf
                 for (PluginConfig pluginConfig : pluginConfigs) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select plugin_id from plugin_configs where id='"+pluginConfig.getId()+"'");
                     try {
-                        pluginConfig.setPlugin(getMySQLDatabase().getPluginRepository().getModel((int) relations.get("plugin_id")));
+                        pluginConfig.setPlugin(getMySQLDatabase().getPluginRepository().getModel((long) relations.get("plugin_id")));
                     } catch (SQLException e) {
                         log.error("Threw a Exception in MySQLPluginConfigRepository::getModels::MySQLCommand::command, full stack trace follows: ", e);
                     }
@@ -42,7 +42,7 @@ public class MySQLPluginConfigRepository extends MySQLModelRepository<PluginConf
     }
 
     @Override
-    public PluginConfig getModel(int modelId) throws SQLException {
+    public PluginConfig getModel(long modelId) throws SQLException {
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
@@ -51,7 +51,7 @@ public class MySQLPluginConfigRepository extends MySQLModelRepository<PluginConf
                 if (pluginConfig != null) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select plugin_id from plugin_configs where id='"+modelId+"'");
                     try {
-                        pluginConfig.setPlugin(getMySQLDatabase().getPluginRepository().getModel((int) relations.get("plugin_id")));
+                        pluginConfig.setPlugin(getMySQLDatabase().getPluginRepository().getModel((long) relations.get("plugin_id")));
                         return pluginConfig;
                     } catch (SQLException e) {
                         log.error("Threw a Exception in MySQLPluginConfigRepository::getModel::MySQLCommand::command, full stack trace follows: ", e);

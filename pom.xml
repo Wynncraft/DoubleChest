@@ -46,6 +46,7 @@
                                     <include>org.projectlombok:lombok:*</include>
                                     <!-- mysql -->
                                     <include>commons-dbutils:commons-dbutils:*</include>
+                                    <include>commons-logging:commons-logging:*</include>
                                     <include>org.apache.commons:commons-dbcp2:*</include>
                                     <include>org.apache.commons:commons-pool2:*</include>
                                     <!-- redis -->
@@ -75,7 +76,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.14.4</version>
+            <version>1.14.8</version>
         </dependency>
         <dependency>
             <groupId>commons-dbutils</groupId>

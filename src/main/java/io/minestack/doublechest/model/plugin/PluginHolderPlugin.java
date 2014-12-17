@@ -39,7 +39,9 @@ public class PluginHolderPlugin extends Model {
         hash.put("pluginHolder", pluginHolder.getKey());
         hash.put("plugin", plugin.getKey());
         hash.put("version", version.getKey());
-        hash.put("config", config.getKey());
+        if (config != null) {
+            hash.put("config", config.getKey());
+        }
         hash.put("updated_at", getUpdated_at().getTime()+"");
         return hash;
     }
@@ -55,7 +57,9 @@ public class PluginHolderPlugin extends Model {
         }*/
         setPlugin(DoubleChest.INSTANCE.getRedisDatabase().getPluginRepository().getModel(hash.get("plugin")));
         setVersion(DoubleChest.INSTANCE.getRedisDatabase().getPluginVersionRepository().getModel(hash.get("version")));
-        setConfig(DoubleChest.INSTANCE.getRedisDatabase().getPluginConfigRepository().getModel(hash.get("config")));
+        if (hash.containsKey("config")) {
+            setConfig(DoubleChest.INSTANCE.getRedisDatabase().getPluginConfigRepository().getModel(hash.get("config")));
+        }
         setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
     }
 }

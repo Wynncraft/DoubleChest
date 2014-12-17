@@ -36,13 +36,13 @@ public class RedisDatabase implements Database{
     private final RedisNodePublicAddressRepository nodePublicAddressRepository;
 
     @Getter
-    private final RedisNetworkNodeRepository nodeInfoRepository;
+    private final RedisNetworkNodeRepository networkNodeRepository;
 
     @Getter
     private final RedisServerTypeRepository serverTypeRepository;
 
     @Getter
-    private final RedisNetworkServerTypeRepository serverTypeInfoRepository;
+    private final RedisNetworkServerTypeRepository networkServerTypeRepository;
 
     @Getter
     private final RedisWorldRepository worldRepository;
@@ -51,7 +51,7 @@ public class RedisDatabase implements Database{
     private final RedisWorldVersionRepository worldVersionRepository;
 
     @Getter
-    private final RedisServerTypeWorldRepository worldInfoRepository;
+    private final RedisServerTypeWorldRepository serverTypeWorldRepository;
 
     @Getter
     private final RedisPluginRepository pluginRepository;
@@ -63,7 +63,7 @@ public class RedisDatabase implements Database{
     private final RedisPluginVersionRepository pluginVersionRepository;
 
     @Getter
-    private final RedisPluginHolderPluginRepository pluginInfoRepository;
+    private final RedisPluginHolderPluginRepository pluginHolderPluginRepository;
 
     @Getter
     private final RedisBungeeTypeRepository bungeeTypeRepository;
@@ -72,17 +72,17 @@ public class RedisDatabase implements Database{
         this.jedisHost = jedisHost;
         networkRepository = new RedisNetworkRepository(this);
         nodeRepository = new RedisNodeRepository(this);
-        nodeInfoRepository = new RedisNetworkNodeRepository(this);
+        networkNodeRepository = new RedisNetworkNodeRepository(this);
         nodePublicAddressRepository = new RedisNodePublicAddressRepository(this);
         serverTypeRepository = new RedisServerTypeRepository(this);
-        serverTypeInfoRepository = new RedisNetworkServerTypeRepository(this);
+        networkServerTypeRepository = new RedisNetworkServerTypeRepository(this);
         worldRepository = new RedisWorldRepository(this);
         worldVersionRepository = new RedisWorldVersionRepository(this);
-        worldInfoRepository = new RedisServerTypeWorldRepository(this);
+        serverTypeWorldRepository = new RedisServerTypeWorldRepository(this);
         pluginRepository = new RedisPluginRepository(this);
         pluginConfigRepository = new RedisPluginConfigRepository(this);
         pluginVersionRepository = new RedisPluginVersionRepository(this);
-        pluginInfoRepository = new RedisPluginHolderPluginRepository(this);
+        pluginHolderPluginRepository = new RedisPluginHolderPluginRepository(this);
         bungeeTypeRepository = new RedisBungeeTypeRepository(this);
     }
 
@@ -108,7 +108,9 @@ public class RedisDatabase implements Database{
 
         while (tryNumber < 100) {
             log.info("Executing Redis Command "+command.getCommandName()+" Try Number: "+tryNumber);
-            jedis.watch(command.keysToWatch());
+            if (command.keysToWatch().length > 0) {
+                jedis.watch(command.keysToWatch());
+            }
             if (command.conditional(jedis)) {
                 Transaction transaction = jedis.multi();
                 command.command(transaction);
@@ -120,7 +122,9 @@ public class RedisDatabase implements Database{
                     log.warn("Error executing command "+command.getCommandName()+" trying again...");
                 }
             } else {
-                jedis.unwatch();
+                if (command.keysToWatch().length > 0) {
+                    jedis.unwatch();
+                }
                 break;
             }
         }

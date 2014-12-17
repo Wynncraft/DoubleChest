@@ -38,12 +38,11 @@ public class MySQLNodeRepository extends MySQLModelRepository<Node> {
     }
 
     @Override
-    public Node getModel(int modelId) throws SQLException {
+    public Node getModel(long modelId) throws SQLException {
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
                 Node node = getMySQLDatabase().getBeanInfo(connection, "select id, name, privateAddress, ram, updated_at from nodes where id='"+modelId+"'", Node.class);
-
                 if (node != null) {
                     try {
                         node.getPublicAddresses().addAll(getMySQLDatabase().getNodePublicAddressRepository().getNodePublicAddressesForNode(node));

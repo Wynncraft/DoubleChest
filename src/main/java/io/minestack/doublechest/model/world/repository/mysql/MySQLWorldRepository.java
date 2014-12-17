@@ -41,7 +41,7 @@ public class MySQLWorldRepository extends MySQLModelRepository<World> {
     }
 
     @Override
-    public World getModel(int modelId) throws SQLException {
+    public World getModel(long modelId) throws SQLException {
         World world = getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {

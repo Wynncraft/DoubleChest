@@ -32,9 +32,9 @@ public class MySQLServerTypeWorldRepostiroy extends MySQLModelRepository<ServerT
                 for (ServerTypeWorld serverTypeWorld : serverTypeWorlds) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select servertype_id, world_id, worldversion_id from servertype_worlds where id='"+ serverTypeWorld.getId()+"'");
                     try {
-                        ServerType serverType = getMySQLDatabase().getServerTypeRepository().getModel((int) relations.get("servertype_id"));
-                        World world = getMySQLDatabase().getWorldRepository().getModel((int) relations.get("world_id"));
-                        WorldVersion worldVersion = getMySQLDatabase().getWorldVersionRepository().getModel((int) relations.get("worldversion_id"));
+                        ServerType serverType = getMySQLDatabase().getServerTypeRepository().getModel((long) relations.get("servertype_id"));
+                        World world = getMySQLDatabase().getWorldRepository().getModel((long) relations.get("world_id"));
+                        WorldVersion worldVersion = getMySQLDatabase().getWorldVersionRepository().getModel((long) relations.get("worldversion_id"));
 
                         serverTypeWorld.setServerType(serverType);
                         serverTypeWorld.setWorld(world);
@@ -49,7 +49,7 @@ public class MySQLServerTypeWorldRepostiroy extends MySQLModelRepository<ServerT
     }
 
     @Override
-    public ServerTypeWorld getModel(int modelId) throws SQLException {
+    public ServerTypeWorld getModel(long modelId) throws SQLException {
         return getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
@@ -60,9 +60,9 @@ public class MySQLServerTypeWorldRepostiroy extends MySQLModelRepository<ServerT
                 if (serverTypeWorld != null) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select servertype_id, world_id, worldversion_id from servertype_worlds where id='"+modelId+"'");
                     try {
-                        ServerType serverType = getMySQLDatabase().getServerTypeRepository().getModel((int) relations.get("servertype_id"));
-                        World world = getMySQLDatabase().getWorldRepository().getModel((int) relations.get("world_id"));
-                        WorldVersion worldVersion = getMySQLDatabase().getWorldVersionRepository().getModel((int) relations.get("worldversion_id"));
+                        ServerType serverType = getMySQLDatabase().getServerTypeRepository().getModel((long) relations.get("servertype_id"));
+                        World world = getMySQLDatabase().getWorldRepository().getModel((long) relations.get("world_id"));
+                        WorldVersion worldVersion = getMySQLDatabase().getWorldVersionRepository().getModel((long) relations.get("worldversion_id"));
 
                         serverTypeWorld.setServerType(serverType);
                         serverTypeWorld.setWorld(world);
@@ -89,8 +89,8 @@ public class MySQLServerTypeWorldRepostiroy extends MySQLModelRepository<ServerT
                 for (ServerTypeWorld serverTypeWorld : serverTypeWorlds) {
                     Map<String, Object> relations = getMySQLDatabase().getMapInfo(connection, "select world_id, worldversion_id from servertype_worlds where id='"+ serverTypeWorld.getId()+"'");
                     try {
-                        World world = getMySQLDatabase().getWorldRepository().getModel((int) relations.get("world_id"));
-                        WorldVersion worldVersion = getMySQLDatabase().getWorldVersionRepository().getModel((int) relations.get("worldversion_id"));
+                        World world = getMySQLDatabase().getWorldRepository().getModel((long) relations.get("world_id"));
+                        WorldVersion worldVersion = getMySQLDatabase().getWorldVersionRepository().getModel((long) relations.get("worldversion_id"));
 
                         serverTypeWorld.setServerType(serverType);
                         serverTypeWorld.setWorld(world);

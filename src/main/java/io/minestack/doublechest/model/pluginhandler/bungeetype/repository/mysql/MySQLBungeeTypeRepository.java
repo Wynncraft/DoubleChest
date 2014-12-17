@@ -33,7 +33,7 @@ public class MySQLBungeeTypeRepository extends MySQLModelRepository<BungeeType> 
     }
 
     @Override
-    public BungeeType getModel(int modelId) throws SQLException {
+    public BungeeType getModel(long modelId) throws SQLException {
         BungeeType bungeeType = getMySQLDatabase().executeCommand(new MySQLCommand() {
             @Override
             public Object command(Connection connection) {
