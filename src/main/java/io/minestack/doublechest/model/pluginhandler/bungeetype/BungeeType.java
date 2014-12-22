@@ -1,14 +1,8 @@
 package io.minestack.doublechest.model.pluginhandler.bungeetype;
 
-import io.minestack.doublechest.DoubleChest;
-import io.minestack.doublechest.model.plugin.PluginHolderPlugin;
 import io.minestack.doublechest.model.pluginhandler.PluginHolder;
 import lombok.Getter;
 import lombok.Setter;
-import org.json.JSONArray;
-
-import java.sql.Timestamp;
-import java.util.HashMap;
 
 public class BungeeType extends PluginHolder {
 
@@ -20,42 +14,4 @@ public class BungeeType extends PluginHolder {
     @Setter
     private int ram;
 
-    @Override
-    public String getKey() {
-        return "bungeetype:"+getId();
-    }
-
-    @Override
-    public HashMap<String, String> toHash() {
-        HashMap<String, String> hash = new HashMap<>();
-        hash.put("id", getId()+"");
-        hash.put("name", getName());
-        hash.put("description", description);
-        hash.put("ram", ram+"");
-        JSONArray plugins = new JSONArray();
-        for (PluginHolderPlugin pluginHolderPlugin : getPlugins()) {
-            plugins.put(pluginHolderPlugin.getKey());
-        }
-        hash.put("plugins", plugins.toString());
-        hash.put("updated_at", getUpdated_at().getTime()+"");
-        return hash;
-    }
-
-    @Override
-    public void fromHash(HashMap<String, String> hash) throws Exception {
-        setId(Integer.parseInt("id"));
-        setName(hash.get("name"));
-        setDescription(hash.get("description"));
-        setRam(Integer.parseInt(hash.get("ram")));
-        JSONArray plugins = new JSONArray(hash.get("plugins"));
-        for (int i = 0; i < plugins.length(); i++) {
-            String pluginKey = plugins.getString(i);
-            PluginHolderPlugin pluginHolderPlugin = DoubleChest.INSTANCE.getRedisDatabase().getPluginHolderPluginRepository().getModel(pluginKey);
-            if (pluginHolderPlugin != null) {
-                pluginHolderPlugin.setPluginHolder(this);
-                getPlugins().add(pluginHolderPlugin);
-            }
-        }
-        setUpdated_at(new Timestamp(Long.parseLong(hash.get("updated_at"))));
-    }
 }
