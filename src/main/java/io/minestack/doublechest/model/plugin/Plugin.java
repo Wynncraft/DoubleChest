@@ -88,6 +88,6 @@ public class Plugin extends Model {
                 this.configs.add(config);
             }
         }
-        setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
+        setUpdated_at(new Timestamp(Long.parseLong(hash.get("updated_at"))));
     }
 }

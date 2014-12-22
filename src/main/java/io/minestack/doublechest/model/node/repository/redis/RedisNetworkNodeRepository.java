@@ -3,6 +3,7 @@ package io.minestack.doublechest.model.node.repository.redis;
 import io.minestack.doublechest.databases.redis.RedisCommand;
 import io.minestack.doublechest.databases.redis.RedisDatabase;
 import io.minestack.doublechest.databases.redis.RedisModelRespository;
+import io.minestack.doublechest.model.network.Network;
 import io.minestack.doublechest.model.node.NetworkNode;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
@@ -55,6 +56,32 @@ public class RedisNetworkNodeRepository extends RedisModelRespository<NetworkNod
             return networkNode;
         }
         return null;
+    }
+
+    public void removeModel(NetworkNode networkNode, Network network) throws Exception {
+        String listKey = listKey(network.getId());
+        getRedisDatabase().executeCommand(new RedisCommand("removeNetworkNodeModel") {
+            @Override
+            public String[] keysToWatch() {
+                return new String[]{listKey, networkNode.getKey()};
+            }
+
+            @Override
+            public boolean conditional(Jedis jedis) {
+                return jedis.exists(listKey) && jedis.exists(networkNode.getKey());
+            }
+
+            @Override
+            public void command(Transaction transaction) {
+                transaction.srem(listKey, networkNode.getKey());
+                transaction.del(networkNode.getKey());
+            }
+
+            @Override
+            public Object response() {
+                return null;
+            }
+        });
     }
 
     @Override

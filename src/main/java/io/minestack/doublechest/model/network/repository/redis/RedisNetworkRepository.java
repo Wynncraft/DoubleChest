@@ -51,6 +51,32 @@ public class RedisNetworkRepository extends RedisModelRespository<Network> {
         return null;
     }
 
+    public void removeModel(Network network) throws Exception {
+        String listKey = listKey();
+        getRedisDatabase().executeCommand(new RedisCommand("removeNetworkModel") {
+            @Override
+            public String[] keysToWatch() {
+                return new String[]{listKey, network.getKey()};
+            }
+
+            @Override
+            public boolean conditional(Jedis jedis) {
+                return jedis.exists(listKey) && jedis.exists(network.getKey());
+            }
+
+            @Override
+            public void command(Transaction transaction) {
+                transaction.srem(listKey, network.getKey());
+                transaction.del(network.getKey());
+            }
+
+            @Override
+            public Object response() {
+                return null;
+            }
+        });
+    }
+
     @Override
     public void saveModel(Network model) throws Exception {
         getRedisDatabase().executeCommand(new RedisCommand("saveNetworkModel") {

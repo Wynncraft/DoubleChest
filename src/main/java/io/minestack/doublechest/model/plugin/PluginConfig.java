@@ -49,6 +49,6 @@ public class PluginConfig extends Model {
         setName(hash.get("name"));
         setDescription(hash.get("description"));
         setDirectory(hash.get("directory"));
-        setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
+        setUpdated_at(new Timestamp(Long.parseLong(hash.get("updated_at"))));
     }
 }

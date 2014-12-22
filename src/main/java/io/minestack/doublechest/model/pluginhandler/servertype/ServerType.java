@@ -81,6 +81,6 @@ public class ServerType extends PluginHolder {
                 this.worlds.add(serverTypeWorld);
             }
         }
-        setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
+        setUpdated_at(new Timestamp(Long.parseLong(hash.get("updated_at"))));
     }
 }

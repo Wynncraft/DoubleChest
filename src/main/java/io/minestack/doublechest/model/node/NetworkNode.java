@@ -56,6 +56,6 @@ public class NetworkNode extends Model {
             setBungeeType(DoubleChest.INSTANCE.getRedisDatabase().getBungeeTypeRepository().getModel(hash.get("bungeeType")));
             setNodePublicAddress(DoubleChest.INSTANCE.getRedisDatabase().getNodePublicAddressRepository().getModel(hash.get("publicAddress")));
         }
-        setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
+        setUpdated_at(new Timestamp(Long.parseLong(hash.get("updated_at"))));
     }
 }

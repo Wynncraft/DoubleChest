@@ -3,6 +3,7 @@ package io.minestack.doublechest.model.plugin.repository.redis;
 import io.minestack.doublechest.databases.redis.RedisCommand;
 import io.minestack.doublechest.databases.redis.RedisDatabase;
 import io.minestack.doublechest.databases.redis.RedisModelRespository;
+import io.minestack.doublechest.model.plugin.Plugin;
 import io.minestack.doublechest.model.plugin.PluginVersion;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
@@ -55,6 +56,32 @@ public class RedisPluginVersionRepository extends RedisModelRespository<PluginVe
             return pluginVersion;
         }
         return null;
+    }
+
+    public void removeModel(PluginVersion pluginVersion, Plugin plugin) throws Exception {
+        String listKey = listKey(plugin.getId());
+        getRedisDatabase().executeCommand(new RedisCommand("removePluginVersionModel") {
+            @Override
+            public String[] keysToWatch() {
+                return new String[]{listKey, pluginVersion.getKey()};
+            }
+
+            @Override
+            public boolean conditional(Jedis jedis) {
+                return jedis.exists(listKey) && jedis.exists(pluginVersion.getKey());
+            }
+
+            @Override
+            public void command(Transaction transaction) {
+                transaction.srem(listKey, pluginVersion.getKey());
+                transaction.del(pluginVersion.getKey());
+            }
+
+            @Override
+            public Object response() {
+                return null;
+            }
+        });
     }
 
     @Override

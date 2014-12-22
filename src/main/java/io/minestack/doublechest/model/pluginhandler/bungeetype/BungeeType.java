@@ -56,6 +56,6 @@ public class BungeeType extends PluginHolder {
                 getPlugins().add(pluginHolderPlugin);
             }
         }
-        setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
+        setUpdated_at(new Timestamp(Long.parseLong(hash.get("updated_at"))));
     }
 }

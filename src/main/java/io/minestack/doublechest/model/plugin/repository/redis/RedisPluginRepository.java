@@ -7,7 +7,9 @@ import io.minestack.doublechest.model.plugin.Plugin;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 public class RedisPluginRepository extends RedisModelRespository<Plugin> {
 
@@ -18,6 +20,42 @@ public class RedisPluginRepository extends RedisModelRespository<Plugin> {
     @Override
     public String listKey(int... replace) {
         return "plugins";
+    }
+
+    @SuppressWarnings("unchecked")
+    public ArrayList<Plugin> getModels() throws Exception {
+        ArrayList<Plugin> plugins = new ArrayList<>();
+
+        Set<String> pluginKeys = getRedisDatabase().executeCommand(new RedisCommand("") {
+            @Override
+            public String[] keysToWatch() {
+                return new String[]{listKey()};
+            }
+
+            @Override
+            public boolean conditional(Jedis jedis) {
+                return jedis.exists(listKey());
+            }
+
+            @Override
+            public void command(Transaction transaction) {
+                getResponses().put("pluginKeys", transaction.smembers(listKey()));
+            }
+
+            @Override
+            public Object response() {
+                return getResponses().get("pluginKeys").get();
+            }
+        }, Set.class);
+
+        for (String pluginKey : pluginKeys) {
+            Plugin plugin = getModel(pluginKey);
+            if (plugin != null) {
+                plugins.add(plugin);
+            }
+        }
+
+        return plugins;
     }
 
     @Override
@@ -49,6 +87,32 @@ public class RedisPluginRepository extends RedisModelRespository<Plugin> {
             return plugin;
         }
         return null;
+    }
+
+    public void removeModel(Plugin plugin) throws Exception {
+        String listKey = listKey();
+        getRedisDatabase().executeCommand(new RedisCommand("removePluginModel") {
+            @Override
+            public String[] keysToWatch() {
+                return new String[]{listKey, plugin.getKey()};
+            }
+
+            @Override
+            public boolean conditional(Jedis jedis) {
+                return jedis.exists(listKey) && jedis.exists(plugin.getKey());
+            }
+
+            @Override
+            public void command(Transaction transaction) {
+                transaction.srem(listKey, plugin.getKey());
+                transaction.del(plugin.getKey());
+            }
+
+            @Override
+            public Object response() {
+                return null;
+            }
+        });
     }
 
     @Override

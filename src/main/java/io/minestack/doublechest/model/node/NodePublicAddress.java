@@ -37,6 +37,6 @@ public class NodePublicAddress extends Model {
         setId(Integer.parseInt(hash.get("id")));
         //setNode(DoubleChest.INSTANCE.getRedisDatabase().getNodeRepository().getModel(hash.get("node")));
         setPublicAddress(hash.get("publicAddress"));
-        setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
+        setUpdated_at(new Timestamp(Long.parseLong(hash.get("updated_at"))));
     }
 }

@@ -51,6 +51,32 @@ public class RedisBungeeTypeRepository extends RedisModelRespository<BungeeType>
         return null;
     }
 
+    public void removeModel(BungeeType bungeeType) throws Exception {
+        String listKey = listKey();
+        getRedisDatabase().executeCommand(new RedisCommand("removeBungeeTypeModel") {
+            @Override
+            public String[] keysToWatch() {
+                return new String[]{listKey, bungeeType.getKey()};
+            }
+
+            @Override
+            public boolean conditional(Jedis jedis) {
+                return jedis.exists(listKey) && jedis.exists(bungeeType.getKey());
+            }
+
+            @Override
+            public void command(Transaction transaction) {
+                transaction.srem(listKey, bungeeType.getKey());
+                transaction.del(bungeeType.getKey());
+            }
+
+            @Override
+            public Object response() {
+                return null;
+            }
+        });
+    }
+
     @Override
     public void saveModel(BungeeType model) throws Exception {
         getRedisDatabase().executeCommand(new RedisCommand("saveBungeeTypeModel") {

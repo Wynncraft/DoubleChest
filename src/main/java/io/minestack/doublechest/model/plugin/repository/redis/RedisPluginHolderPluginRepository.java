@@ -4,6 +4,8 @@ import io.minestack.doublechest.databases.redis.RedisCommand;
 import io.minestack.doublechest.databases.redis.RedisDatabase;
 import io.minestack.doublechest.databases.redis.RedisModelRespository;
 import io.minestack.doublechest.model.plugin.PluginHolderPlugin;
+import io.minestack.doublechest.model.pluginhandler.PluginHolder;
+import io.minestack.doublechest.model.pluginhandler.bungeetype.BungeeType;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
@@ -17,7 +19,7 @@ public class RedisPluginHolderPluginRepository extends RedisModelRespository<Plu
 
     @Override
     public String listKey(int... replace) {
-        String key = "pluginholder:{0}:plugins";
+        String key = "pluginholder:{0}:{1}:plugins";
         if (replace != null) {
             for (int i = 0; i < replace.length; i++) {
                 key = key.replace("{" + i + "}", replace[i]+"");
@@ -57,6 +59,32 @@ public class RedisPluginHolderPluginRepository extends RedisModelRespository<Plu
         return null;
     }
 
+    public void removeModel(PluginHolderPlugin pluginHolderPlugin, PluginHolder pluginHolder) throws Exception {
+        String listKey = listKey(pluginHolder instanceof BungeeType ? 0 : 1, pluginHolderPlugin.getId());
+        getRedisDatabase().executeCommand(new RedisCommand("removePluginHolderPluginModel") {
+            @Override
+            public String[] keysToWatch() {
+                return new String[]{listKey, pluginHolderPlugin.getKey()};
+            }
+
+            @Override
+            public boolean conditional(Jedis jedis) {
+                return jedis.exists(listKey) && jedis.exists(pluginHolderPlugin.getKey());
+            }
+
+            @Override
+            public void command(Transaction transaction) {
+                transaction.srem(listKey, pluginHolderPlugin.getKey());
+                transaction.del(pluginHolderPlugin.getKey());
+            }
+
+            @Override
+            public Object response() {
+                return null;
+            }
+        });
+    }
+
     @Override
     public void saveModel(PluginHolderPlugin model) throws Exception {
         getRedisDatabase().executeCommand(new RedisCommand("savePluginHolderPluginModel") {
@@ -73,7 +101,7 @@ public class RedisPluginHolderPluginRepository extends RedisModelRespository<Plu
             @Override
             public void command(Transaction transaction) {
                 transaction.hmset(model.getKey(), model.toHash());
-                transaction.sadd(listKey(model.getPluginHolder().getId()), model.getKey());
+                transaction.sadd(listKey(model.getPluginHolder() instanceof BungeeType ? 0 : 1, model.getPluginHolder().getId()), model.getKey());
             }
 
             @Override

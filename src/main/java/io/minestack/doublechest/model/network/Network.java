@@ -76,6 +76,6 @@ public class Network extends Model {
                 this.serverTypes.add(networkServerType);
             }
         }
-        setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
+        setUpdated_at(new Timestamp(Long.parseLong(hash.get("updated_at"))));
     }
 }

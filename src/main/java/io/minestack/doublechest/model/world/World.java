@@ -63,6 +63,6 @@ public class World extends Model {
                 this.versions.add(worldVersion);
             }
         }
-        setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
+        setUpdated_at(new Timestamp(Long.parseLong(hash.get("updated_at"))));
     }
 }

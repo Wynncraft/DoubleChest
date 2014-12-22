@@ -51,6 +51,6 @@ public class NetworkServerType extends Model {
         setServerType(DoubleChest.INSTANCE.getRedisDatabase().getServerTypeRepository().getModel(hash.get("servertype")));
         setAmount(Integer.parseInt(hash.get("amount")));
         this.setDefaultServerType(Boolean.parseBoolean(hash.get("defaultServerType")));
-        setUpdated_at(new Timestamp(Long.parseLong("updated_at")));
+        setUpdated_at(new Timestamp(Long.parseLong(hash.get("updated_at"))));
     }
 }

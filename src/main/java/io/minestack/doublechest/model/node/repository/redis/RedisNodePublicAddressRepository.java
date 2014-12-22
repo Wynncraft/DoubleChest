@@ -3,6 +3,7 @@ package io.minestack.doublechest.model.node.repository.redis;
 import io.minestack.doublechest.databases.redis.RedisCommand;
 import io.minestack.doublechest.databases.redis.RedisDatabase;
 import io.minestack.doublechest.databases.redis.RedisModelRespository;
+import io.minestack.doublechest.model.node.Node;
 import io.minestack.doublechest.model.node.NodePublicAddress;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
@@ -55,6 +56,32 @@ public class RedisNodePublicAddressRepository extends RedisModelRespository<Node
             return publicAddress;
         }
         return null;
+    }
+
+    public void removeModel(NodePublicAddress publicAddress, Node node) throws Exception {
+        String listKey = listKey(node.getId());
+        getRedisDatabase().executeCommand(new RedisCommand("removeNodePublicAddressModel") {
+            @Override
+            public String[] keysToWatch() {
+                return new String[]{listKey, publicAddress.getKey()};
+            }
+
+            @Override
+            public boolean conditional(Jedis jedis) {
+                return jedis.exists(listKey) && jedis.exists(publicAddress.getKey());
+            }
+
+            @Override
+            public void command(Transaction transaction) {
+                transaction.srem(listKey, publicAddress.getKey());
+                transaction.del(publicAddress.getKey());
+            }
+
+            @Override
+            public Object response() {
+                return null;
+            }
+        });
     }
 
     @Override

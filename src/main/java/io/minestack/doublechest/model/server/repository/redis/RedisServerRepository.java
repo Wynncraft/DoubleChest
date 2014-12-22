@@ -92,7 +92,7 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
         });
     }
 
-    public void removeModel(Server server, Network network, ServerType serverType) throws Exception {
+    public void removeModel(Server server, ServerType serverType, Network network) throws Exception {
         String listKey = listKey(network.getId(), serverType.getId());
         getRedisDatabase().executeCommand(new RedisCommand("removeServerModel") {
             @Override
@@ -144,7 +144,7 @@ public class RedisServerRepository extends RedisModelRespository<Server> {
                             Server server = getModel(serverKey);
                             if (server != null) {
                                 if (server.getUpdated_at().after(new Timestamp(System.currentTimeMillis() - 30000)) == false) {
-                                    removeModel(server, network, networkServerType.getServerType());
+                                    removeModel(server, networkServerType.getServerType(), network);
                                 }
                             }
                         } catch (Exception e) {

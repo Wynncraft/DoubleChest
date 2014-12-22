@@ -51,6 +51,32 @@ public class RedisServerTypeRepository extends RedisModelRespository<ServerType>
         return null;
     }
 
+    public void removeModel(ServerType serverType) throws Exception {
+        String listKey = listKey();
+        getRedisDatabase().executeCommand(new RedisCommand("removeServerTypeModel") {
+            @Override
+            public String[] keysToWatch() {
+                return new String[]{listKey, serverType.getKey()};
+            }
+
+            @Override
+            public boolean conditional(Jedis jedis) {
+                return jedis.exists(listKey) && jedis.exists(serverType.getKey());
+            }
+
+            @Override
+            public void command(Transaction transaction) {
+                transaction.srem(listKey, serverType.getKey());
+                transaction.del(serverType.getKey());
+            }
+
+            @Override
+            public Object response() {
+                return null;
+            }
+        });
+    }
+
     @Override
     public void saveModel(ServerType model) throws Exception {
         getRedisDatabase().executeCommand(new RedisCommand("saveServerTypeModel") {

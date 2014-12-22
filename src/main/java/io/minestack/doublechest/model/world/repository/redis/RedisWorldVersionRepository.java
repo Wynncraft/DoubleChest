@@ -3,6 +3,7 @@ package io.minestack.doublechest.model.world.repository.redis;
 import io.minestack.doublechest.databases.redis.RedisCommand;
 import io.minestack.doublechest.databases.redis.RedisDatabase;
 import io.minestack.doublechest.databases.redis.RedisModelRespository;
+import io.minestack.doublechest.model.world.World;
 import io.minestack.doublechest.model.world.WorldVersion;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
@@ -55,6 +56,32 @@ public class RedisWorldVersionRepository extends RedisModelRespository<WorldVers
             return worldVersion;
         }
         return null;
+    }
+
+    public void removeModel(WorldVersion worldVersion, World world) throws Exception {
+        String listKey = listKey(world.getId());
+        getRedisDatabase().executeCommand(new RedisCommand("removeWorldVersionModel") {
+            @Override
+            public String[] keysToWatch() {
+                return new String[]{listKey, worldVersion.getKey()};
+            }
+
+            @Override
+            public boolean conditional(Jedis jedis) {
+                return jedis.exists(listKey) && jedis.exists(worldVersion.getKey());
+            }
+
+            @Override
+            public void command(Transaction transaction) {
+                transaction.srem(listKey, worldVersion.getKey());
+                transaction.del(worldVersion.getKey());
+            }
+
+            @Override
+            public Object response() {
+                return null;
+            }
+        });
     }
 
     @Override
