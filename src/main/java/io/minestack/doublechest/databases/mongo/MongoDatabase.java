@@ -72,7 +72,7 @@ public class MongoDatabase implements Database {
                 .heartbeatThreadCount(1)
                 .build();
         MongoClient mongoClient;
-        if (username.isEmpty() == false) {
+        if (username != null) {
             MongoCredential credential = MongoCredential.createMongoCRCredential(username, database, password.toCharArray());
             mongoClient = new MongoClient(addressList, Arrays.asList(credential), clientOptions);
         } else {

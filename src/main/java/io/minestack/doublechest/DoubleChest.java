@@ -13,6 +13,10 @@ public class DoubleChest {
     @Getter
     private MongoDatabase mongoDatabase;
 
+    public void initMongoDatabase(List<ServerAddress> addressList, String database) {
+        initMongoDatabase(addressList, null, null, database);
+    }
+
     public void initMongoDatabase(List<ServerAddress> addressList, String username, String password, String database) {
         mongoDatabase = new MongoDatabase(addressList, username, password, database);
         mongoDatabase.setupDatabase();
