@@ -4,6 +4,9 @@ import io.minestack.doublechest.model.Model;
 import io.minestack.doublechest.model.network.Network;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
+
+import java.util.Date;
 
 public class NetworkServerType extends Model {
 
@@ -23,4 +26,7 @@ public class NetworkServerType extends Model {
     @Setter
     private boolean defaultServerType;
 
+    public NetworkServerType(ObjectId id, Date created_at) {
+        super(id, created_at);
+    }
 }

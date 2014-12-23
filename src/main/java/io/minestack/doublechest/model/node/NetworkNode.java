@@ -5,6 +5,9 @@ import io.minestack.doublechest.model.network.Network;
 import io.minestack.doublechest.model.pluginhandler.bungeetype.BungeeType;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
+
+import java.util.Date;
 
 public class NetworkNode extends Model {
 
@@ -24,4 +27,7 @@ public class NetworkNode extends Model {
     @Setter
     private NodePublicAddress nodePublicAddress;
 
+    public NetworkNode(ObjectId id, Date created_at) {
+        super(id, created_at);
+    }
 }

@@ -6,6 +6,9 @@ import io.minestack.doublechest.model.node.Node;
 import io.minestack.doublechest.model.pluginhandler.servertype.ServerType;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
+
+import java.util.Date;
 
 public class Server extends Model {
 
@@ -21,4 +24,11 @@ public class Server extends Model {
     @Setter
     private Node node;
 
+    @Getter
+    @Setter
+    private int number;
+
+    public Server(ObjectId id, Date created_at) {
+        super(id, created_at);
+    }
 }

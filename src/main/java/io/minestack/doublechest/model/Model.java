@@ -1,18 +1,23 @@
 package io.minestack.doublechest.model;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
+@RequiredArgsConstructor
 public abstract class Model {
 
     @Getter
-    @Setter
-    private int id;
+    private final ObjectId id;
 
     @Getter
     @Setter
-    private Timestamp updated_at;
+    private Date updated_at;
+
+    @Getter
+    private final Date created_at;
 
 }

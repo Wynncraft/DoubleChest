@@ -3,6 +3,9 @@ package io.minestack.doublechest.model.plugin;
 import io.minestack.doublechest.model.Model;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
+
+import java.util.Date;
 
 public class PluginConfig extends Model {
 
@@ -22,4 +25,7 @@ public class PluginConfig extends Model {
     @Setter
     private String directory;
 
+    public PluginConfig(ObjectId id, Date created_at) {
+        super(id, created_at);
+    }
 }

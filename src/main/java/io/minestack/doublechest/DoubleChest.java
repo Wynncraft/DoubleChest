@@ -1,18 +1,21 @@
 package io.minestack.doublechest;
 
-import io.minestack.doublechest.databases.mysql.MySQLDatabase;
+import com.mongodb.ServerAddress;
+import io.minestack.doublechest.databases.mongo.MongoDatabase;
 import lombok.Getter;
+
+import java.util.List;
 
 public class DoubleChest {
 
     public static DoubleChest INSTANCE = new DoubleChest();
 
     @Getter
-    private MySQLDatabase mySQLDatabase;
+    private MongoDatabase mongoDatabase;
 
-    public void initMySQLDatabase(String userName, String password, String database, String address, int port) {
-        mySQLDatabase = new MySQLDatabase(userName, password, database, address, port);
-        mySQLDatabase.setupDatabase();
+    public void initMongoDatabase(List<ServerAddress> addressList, String username, String password, String database) {
+        mongoDatabase = new MongoDatabase(addressList, username, password, database);
+        mongoDatabase.setupDatabase();
     }
 
 }

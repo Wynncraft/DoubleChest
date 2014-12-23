@@ -6,6 +6,9 @@ import io.minestack.doublechest.model.node.Node;
 import io.minestack.doublechest.model.pluginhandler.bungeetype.BungeeType;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
+
+import java.util.Date;
 
 public class Bungee extends Model {
 
@@ -21,4 +24,7 @@ public class Bungee extends Model {
     @Setter
     private Node node;
 
+    public Bungee(ObjectId id, Date created_at) {
+        super(id, created_at);
+    }
 }
