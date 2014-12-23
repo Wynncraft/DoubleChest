@@ -5,8 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Node extends Model {
 
@@ -23,7 +24,7 @@ public class Node extends Model {
     private int ram;
 
     @Getter
-    private ArrayList<NodePublicAddress> publicAddresses = new ArrayList<>();
+    private Map<ObjectId, NodePublicAddress> publicAddresses = new HashMap<>();
 
     public Node(ObjectId id, Date created_at) {
         super(id, created_at);

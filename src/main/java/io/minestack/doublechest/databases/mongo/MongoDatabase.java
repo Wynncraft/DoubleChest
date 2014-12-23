@@ -2,6 +2,15 @@ package io.minestack.doublechest.databases.mongo;
 
 import com.mongodb.*;
 import io.minestack.doublechest.databases.Database;
+import io.minestack.doublechest.model.bungee.repository.mongo.MongoBungeeRepository;
+import io.minestack.doublechest.model.network.repository.mongo.MongoNetworkRepository;
+import io.minestack.doublechest.model.node.repository.mongo.MongoNodeRepository;
+import io.minestack.doublechest.model.plugin.repository.mongo.MongoPluginRepository;
+import io.minestack.doublechest.model.pluginhandler.bungeetype.repository.mongo.MongoBungeeTypeRepository;
+import io.minestack.doublechest.model.pluginhandler.servertype.repository.mongo.MongoServerTypeRepository;
+import io.minestack.doublechest.model.server.repository.mongo.MongoServerRepository;
+import io.minestack.doublechest.model.world.repository.mongo.MongoWorldRepository;
+import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,11 +23,44 @@ public class MongoDatabase implements Database {
     private final String database;
     private DB db;
 
+    @Getter
+    private final MongoWorldRepository worldRepository;
+
+    @Getter
+    private final MongoServerRepository serverRepository;
+
+    @Getter
+    private final MongoServerTypeRepository serverTypeRepository;
+
+    @Getter
+    private final MongoBungeeTypeRepository bungeeTypeRepository;
+
+    @Getter
+    private final MongoPluginRepository pluginRepository;
+
+    @Getter
+    private final MongoNodeRepository nodeRepository;
+
+    @Getter
+    private final MongoNetworkRepository networkRepository;
+
+    @Getter
+    private final MongoBungeeRepository bungeeRepository;
+
     public MongoDatabase(List<ServerAddress> addressList, String username, String password, String database) {
         this.addressList = addressList;
         this.username = username;
         this.password = password;
         this.database = database;
+
+        worldRepository = new MongoWorldRepository(this);
+        serverRepository = new MongoServerRepository(this);
+        serverTypeRepository = new MongoServerTypeRepository(this);
+        bungeeTypeRepository = new MongoBungeeTypeRepository(this);
+        pluginRepository = new MongoPluginRepository(this);
+        nodeRepository = new MongoNodeRepository(this);
+        networkRepository = new MongoNetworkRepository(this);
+        bungeeRepository = new MongoBungeeRepository(this);
     }
 
     @Override

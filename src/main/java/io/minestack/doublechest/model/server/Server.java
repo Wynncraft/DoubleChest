@@ -26,6 +26,10 @@ public class Server extends Model {
 
     @Getter
     @Setter
+    private int port;
+
+    @Getter
+    @Setter
     private int number;
 
     public Server(ObjectId id, Date created_at) {

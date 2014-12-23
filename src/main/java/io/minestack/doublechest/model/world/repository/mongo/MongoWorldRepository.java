@@ -35,6 +35,10 @@ public class MongoWorldRepository extends MongoModelRepository<World> {
     public World getModel(ObjectId id) {
         DBObject dbWorld = getDatabase().findOne("worlds", new BasicDBObject("_id", id));
 
+        if (dbWorld == null) {
+            return null;
+        }
+
         World world = new World((ObjectId) dbWorld.get("_id"), (Date) dbWorld.get("created_at"));
         world.setUpdated_at((Date) dbWorld.get("updated_at"));
         world.setName((String) dbWorld.get("name"));
@@ -50,7 +54,7 @@ public class MongoWorldRepository extends MongoModelRepository<World> {
                 version.setVersion((String) dbVersion.get("version"));
                 version.setDescription((String) dbVersion.get("description"));
                 version.setWorld(world);
-                world.getVersions().add(version);
+                world.getVersions().put(version.getId(), version);
             }
         }
 

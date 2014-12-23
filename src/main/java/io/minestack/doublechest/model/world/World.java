@@ -5,8 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class World extends Model {
 
@@ -23,7 +24,7 @@ public class World extends Model {
     private String directory;
 
     @Getter
-    private ArrayList<WorldVersion> versions = new ArrayList<>();
+    private Map<ObjectId, WorldVersion> versions = new HashMap<>();
 
     public World(ObjectId id, Date created_at) {
         super(id, created_at);

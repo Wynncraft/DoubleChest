@@ -7,8 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Network extends Model {
 
@@ -21,10 +22,10 @@ public class Network extends Model {
     private String description;
 
     @Getter
-    private ArrayList<NetworkNode> nodes = new ArrayList<>();
+    private Map<ObjectId, NetworkNode> nodes = new HashMap<>();
 
     @Getter
-    private ArrayList<NetworkServerType> serverTypes = new ArrayList<>();
+    private Map<ObjectId, NetworkServerType> serverTypes = new HashMap<>();
 
     public Network(ObjectId id, Date created_at) {
         super(id, created_at);
