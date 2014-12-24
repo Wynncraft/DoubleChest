@@ -71,6 +71,7 @@ public class MongoBungeeRepository extends MongoModelRepository<Bungee> {
     public void saveModel(Bungee model) {
         if (model.getId() == null) {
             BasicDBObject dbBungee = new BasicDBObject();
+            dbBungee.put("_id", model.getId());
             dbBungee.put("created_at", model.getCreated_at());
             dbBungee.put("updated_at", model.getUpdated_at());
             dbBungee.put("network_id", model.getNetwork().getId().toString());

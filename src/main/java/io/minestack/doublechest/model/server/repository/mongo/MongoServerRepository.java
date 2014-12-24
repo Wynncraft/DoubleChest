@@ -63,6 +63,27 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         return servers;
     }
 
+    public int getNextNumber(Network network, ServerType serverType) {
+        int number = 1;
+
+        List<Integer> numbers = new ArrayList<>();
+
+        BasicDBObject query = new BasicDBObject("network_id", network.getId().toString());
+        query.put("server_type_id", serverType.getId().toString());
+
+        DBCursor serversCursor = getDatabase().findMany("servers", query);
+        while (serversCursor.hasNext()) {
+            int serverNumber = (int) serversCursor.next().get("number");
+            numbers.add(serverNumber);
+        }
+
+        while (numbers.contains(number)) {
+            number += 1;
+        }
+
+        return number;
+    }
+
     public List<Server> getNetworkServers(Network network) {
         List<Server> servers = new ArrayList<>();
 
@@ -103,6 +124,7 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
     public void saveModel(Server model) {
         if (model.getId() == null) {
             BasicDBObject dbServer = new BasicDBObject();
+            dbServer.put("_id", model.getId());
             dbServer.put("created_at", model.getCreated_at());
             dbServer.put("updated_at", model.getUpdated_at());
             dbServer.put("network_id", model.getNetwork().getId().toString());
