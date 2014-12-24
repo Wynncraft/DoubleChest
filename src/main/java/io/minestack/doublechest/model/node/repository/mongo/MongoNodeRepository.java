@@ -69,4 +69,9 @@ public class MongoNodeRepository extends MongoModelRepository<Node> {
     public void saveModel(Node model) {
         throw new NotImplementedException();
     }
+
+    @Override
+    public void removeModel(Node model) {
+        throw new NotImplementedException();
+    }
 }

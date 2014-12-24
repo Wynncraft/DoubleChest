@@ -6,6 +6,7 @@ import com.mongodb.DBObject;
 import io.minestack.doublechest.databases.mongo.MongoDatabase;
 import io.minestack.doublechest.databases.mongo.MongoModelRepository;
 import io.minestack.doublechest.model.network.Network;
+import io.minestack.doublechest.model.node.Node;
 import io.minestack.doublechest.model.pluginhandler.servertype.ServerType;
 import io.minestack.doublechest.model.server.Server;
 import org.bson.types.ObjectId;
@@ -49,6 +50,17 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         server.setNumber((int) dbServer.get("number"));
 
         return server;
+    }
+
+    public List<Server> getNodeServers(Node node) {
+        List<Server> servers = new ArrayList<>();
+
+        DBCursor serversCursor = getDatabase().findMany("servers", new BasicDBObject("node_id", node.getId().toString()));
+        while (serversCursor.hasNext()) {
+            servers.add(getModel((ObjectId) serversCursor.next().get("_id")));
+        }
+
+        return servers;
     }
 
     public List<Server> getNetworkServers(Network network) {
@@ -106,5 +118,10 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
 
             getDatabase().updateDocument("servers", new BasicDBObject("_id", model.getId()), dbServer);
         }
+    }
+
+    @Override
+    public void removeModel(Server model) {
+        getDatabase().remove("servers", new BasicDBObject("_id", model.getId()));
     }
 }

@@ -18,4 +18,6 @@ public abstract class MongoModelRepository<T extends Model> {
     public abstract T getModel(ObjectId id);
 
     public abstract void saveModel(T model);
+
+    public abstract void removeModel(T model);
 }

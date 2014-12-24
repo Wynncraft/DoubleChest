@@ -6,6 +6,8 @@ import com.mongodb.DBObject;
 import io.minestack.doublechest.databases.mongo.MongoDatabase;
 import io.minestack.doublechest.databases.mongo.MongoModelRepository;
 import io.minestack.doublechest.model.bungee.Bungee;
+import io.minestack.doublechest.model.network.Network;
+import io.minestack.doublechest.model.node.Node;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
@@ -47,6 +49,24 @@ public class MongoBungeeRepository extends MongoModelRepository<Bungee> {
         return bungee;
     }
 
+    public List<Bungee> getNodeBungees(Node node) {
+        List<Bungee> bungees = new ArrayList<>();
+
+        DBCursor bungeesCursor = getDatabase().findMany("bungees", new BasicDBObject("node_id", node.getId().toString()));
+        while (bungeesCursor.hasNext()) {
+            bungees.add(getModel((ObjectId) bungeesCursor.next().get("_id")));
+        }
+
+        return bungees;
+    }
+
+    public Bungee getNetworkNodeBungee(Network network, Node node) {
+        DBObject query = new BasicDBObject("network_id", network.getId().toString());
+        query.put("node_id", node.getId());
+
+        return getModel((ObjectId) getDatabase().findOne("bungees", query).get("_id"));
+    }
+
     @Override
     public void saveModel(Bungee model) {
         if (model.getId() == null) {
@@ -64,5 +84,10 @@ public class MongoBungeeRepository extends MongoModelRepository<Bungee> {
 
             getDatabase().updateDocument("bungees", new BasicDBObject("_id", model.getId()), dbBungee);
         }
+    }
+
+    @Override
+    public void removeModel(Bungee model) {
+        getDatabase().remove("bungees", new BasicDBObject("_id", model.getId()));
     }
 }

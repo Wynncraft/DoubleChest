@@ -65,4 +65,9 @@ public class MongoWorldRepository extends MongoModelRepository<World> {
     public void saveModel(World model) {
         throw new NotImplementedException();
     }
+
+    @Override
+    public void removeModel(World model) {
+        throw new NotImplementedException();
+    }
 }

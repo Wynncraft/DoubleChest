@@ -86,4 +86,9 @@ public class MongoPluginRepository extends MongoModelRepository<Plugin> {
     public void saveModel(Plugin model) {
         throw new NotImplementedException();
     }
+
+    @Override
+    public void removeModel(Plugin model) {
+        throw new NotImplementedException();
+    }
 }

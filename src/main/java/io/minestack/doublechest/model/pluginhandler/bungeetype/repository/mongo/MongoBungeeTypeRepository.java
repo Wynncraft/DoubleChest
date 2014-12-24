@@ -67,4 +67,9 @@ public class MongoBungeeTypeRepository extends MongoModelRepository<BungeeType> 
     public void saveModel(BungeeType model) {
         throw new NotImplementedException();
     }
+
+    @Override
+    public void removeModel(BungeeType model) {
+        throw new NotImplementedException();
+    }
 }

@@ -30,4 +30,5 @@ public class NetworkNode extends Model {
     public NetworkNode(ObjectId id, Date created_at) {
         super(id, created_at);
     }
+
 }

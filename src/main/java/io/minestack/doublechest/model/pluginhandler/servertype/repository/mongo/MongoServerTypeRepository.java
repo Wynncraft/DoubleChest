@@ -81,4 +81,9 @@ public class MongoServerTypeRepository extends MongoModelRepository<ServerType> 
     public void saveModel(ServerType model) {
         throw new NotImplementedException();
     }
+
+    @Override
+    public void removeModel(ServerType model) {
+        throw new NotImplementedException();
+    }
 }

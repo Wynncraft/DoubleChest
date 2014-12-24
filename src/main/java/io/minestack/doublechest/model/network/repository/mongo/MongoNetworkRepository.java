@@ -10,6 +10,7 @@ import io.minestack.doublechest.model.network.Network;
 import io.minestack.doublechest.model.node.NetworkNode;
 import io.minestack.doublechest.model.pluginhandler.servertype.NetworkServerType;
 import org.bson.types.ObjectId;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -80,6 +81,11 @@ public class MongoNetworkRepository extends MongoModelRepository<Network> {
 
     @Override
     public void saveModel(Network model) {
+        throw new NotImplementedException();
+    }
 
+    @Override
+    public void removeModel(Network model) {
+        throw new NotImplementedException();
     }
 }
