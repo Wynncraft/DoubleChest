@@ -1,10 +1,10 @@
 package io.minestack.doublechest.databases.rabbitmq;
 
-import com.mongodb.util.JSON;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.MessageProperties;
 import lombok.extern.log4j.Log4j2;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -37,7 +37,7 @@ public class Publisher {
         }
     }
 
-    public void publish(JSON message) throws IOException {
+    public void publish(JSONObject message) throws IOException {
         channel.basicPublish("", queueName, MessageProperties.PERSISTENT_TEXT_PLAIN, message.toString().getBytes());
         channel.close();
         connection.close();
