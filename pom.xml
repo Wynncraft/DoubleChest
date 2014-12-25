@@ -46,6 +46,10 @@
                                     <include>org.projectlombok:lombok:*</include>
                                     <!-- MongoDB -->
                                     <include>org.mongodb:mongo-java-driver:*</include>
+                                    <!-- RabbitMQ -->
+                                    <include>com.rabbitmq:amqp-client:*</include>
+                                    <!-- JSON -->
+                                    <include>org.json:json:*</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
@@ -75,6 +79,16 @@
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
             <version>2.12.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20141113</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>3.4.2</version>
         </dependency>
     </dependencies>
 
