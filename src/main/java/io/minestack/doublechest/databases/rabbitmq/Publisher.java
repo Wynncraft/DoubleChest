@@ -39,5 +39,7 @@ public class Publisher {
 
     public void publish(JSON message) throws IOException {
         channel.basicPublish("", queueName, MessageProperties.PERSISTENT_TEXT_PLAIN, message.toString().getBytes());
+        channel.close();
+        connection.close();
     }
 }
