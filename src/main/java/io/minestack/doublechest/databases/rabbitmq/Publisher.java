@@ -7,7 +7,6 @@ import lombok.extern.log4j.Log4j2;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 @Log4j2
 public class Publisher {
@@ -47,41 +46,22 @@ public class Publisher {
 
     public void publisherSetup() throws IOException {
         if (queueName != null) {
-            try {
-                log.info("Connecting to Queue " + queueName);
-                channel.queueDeclarePassive(queueName);
-            } catch (IOException e) {
-                channel = connection.createChannel();
-                log.info("Creating Queue " + queueName);
-                HashMap<String, Object> args = new HashMap<>();
-                args.put("x-ha-policy", "all");
-                args.put("x-expires", 1800000);//expire queue after 30 minutes of no activity
-                channel.queueDeclare(queueName, false, false, false, args);
-            }
+            log.info("Connecting to Queue " + queueName);
+            channel.queueDeclarePassive(queueName);
         }
 
         if (exchangeName != null) {
-            try {
-                log.info("Connecting to Exchange "+exchangeName);
-                channel.exchangeDeclarePassive(exchangeName);
-            } catch (IOException e) {
-                channel = connection.createChannel();
-                log.info("Creating Exchange "+exchangeName);
-                HashMap<String, Object> args = new HashMap<>();
-                args.put("x-expires", 1800000);//expire exchange after 30 minutes of no activity
-                channel.exchangeDeclare(exchangeName, exchangeType.getValue(), false, false, false, args);
-            }
+            log.info("Connecting to Exchange " + exchangeName);
+            channel.exchangeDeclarePassive(exchangeName);
         }
     }
 
     public void publish(JSONObject message) throws IOException {
         if (exchangeName == null && queueName != null) {
             channel.basicPublish("", queueName, MessageProperties.PERSISTENT_TEXT_PLAIN, message.toString().getBytes());
-        }
-        if (exchangeName != null && queueName == null) {
+        } else if (exchangeName != null && queueName == null) {
             channel.basicPublish(exchangeName, "", MessageProperties.PERSISTENT_TEXT_PLAIN, message.toString().getBytes());
-        }
-        if (exchangeName != null && queueName != null) {
+        } else if (exchangeName != null) {
             channel.basicPublish(exchangeName, queueName, MessageProperties.PERSISTENT_TEXT_PLAIN, message.toString().getBytes());
         }
         channel.close();

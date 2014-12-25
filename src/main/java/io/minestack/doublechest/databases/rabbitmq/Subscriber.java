@@ -44,7 +44,7 @@ public abstract class Subscriber {
         channel.basicConsume(queueName, false, args, consumer);
     }
 
-    public void stopWorking() {
+    public void stopSubscribing() {
         try {
             stop = true;
             channel.basicCancel(consumer.getConsumerTag());
