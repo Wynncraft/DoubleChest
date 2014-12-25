@@ -32,6 +32,10 @@ public class Server extends Model {
     @Setter
     private int number;
 
+    @Getter
+    @Setter
+    private String containerId;
+
     public Server(ObjectId id, Date created_at) {
         super(id, created_at);
     }

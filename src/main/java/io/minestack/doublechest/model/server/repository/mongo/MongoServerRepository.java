@@ -122,10 +122,12 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
 
     @Override
     public void saveModel(Server model) {
-            BasicDBObject dbServer = new BasicDBObject();
-            dbServer.put("updated_at", model.getUpdated_at());
+        BasicDBObject dbServer = new BasicDBObject();
+        dbServer.put("port", model.getPort());
+        dbServer.put("container", model.getContainerId());
+        dbServer.put("updated_at", model.getUpdated_at());
 
-            getDatabase().updateDocument("servers", new BasicDBObject("_id", model.getId()), dbServer);
+        getDatabase().updateDocument("servers", new BasicDBObject("_id", model.getId()), dbServer);
     }
 
     @Override
@@ -138,6 +140,7 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         dbServer.put("node_id", model.getNode().getId().toString());
         dbServer.put("server_type_id", model.getServerType().getId().toString());
         dbServer.put("port", model.getPort());
+        dbServer.put("container", model.getContainerId());
         dbServer.put("number", model.getNumber());
 
         getDatabase().insert("servers", dbServer);
