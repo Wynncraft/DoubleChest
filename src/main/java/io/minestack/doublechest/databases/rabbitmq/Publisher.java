@@ -16,7 +16,7 @@ public class Publisher {
     private final String queueName;
     private Channel channel;
 
-    protected Publisher(RabbitMQDatabase rabbitMQDatabase, String queueName) throws IOException {
+    public Publisher(RabbitMQDatabase rabbitMQDatabase, String queueName) throws IOException {
         connection = rabbitMQDatabase.getConnection();
         channel = connection.createChannel();
         this.queueName = queueName;
