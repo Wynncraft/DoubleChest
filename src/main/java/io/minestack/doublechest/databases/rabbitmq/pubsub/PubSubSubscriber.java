@@ -1,6 +1,7 @@
-package io.minestack.doublechest.databases.rabbitmq;
+package io.minestack.doublechest.databases.rabbitmq.pubsub;
 
 import com.rabbitmq.client.*;
+import io.minestack.doublechest.databases.rabbitmq.RabbitMQDatabase;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
@@ -8,7 +9,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 @Log4j2
-public abstract class Subscriber {
+public abstract class PubSubSubscriber {
 
     private final Connection connection;
     private final String exchangeName;
@@ -19,7 +20,7 @@ public abstract class Subscriber {
     private SubscriberConsumer consumer;
     private boolean stop = false;
 
-    public Subscriber(RabbitMQDatabase rabbitMQDatabase, String exchangeName) throws IOException {
+    public PubSubSubscriber(RabbitMQDatabase rabbitMQDatabase, String exchangeName) throws IOException {
         connection = rabbitMQDatabase.getConnection();
         channel = connection.createChannel();
         this.exchangeName = exchangeName;
@@ -39,6 +40,8 @@ public abstract class Subscriber {
         }
 
         String queueName = channel.queueDeclare().getQueue();
+        channel.queueBind(queueName, exchangeName, "");
+
         consumer = new SubscriberConsumer(channel);
         HashMap<String, Object> args = new HashMap<>();
         channel.basicConsume(queueName, false, args, consumer);

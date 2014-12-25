@@ -1,6 +1,7 @@
-package io.minestack.doublechest.databases.rabbitmq;
+package io.minestack.doublechest.databases.rabbitmq.worker;
 
 import com.rabbitmq.client.*;
+import io.minestack.doublechest.databases.rabbitmq.RabbitMQDatabase;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
