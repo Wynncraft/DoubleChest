@@ -46,7 +46,7 @@ public class MongoNodeRepository extends MongoModelRepository<Node> {
         node.setUpdated_at((Date) dbNode.get("updated_at"));
         node.setName((String) dbNode.get("name"));
         node.setPrivateAddress((String) dbNode.get("privateAddress"));
-        node.setRam((int) dbNode.get("ram"));
+        node.setRam(Integer.parseInt((String) dbNode.get("ram")));
 
         if (dbNode.containsField("publicaddresses")) {
             BasicDBList publicAddressList = (BasicDBList) dbNode.get("publicaddresses");
@@ -67,6 +67,11 @@ public class MongoNodeRepository extends MongoModelRepository<Node> {
 
     @Override
     public void saveModel(Node model) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public void insertModel(Node model) {
         throw new NotImplementedException();
     }
 

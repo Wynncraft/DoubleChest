@@ -88,6 +88,11 @@ public class MongoPluginRepository extends MongoModelRepository<Plugin> {
     }
 
     @Override
+    public void insertModel(Plugin model) {
+        throw new NotImplementedException();
+    }
+
+    @Override
     public void removeModel(Plugin model) {
         throw new NotImplementedException();
     }

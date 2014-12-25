@@ -46,8 +46,8 @@ public class MongoServerTypeRepository extends MongoModelRepository<ServerType> 
         serverType.setUpdated_at((Date) dbServerType.get("updated_at"));
         serverType.setName((String) dbServerType.get("name"));
         serverType.setDescription((String) dbServerType.get("description"));
-        serverType.setPlayers((int) dbServerType.get("players"));
-        serverType.setRam((int) dbServerType.get("ram"));
+        serverType.setPlayers(Integer.parseInt((String) dbServerType.get("players")));
+        serverType.setRam(Integer.parseInt((String) dbServerType.get("ram")));
 
         if (dbServerType.containsField("plugins")) {
             BasicDBList pluginList = (BasicDBList) dbServerType.get("plugins");
@@ -58,7 +58,9 @@ public class MongoServerTypeRepository extends MongoModelRepository<ServerType> 
                 pluginHolderPlugin.setUpdated_at((Date) dbPluginHolderPlugin.get("updated_at"));
                 pluginHolderPlugin.setPlugin(getDatabase().getPluginRepository().getModel(new ObjectId((String) dbPluginHolderPlugin.get("plugin_id"))));
                 pluginHolderPlugin.setVersion(pluginHolderPlugin.getPlugin().getVersions().get(new ObjectId((String) dbPluginHolderPlugin.get("pluginversion_id"))));
-                pluginHolderPlugin.setConfig(pluginHolderPlugin.getPlugin().getConfigs().get(new ObjectId((String) dbPluginHolderPlugin.get("pluginconfig_id"))));
+                if (dbPluginHolderPlugin.containsField("pluginconfig_id")) {
+                    pluginHolderPlugin.setConfig(pluginHolderPlugin.getPlugin().getConfigs().get(new ObjectId((String) dbPluginHolderPlugin.get("pluginconfig_id"))));
+                }
             }
         }
 
@@ -79,6 +81,11 @@ public class MongoServerTypeRepository extends MongoModelRepository<ServerType> 
 
     @Override
     public void saveModel(ServerType model) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public void insertModel(ServerType model) {
         throw new NotImplementedException();
     }
 

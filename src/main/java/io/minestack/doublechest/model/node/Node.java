@@ -45,7 +45,6 @@ public class Node extends Model {
         for (Bungee bungee : DoubleChest.INSTANCE.getMongoDatabase().getBungeeRepository().getNodeBungees(this)) {
             freeRam -= bungee.getBungeeType().getRam();
         }
-
         return freeRam;
     }
 

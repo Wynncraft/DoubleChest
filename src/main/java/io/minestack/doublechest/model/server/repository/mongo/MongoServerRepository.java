@@ -122,24 +122,25 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
 
     @Override
     public void saveModel(Server model) {
-        if (model.getId() == null) {
-            BasicDBObject dbServer = new BasicDBObject();
-            dbServer.put("_id", model.getId());
-            dbServer.put("created_at", model.getCreated_at());
-            dbServer.put("updated_at", model.getUpdated_at());
-            dbServer.put("network_id", model.getNetwork().getId().toString());
-            dbServer.put("node_id", model.getNode().getId().toString());
-            dbServer.put("server_type_id", model.getServerType().getId().toString());
-            dbServer.put("port", model.getPort());
-            dbServer.put("number", model.getNumber());
-
-            getDatabase().insert("servers", dbServer);
-        } else {
             BasicDBObject dbServer = new BasicDBObject();
             dbServer.put("updated_at", model.getUpdated_at());
 
             getDatabase().updateDocument("servers", new BasicDBObject("_id", model.getId()), dbServer);
-        }
+    }
+
+    @Override
+    public void insertModel(Server model) {
+        BasicDBObject dbServer = new BasicDBObject();
+        dbServer.put("_id", model.getId());
+        dbServer.put("created_at", model.getCreated_at());
+        dbServer.put("updated_at", model.getUpdated_at());
+        dbServer.put("network_id", model.getNetwork().getId().toString());
+        dbServer.put("node_id", model.getNode().getId().toString());
+        dbServer.put("server_type_id", model.getServerType().getId().toString());
+        dbServer.put("port", model.getPort());
+        dbServer.put("number", model.getNumber());
+
+        getDatabase().insert("servers", dbServer);
     }
 
     @Override

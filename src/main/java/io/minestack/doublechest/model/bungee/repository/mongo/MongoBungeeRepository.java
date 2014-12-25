@@ -62,29 +62,35 @@ public class MongoBungeeRepository extends MongoModelRepository<Bungee> {
 
     public Bungee getNetworkNodeBungee(Network network, Node node) {
         DBObject query = new BasicDBObject("network_id", network.getId().toString());
-        query.put("node_id", node.getId());
+        query.put("node_id", node.getId().toString());
 
-        return getModel((ObjectId) getDatabase().findOne("bungees", query).get("_id"));
+        DBObject dbObject = getDatabase().findOne("bungees", query);
+        if (dbObject == null) {
+            return null;
+        }
+        return getModel((ObjectId) dbObject.get("_id"));
     }
 
     @Override
     public void saveModel(Bungee model) {
-        if (model.getId() == null) {
-            BasicDBObject dbBungee = new BasicDBObject();
-            dbBungee.put("_id", model.getId());
-            dbBungee.put("created_at", model.getCreated_at());
-            dbBungee.put("updated_at", model.getUpdated_at());
-            dbBungee.put("network_id", model.getNetwork().getId().toString());
-            dbBungee.put("node_id", model.getNode().getId().toString());
-            dbBungee.put("bungee_type_id", model.getBungeeType().getId().toString());
-
-            getDatabase().insert("bungees", dbBungee);
-        } else {
             BasicDBObject dbBungee = new BasicDBObject();
             dbBungee.put("updated_at", model.getUpdated_at());
 
             getDatabase().updateDocument("bungees", new BasicDBObject("_id", model.getId()), dbBungee);
-        }
+    }
+
+    @Override
+    public void insertModel(Bungee model) {
+        BasicDBObject dbBungee = new BasicDBObject();
+        dbBungee.put("_id", model.getId());
+        dbBungee.put("created_at", model.getCreated_at());
+        dbBungee.put("updated_at", model.getUpdated_at());
+        dbBungee.put("network_id", model.getNetwork().getId().toString());
+        dbBungee.put("node_id", model.getNode().getId().toString());
+        dbBungee.put("node_public_address_id", model.getPublicAddress().getId().toString());
+        dbBungee.put("bungee_type_id", model.getBungeeType().getId().toString());
+
+        getDatabase().insert("bungees", dbBungee);
     }
 
     @Override

@@ -56,7 +56,7 @@ public class MongoNetworkRepository extends MongoModelRepository<Network> {
                 networkServerType.setUpdated_at((Date) dbServerType.get("updated_at"));
                 networkServerType.setServerType(getDatabase().getServerTypeRepository().getModel(new ObjectId((String) dbServerType.get("server_type_id"))));
                 networkServerType.setDefaultServerType((boolean) dbServerType.get("defaultServerType"));
-                networkServerType.setAmount((int) dbServerType.get("amount"));
+                networkServerType.setAmount(Integer.parseInt((String) dbServerType.get("amount")));
                 networkServerType.setNetwork(network);
                 network.getServerTypes().put(networkServerType.getId(), networkServerType);
             }
@@ -73,6 +73,8 @@ public class MongoNetworkRepository extends MongoModelRepository<Network> {
                 networkNode.setNode(getDatabase().getNodeRepository().getModel(new ObjectId((String) dbNode.get("node_id"))));
                 networkNode.setNodePublicAddress(networkNode.getNode().getPublicAddresses().get(new ObjectId((String) dbNode.get("node_public_address_id"))));
                 networkNode.setBungeeType(getDatabase().getBungeeTypeRepository().getModel(new ObjectId((String) dbNode.get("bungee_type_id"))));
+                networkNode.setNetwork(network);
+                network.getNodes().put(networkNode.getId(), networkNode);
             }
         }
 
@@ -81,6 +83,11 @@ public class MongoNetworkRepository extends MongoModelRepository<Network> {
 
     @Override
     public void saveModel(Network model) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public void insertModel(Network model) {
         throw new NotImplementedException();
     }
 

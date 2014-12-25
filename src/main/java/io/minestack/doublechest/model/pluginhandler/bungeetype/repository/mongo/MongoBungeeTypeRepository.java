@@ -45,7 +45,7 @@ public class MongoBungeeTypeRepository extends MongoModelRepository<BungeeType> 
         bungeeType.setUpdated_at((Date) dbBungeeType.get("updated_at"));
         bungeeType.setName((String) dbBungeeType.get("name"));
         bungeeType.setDescription((String) dbBungeeType.get("description"));
-        bungeeType.setRam((int) dbBungeeType.get("ram"));
+        bungeeType.setRam(Integer.parseInt((String) dbBungeeType.get("ram")));
 
         if (dbBungeeType.containsField("plugins")) {
             BasicDBList pluginList = (BasicDBList) dbBungeeType.get("plugins");
@@ -56,7 +56,9 @@ public class MongoBungeeTypeRepository extends MongoModelRepository<BungeeType> 
                 pluginHolderPlugin.setUpdated_at((Date) dbPluginHolderPlugin.get("updated_at"));
                 pluginHolderPlugin.setPlugin(getDatabase().getPluginRepository().getModel(new ObjectId((String) dbPluginHolderPlugin.get("plugin_id"))));
                 pluginHolderPlugin.setVersion(pluginHolderPlugin.getPlugin().getVersions().get(new ObjectId((String) dbPluginHolderPlugin.get("pluginversion_id"))));
-                pluginHolderPlugin.setConfig(pluginHolderPlugin.getPlugin().getConfigs().get(new ObjectId((String) dbPluginHolderPlugin.get("pluginconfig_id"))));
+                if (dbPluginHolderPlugin.containsField("pluginconfig_id")) {
+                    pluginHolderPlugin.setConfig(pluginHolderPlugin.getPlugin().getConfigs().get(new ObjectId((String) dbPluginHolderPlugin.get("pluginconfig_id"))));
+                }
             }
         }
 
@@ -65,6 +67,11 @@ public class MongoBungeeTypeRepository extends MongoModelRepository<BungeeType> 
 
     @Override
     public void saveModel(BungeeType model) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public void insertModel(BungeeType model) {
         throw new NotImplementedException();
     }
 
