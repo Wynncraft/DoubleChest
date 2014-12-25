@@ -17,25 +17,22 @@ public abstract class WorkerQueue {
 
     public WorkerQueue(RabbitMQDatabase rabbitMQDatabase, String queueName) throws IOException {
         connection = rabbitMQDatabase.getConnection();
-        connection.addShutdownListener(this::shutdownListener);
-
         channel = connection.createChannel();
-
         this.queueName = queueName;
-
         consumerSetup();
     }
 
     private void consumerSetup() throws IOException {
         try {
-            log.info("Connecting to Queue "+queueName);
+            log.info("Connecting to Worker Queue "+queueName);
             channel.queueDeclarePassive(queueName);
         } catch (IOException e) {
             channel = connection.createChannel();
-            log.info("Creating Queue "+ queueName);
+            log.info("Creating Worker Queue "+ queueName);
             HashMap<String, Object> args = new HashMap<>();
             args.put("x-ha-policy", "all");
-            channel.queueDeclare(queueName, true, false, true, args);
+            args.put("x-expires", 1800000);//expire queue after 30 minutes of no activity
+            channel.queueDeclare(queueName, false, false, false, args);
         }
         channel.basicQos(1);
         consumer = new WorkerQueueConsumer(channel);
@@ -54,8 +51,6 @@ public abstract class WorkerQueue {
             e.printStackTrace();
         }
     }
-
-    public abstract void shutdownListener(ShutdownSignalException e);
 
     public abstract void messageDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body);
 
