@@ -1,6 +1,7 @@
 package io.minestack.doublechest.databases.rabbitmq;
 
 import com.rabbitmq.client.*;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
@@ -11,7 +12,10 @@ public abstract class WorkerQueue {
 
     private final Connection connection;
     private final String queueName;
+
+    @Getter
     private Channel channel;
+
     private WorkerQueueConsumer consumer;
     private boolean stop = false;
 
@@ -52,7 +56,7 @@ public abstract class WorkerQueue {
         }
     }
 
-    public abstract void messageDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body);
+    public abstract void messageDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException;
 
     class WorkerQueueConsumer extends DefaultConsumer {
 
