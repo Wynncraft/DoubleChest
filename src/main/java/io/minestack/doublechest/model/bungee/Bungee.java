@@ -29,6 +29,10 @@ public class Bungee extends Model {
     @Setter
     private NodePublicAddress publicAddress;
 
+    @Getter
+    @Setter
+    private String containerId;
+
     public Bungee(ObjectId id, Date created_at) {
         super(id, created_at);
     }

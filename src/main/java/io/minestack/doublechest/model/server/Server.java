@@ -36,6 +36,10 @@ public class Server extends Model {
     @Setter
     private String containerId;
 
+    @Getter
+    @Setter
+    private int players;
+
     public Server(ObjectId id, Date created_at) {
         super(id, created_at);
     }

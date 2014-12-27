@@ -44,9 +44,14 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         Server server = new Server((ObjectId) dbServer.get("_id"), (Date) dbServer.get("created_at"));
         server.setUpdated_at((Date) dbServer.get("updated_at"));
         server.setNetwork(getDatabase().getNetworkRepository().getModel(new ObjectId((String) dbServer.get("network_id"))));
-        server.setNode(getDatabase().getNodeRepository().getModel(new ObjectId((String) dbServer.get("node_id"))));
+        String node = (String) dbServer.get("node_id");
+        if (node != null) {
+            server.setNode(getDatabase().getNodeRepository().getModel(new ObjectId(node)));
+        }
         server.setServerType(getDatabase().getServerTypeRepository().getModel(new ObjectId((String) dbServer.get("server_type_id"))));
+        server.setContainerId((String) dbServer.get("container"));
         server.setPort((int) dbServer.get("port"));
+        server.setPlayers((int) dbServer.get("players"));
         server.setNumber((int) dbServer.get("number"));
 
         return server;
@@ -123,11 +128,15 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
     @Override
     public void saveModel(Server model) {
         BasicDBObject dbServer = new BasicDBObject();
+        dbServer.put("updated_at", model.getUpdated_at());
+        if (model.getNode() != null) {
+            dbServer.put("node_id", model.getNode().getId().toString());
+        }
         dbServer.put("port", model.getPort());
         dbServer.put("container", model.getContainerId());
-        dbServer.put("updated_at", model.getUpdated_at());
-
-        getDatabase().updateDocument("servers", new BasicDBObject("_id", model.getId()), dbServer);
+        dbServer.put("players", model.getPlayers());
+        dbServer.put("number", model.getNumber());
+        getDatabase().updateDocument("servers", new BasicDBObject("_id", model.getId()), new BasicDBObject("$set", dbServer));
     }
 
     @Override
@@ -137,10 +146,15 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         dbServer.put("created_at", model.getCreated_at());
         dbServer.put("updated_at", model.getUpdated_at());
         dbServer.put("network_id", model.getNetwork().getId().toString());
-        dbServer.put("node_id", model.getNode().getId().toString());
+        if (model.getNode() != null) {
+            dbServer.put("node_id", model.getNode().getId().toString());
+        } else {
+            dbServer.put("node_id", null);
+        }
         dbServer.put("server_type_id", model.getServerType().getId().toString());
         dbServer.put("port", model.getPort());
         dbServer.put("container", model.getContainerId());
+        dbServer.put("players", model.getPlayers());
         dbServer.put("number", model.getNumber());
 
         getDatabase().insert("servers", dbServer);

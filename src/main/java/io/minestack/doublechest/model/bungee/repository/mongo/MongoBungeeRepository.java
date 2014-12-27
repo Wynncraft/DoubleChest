@@ -45,6 +45,7 @@ public class MongoBungeeRepository extends MongoModelRepository<Bungee> {
         bungee.setNetwork(getDatabase().getNetworkRepository().getModel(new ObjectId((String) dbBungee.get("network_id"))));
         bungee.setNode(getDatabase().getNodeRepository().getModel(new ObjectId((String) dbBungee.get("node_id"))));
         bungee.setBungeeType(getDatabase().getBungeeTypeRepository().getModel(new ObjectId((String) dbBungee.get("bungee_type_id"))));
+        bungee.setContainerId((String) dbBungee.get("container"));
 
         return bungee;
     }
@@ -73,10 +74,11 @@ public class MongoBungeeRepository extends MongoModelRepository<Bungee> {
 
     @Override
     public void saveModel(Bungee model) {
-            BasicDBObject dbBungee = new BasicDBObject();
-            dbBungee.put("updated_at", model.getUpdated_at());
+        BasicDBObject dbBungee = new BasicDBObject();
+        dbBungee.put("updated_at", model.getUpdated_at());
+        dbBungee.put("container", model.getContainerId());
 
-            getDatabase().updateDocument("bungees", new BasicDBObject("_id", model.getId()), dbBungee);
+        getDatabase().updateDocument("bungees", new BasicDBObject("_id", model.getId()), new BasicDBObject("$set", dbBungee));
     }
 
     @Override
@@ -89,6 +91,7 @@ public class MongoBungeeRepository extends MongoModelRepository<Bungee> {
         dbBungee.put("node_id", model.getNode().getId().toString());
         dbBungee.put("node_public_address_id", model.getPublicAddress().getId().toString());
         dbBungee.put("bungee_type_id", model.getBungeeType().getId().toString());
+        dbBungee.put("container", model.getContainerId());
 
         getDatabase().insert("bungees", dbBungee);
     }

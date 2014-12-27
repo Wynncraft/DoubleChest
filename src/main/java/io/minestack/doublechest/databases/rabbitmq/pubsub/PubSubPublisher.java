@@ -40,6 +40,9 @@ public class PubSubPublisher {
 
     public void publish(JSONObject message) throws IOException {
         channel.basicPublish(exchangeName, "", MessageProperties.PERSISTENT_TEXT_PLAIN, message.toString().getBytes());
+    }
+
+    public void close() throws IOException {
         channel.close();
         connection.close();
     }

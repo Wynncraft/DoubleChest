@@ -26,6 +26,10 @@ public class NetworkServerType extends Model {
     @Setter
     private boolean defaultServerType;
 
+    @Getter
+    @Setter
+    private boolean manualStart;
+
     public NetworkServerType(ObjectId id, Date created_at) {
         super(id, created_at);
     }
