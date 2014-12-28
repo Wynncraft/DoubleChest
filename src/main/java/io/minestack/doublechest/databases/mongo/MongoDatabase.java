@@ -11,10 +11,12 @@ import io.minestack.doublechest.model.pluginhandler.servertype.repository.mongo.
 import io.minestack.doublechest.model.server.repository.mongo.MongoServerRepository;
 import io.minestack.doublechest.model.world.repository.mongo.MongoWorldRepository;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.Arrays;
 import java.util.List;
 
+@Log4j2
 public class MongoDatabase implements Database {
 
     private final List<ServerAddress> addressList;

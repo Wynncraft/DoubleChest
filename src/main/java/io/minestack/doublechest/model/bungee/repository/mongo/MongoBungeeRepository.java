@@ -45,6 +45,7 @@ public class MongoBungeeRepository extends MongoModelRepository<Bungee> {
         bungee.setNetwork(getDatabase().getNetworkRepository().getModel(new ObjectId((String) dbBungee.get("network_id"))));
         bungee.setNode(getDatabase().getNodeRepository().getModel(new ObjectId((String) dbBungee.get("node_id"))));
         bungee.setBungeeType(getDatabase().getBungeeTypeRepository().getModel(new ObjectId((String) dbBungee.get("bungee_type_id"))));
+        bungee.setPublicAddress(bungee.getNode().getPublicAddresses().get(new ObjectId((String) dbBungee.get("node_public_address_id"))));
         bungee.setContainerId((String) dbBungee.get("container"));
 
         return bungee;
