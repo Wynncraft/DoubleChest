@@ -44,7 +44,7 @@ public abstract class PubSubSubscriber {
 
         consumer = new SubscriberConsumer(channel);
         HashMap<String, Object> args = new HashMap<>();
-        channel.basicConsume(queueName, false, args, consumer);
+        channel.basicConsume(queueName, true, args, consumer);
     }
 
     public void stopSubscribing() {

@@ -2,7 +2,6 @@ package io.minestack.doublechest.databases.rabbitmq.pubsub;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.MessageProperties;
 import io.minestack.doublechest.databases.rabbitmq.ExchangeType;
 import io.minestack.doublechest.databases.rabbitmq.RabbitMQDatabase;
 import lombok.extern.log4j.Log4j2;
@@ -39,7 +38,7 @@ public class PubSubPublisher {
     }
 
     public void publish(JSONObject message) throws IOException {
-        channel.basicPublish(exchangeName, "", MessageProperties.PERSISTENT_TEXT_PLAIN, message.toString().getBytes());
+        channel.basicPublish(exchangeName, "", null, message.toString().getBytes());
     }
 
     public void close() throws IOException {
