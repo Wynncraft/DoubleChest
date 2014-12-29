@@ -79,6 +79,15 @@ public class MongoServerTypeRepository extends MongoModelRepository<ServerType> 
         return serverType;
     }
 
+    public ServerType getModel(String typeName) {
+        DBObject query = new BasicDBObject("name", typeName);
+        DBObject dbServerType = getDatabase().findOne("servertypes", query);
+        if (dbServerType == null) {
+            return null;
+        }
+        return getModel((ObjectId) dbServerType.get("_id"));
+    }
+
     @Override
     public void saveModel(ServerType model) {
         throw new NotImplementedException();

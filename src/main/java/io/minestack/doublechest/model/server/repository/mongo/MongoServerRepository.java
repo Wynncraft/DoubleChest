@@ -114,6 +114,20 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         return servers;
     }
 
+    public Server getNetworkServerTypeServerNumber(Network network, ServerType serverType, int number) {
+        List<Server> servers = new ArrayList<>();
+
+        BasicDBObject query = new BasicDBObject("network_id", network.getId().toString());
+        query.put("server_type_id", serverType.getId().toString());
+        query.put("number", number);
+
+        DBObject dbServer = getDatabase().findOne("servers", query);
+        if (dbServer == null) {
+            return null;
+        }
+        return getModel((ObjectId) dbServer.get("_id"));
+    }
+
     public List<Server> getServerTypeServers(ServerType serverType) {
         List<Server> servers = new ArrayList<>();
 
