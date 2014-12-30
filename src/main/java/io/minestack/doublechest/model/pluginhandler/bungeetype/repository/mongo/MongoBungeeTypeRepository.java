@@ -55,7 +55,9 @@ public class MongoBungeeTypeRepository extends MongoModelRepository<BungeeType> 
                 PluginHolderPlugin pluginHolderPlugin = new PluginHolderPlugin((ObjectId) dbPluginHolderPlugin.get("_id"), (Date) dbPluginHolderPlugin.get("created_at"));
                 pluginHolderPlugin.setUpdated_at((Date) dbPluginHolderPlugin.get("updated_at"));
                 pluginHolderPlugin.setPlugin(getDatabase().getPluginRepository().getModel(new ObjectId((String) dbPluginHolderPlugin.get("plugin_id"))));
-                pluginHolderPlugin.setVersion(pluginHolderPlugin.getPlugin().getVersions().get(new ObjectId((String) dbPluginHolderPlugin.get("pluginversion_id"))));
+                if (dbPluginHolderPlugin.containsField("pluginversion_id")) {
+                    pluginHolderPlugin.setVersion(pluginHolderPlugin.getPlugin().getVersions().get(new ObjectId((String) dbPluginHolderPlugin.get("pluginversion_id"))));
+                }
                 if (dbPluginHolderPlugin.containsField("pluginconfig_id")) {
                     pluginHolderPlugin.setConfig(pluginHolderPlugin.getPlugin().getConfigs().get(new ObjectId((String) dbPluginHolderPlugin.get("pluginconfig_id"))));
                 }
