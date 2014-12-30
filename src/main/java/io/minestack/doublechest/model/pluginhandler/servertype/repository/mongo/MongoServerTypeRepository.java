@@ -57,8 +57,10 @@ public class MongoServerTypeRepository extends MongoModelRepository<ServerType> 
                 PluginHolderPlugin pluginHolderPlugin = new PluginHolderPlugin((ObjectId) dbPluginHolderPlugin.get("_id"), (Date) dbPluginHolderPlugin.get("created_at"));
                 pluginHolderPlugin.setUpdated_at((Date) dbPluginHolderPlugin.get("updated_at"));
                 pluginHolderPlugin.setPlugin(getDatabase().getPluginRepository().getModel(new ObjectId((String) dbPluginHolderPlugin.get("plugin_id"))));
-                pluginHolderPlugin.setVersion(pluginHolderPlugin.getPlugin().getVersions().get(new ObjectId((String) dbPluginHolderPlugin.get("pluginversion_id"))));
-                if (dbPluginHolderPlugin.containsField("pluginconfig_id")) {
+                if (dbPluginHolderPlugin.containsField("pluginversion_id") == true) {
+                    pluginHolderPlugin.setVersion(pluginHolderPlugin.getPlugin().getVersions().get(new ObjectId((String) dbPluginHolderPlugin.get("pluginversion_id"))));
+                }
+                if (dbPluginHolderPlugin.containsField("pluginconfig_id") == true) {
                     pluginHolderPlugin.setConfig(pluginHolderPlugin.getPlugin().getConfigs().get(new ObjectId((String) dbPluginHolderPlugin.get("pluginconfig_id"))));
                 }
             }
