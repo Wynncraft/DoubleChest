@@ -71,7 +71,9 @@ public class MongoServerTypeRepository extends MongoModelRepository<ServerType> 
 
                 ServerTypeWorld serverTypeWorld = new ServerTypeWorld((ObjectId) dbServerTypeWorld.get("_id"), (Date) dbServerTypeWorld.get("created_at"));
                 serverTypeWorld.setWorld(getDatabase().getWorldRepository().getModel(new ObjectId((String) dbServerTypeWorld.get("world_id"))));
-                serverTypeWorld.setVersion(serverTypeWorld.getWorld().getVersions().get(new ObjectId((String) dbServerTypeWorld.get("worldversion_id"))));
+                if (dbServerType.containsField("worldversion_id") == true) {
+                    serverTypeWorld.setVersion(serverTypeWorld.getWorld().getVersions().get(new ObjectId((String) dbServerTypeWorld.get("worldversion_id"))));
+                }
                 serverTypeWorld.setDefaultWorld((boolean) dbServerTypeWorld.get("defaultWorld"));
             }
         }
