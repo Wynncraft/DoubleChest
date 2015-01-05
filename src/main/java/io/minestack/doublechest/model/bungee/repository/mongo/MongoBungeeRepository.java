@@ -8,6 +8,7 @@ import io.minestack.doublechest.databases.mongo.MongoModelRepository;
 import io.minestack.doublechest.model.bungee.Bungee;
 import io.minestack.doublechest.model.network.Network;
 import io.minestack.doublechest.model.node.Node;
+import io.minestack.doublechest.model.node.NodePublicAddress;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
@@ -62,9 +63,10 @@ public class MongoBungeeRepository extends MongoModelRepository<Bungee> {
         return bungees;
     }
 
-    public Bungee getNetworkNodeBungee(Network network, Node node) {
+    public Bungee getNetworkNodeAddressBungee(Network network, Node node, NodePublicAddress publicAddress) {
         DBObject query = new BasicDBObject("network_id", network.getId().toString());
         query.put("node_id", node.getId().toString());
+        query.put("node_public_address_id", publicAddress.getId().toString());
 
         DBObject dbObject = getDatabase().findOne("bungees", query);
         if (dbObject == null) {
