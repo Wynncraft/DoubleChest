@@ -63,6 +63,17 @@ public class MongoBungeeRepository extends MongoModelRepository<Bungee> {
         return bungees;
     }
 
+    public List<Bungee> getNetworkBungees(Network network) {
+        List<Bungee> bungees = new ArrayList<>();
+
+        DBCursor bungeesCursor = getDatabase().findMany("bungees", new BasicDBObject("network_id", network.getId().toString()));
+        while (bungeesCursor.hasNext()) {
+            bungees.add(getModel((ObjectId) bungeesCursor.next().get("_id")));
+        }
+
+        return bungees;
+    }
+
     public Bungee getNetworkNodeAddressBungee(Network network, Node node, NodePublicAddress publicAddress) {
         DBObject query = new BasicDBObject("network_id", network.getId().toString());
         query.put("node_id", node.getId().toString());
