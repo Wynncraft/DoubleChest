@@ -8,6 +8,8 @@ import io.minestack.doublechest.databases.mongo.MongoDatabase;
 import io.minestack.doublechest.databases.mongo.MongoModelRepository;
 import io.minestack.doublechest.model.network.Network;
 import io.minestack.doublechest.model.node.NetworkNode;
+import io.minestack.doublechest.model.pluginhandler.bungeetype.NetworkBungeeType;
+import io.minestack.doublechest.model.pluginhandler.bungeetype.NetworkBungeeTypeAddress;
 import io.minestack.doublechest.model.pluginhandler.servertype.NetworkServerType;
 import org.bson.types.ObjectId;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -69,15 +71,38 @@ public class MongoNetworkRepository extends MongoModelRepository<Network> {
             for (Object objNode : nodeList) {
                 DBObject dbNode = (DBObject) objNode;
 
-                NetworkNode networkNode = new NetworkNode((ObjectId) dbNetwork.get("_id"), (Date) dbNode.get("created_at"));
+                NetworkNode networkNode = new NetworkNode((ObjectId) dbNode.get("_id"), (Date) dbNode.get("created_at"));
                 networkNode.setUpdated_at((Date) dbNode.get("updated_at"));
                 networkNode.setNode(getDatabase().getNodeRepository().getModel(new ObjectId((String) dbNode.get("node_id"))));
-                if (dbNode.containsField("bungee_type_id")) {
-                    networkNode.setNodePublicAddress(networkNode.getNode().getPublicAddresses().get(new ObjectId((String) dbNode.get("node_public_address_id"))));
-                    networkNode.setBungeeType(getDatabase().getBungeeTypeRepository().getModel(new ObjectId((String) dbNode.get("bungee_type_id"))));
-                }
                 networkNode.setNetwork(network);
                 network.getNodes().put(networkNode.getId(), networkNode);
+            }
+        }
+
+        if (dbNetwork.containsField("bungeetypes")) {
+            BasicDBList bungeeTypeList = (BasicDBList) dbNetwork.get("bungeetypes");
+
+            for (Object objBungeeType : bungeeTypeList) {
+                DBObject dbBungeeType = (DBObject) objBungeeType;
+
+                NetworkBungeeType networkBungeeType = new NetworkBungeeType((ObjectId) dbBungeeType.get("_id"), (Date) dbBungeeType.get("created_at"));
+                networkBungeeType.setAmount(Integer.parseInt((String) dbBungeeType.get("amount")));
+                networkBungeeType.setNetwork(network);
+
+                BasicDBList addressList = (BasicDBList) dbNetwork.get("addresses");
+
+                for (Object objAddress : addressList) {
+                    DBObject dbAddress = (DBObject) objAddress;
+
+                    NetworkBungeeTypeAddress networkBungeeTypeAddress = new NetworkBungeeTypeAddress((ObjectId) dbAddress.get("_id"), (Date) dbAddress.get("created_at"));
+                    networkBungeeTypeAddress.setNetworkBungeeType(networkBungeeType);
+                    networkBungeeTypeAddress.setNode(network.getNodes().get(new ObjectId((String) dbAddress.get("node_id"))).getNode());
+                    networkBungeeTypeAddress.setPublicAddress(networkBungeeTypeAddress.getNode().getPublicAddresses().get(new ObjectId((String) dbAddress.get("node_public_address_id"))));
+
+                    networkBungeeType.getAddresses().put(networkBungeeTypeAddress.getId(), networkBungeeTypeAddress);
+                }
+
+                network.getBungeeTypes().put(networkBungeeType.getId(), networkBungeeType);
             }
         }
 

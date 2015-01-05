@@ -3,6 +3,7 @@ package io.minestack.doublechest.model.network;
 import io.minestack.doublechest.model.Model;
 import io.minestack.doublechest.model.node.NetworkNode;
 import io.minestack.doublechest.model.node.Node;
+import io.minestack.doublechest.model.pluginhandler.bungeetype.NetworkBungeeType;
 import io.minestack.doublechest.model.pluginhandler.servertype.NetworkServerType;
 import io.minestack.doublechest.model.pluginhandler.servertype.ServerType;
 import lombok.Getter;
@@ -28,6 +29,10 @@ public class Network extends Model {
 
     @Getter
     private Map<ObjectId, NetworkServerType> serverTypes = new HashMap<>();
+
+    @Getter
+    private Map<ObjectId, NetworkBungeeType> bungeeTypes = new HashMap<>();
+
 
     public Network(ObjectId id, Date created_at) {
         super(id, created_at);
