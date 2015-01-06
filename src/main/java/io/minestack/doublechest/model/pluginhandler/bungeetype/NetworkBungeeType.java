@@ -18,6 +18,10 @@ public class NetworkBungeeType extends Model {
 
     @Getter
     @Setter
+    private BungeeType bungeeType;
+
+    @Getter
+    @Setter
     private int amount;
 
     @Getter

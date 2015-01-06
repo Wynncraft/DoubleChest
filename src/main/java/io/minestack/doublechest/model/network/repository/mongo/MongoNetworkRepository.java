@@ -4,6 +4,7 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import io.minestack.doublechest.DoubleChest;
 import io.minestack.doublechest.databases.mongo.MongoDatabase;
 import io.minestack.doublechest.databases.mongo.MongoModelRepository;
 import io.minestack.doublechest.model.network.Network;
@@ -75,7 +76,7 @@ public class MongoNetworkRepository extends MongoModelRepository<Network> {
                 networkNode.setUpdated_at((Date) dbNode.get("updated_at"));
                 networkNode.setNode(getDatabase().getNodeRepository().getModel(new ObjectId((String) dbNode.get("node_id"))));
                 networkNode.setNetwork(network);
-                network.getNodes().put(networkNode.getId(), networkNode);
+                network.getNodes().put(networkNode.getNode().getId(), networkNode);
             }
         }
 
@@ -88,8 +89,9 @@ public class MongoNetworkRepository extends MongoModelRepository<Network> {
                 NetworkBungeeType networkBungeeType = new NetworkBungeeType((ObjectId) dbBungeeType.get("_id"), (Date) dbBungeeType.get("created_at"));
                 networkBungeeType.setAmount(Integer.parseInt((String) dbBungeeType.get("amount")));
                 networkBungeeType.setNetwork(network);
+                networkBungeeType.setBungeeType(DoubleChest.INSTANCE.getMongoDatabase().getBungeeTypeRepository().getModel(new ObjectId((String) dbBungeeType.get("bungee_type_id"))));
 
-                BasicDBList addressList = (BasicDBList) dbNetwork.get("addresses");
+                BasicDBList addressList = (BasicDBList) dbBungeeType.get("addresses");
 
                 for (Object objAddress : addressList) {
                     DBObject dbAddress = (DBObject) objAddress;
