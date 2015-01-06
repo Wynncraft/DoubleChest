@@ -22,7 +22,7 @@ public class ServerCreatePublisher extends WorkerPublisher {
         Server server = new Server(new ObjectId(), new Date(System.currentTimeMillis()));
         server.setNetwork(network);
         server.setServerType(serverType);
-        server.setUpdated_at(new Date(System.currentTimeMillis() + 300000));//add 5 minutes for server to start up
+        server.setUpdated_at(new Date(System.currentTimeMillis() + 300000));
         DoubleChest.INSTANCE.getMongoDatabase().getServerRepository().insertModel(server);
 
         JSONObject message = new JSONObject();
