@@ -33,6 +33,8 @@ public class Network extends Model {
     @Getter
     private Map<ObjectId, NetworkBungeeType> bungeeTypes = new HashMap<>();
 
+    @Getter
+    private Map<String, NetworkForcedHost> forcedHosts = new HashMap<>();
 
     public Network(ObjectId id, Date created_at) {
         super(id, created_at);

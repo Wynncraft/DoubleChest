@@ -8,6 +8,7 @@ import io.minestack.doublechest.DoubleChest;
 import io.minestack.doublechest.databases.mongo.MongoDatabase;
 import io.minestack.doublechest.databases.mongo.MongoModelRepository;
 import io.minestack.doublechest.model.network.Network;
+import io.minestack.doublechest.model.network.NetworkForcedHost;
 import io.minestack.doublechest.model.node.NetworkNode;
 import io.minestack.doublechest.model.pluginhandler.bungeetype.NetworkBungeeType;
 import io.minestack.doublechest.model.pluginhandler.bungeetype.NetworkBungeeTypeAddress;
@@ -104,7 +105,22 @@ public class MongoNetworkRepository extends MongoModelRepository<Network> {
                     networkBungeeType.getAddresses().put(networkBungeeTypeAddress.getId(), networkBungeeTypeAddress);
                 }
 
-                network.getBungeeTypes().put(networkBungeeType.getId(), networkBungeeType);
+                network.getBungeeTypes().put(networkBungeeType.getBungeeType().getId(), networkBungeeType);
+            }
+        }
+
+        if (dbNetwork.containsField("forcedHosts")) {
+            BasicDBList forcedHostList = (BasicDBList) dbNetwork.get("forcedHosts");
+
+            for (Object objForcedHost : forcedHostList) {
+                DBObject dbForcedHost = (DBObject) objForcedHost;
+
+                NetworkForcedHost networkForcedHost = new NetworkForcedHost((ObjectId) dbForcedHost.get("_id"), (Date) dbForcedHost.get("created_at"));
+                networkForcedHost.setHost((String) dbForcedHost.get("host"));
+                networkForcedHost.setNetwork(network);
+                networkForcedHost.setServerType(network.getServerTypes().get(new ObjectId((String) dbForcedHost.get("server_type_id"))).getServerType());
+
+                network.getForcedHosts().put(networkForcedHost.getHost(), networkForcedHost);
             }
         }
 
