@@ -36,6 +36,9 @@ public class Network extends Model {
     @Getter
     private Map<String, NetworkForcedHost> forcedHosts = new HashMap<>();
 
+    @Getter
+    private Map<String, NetworkManualServerType> manualServerTypes = new HashMap<>();
+
     public Network(ObjectId id, Date created_at) {
         super(id, created_at);
     }

@@ -9,6 +9,7 @@ import io.minestack.doublechest.databases.mongo.MongoDatabase;
 import io.minestack.doublechest.databases.mongo.MongoModelRepository;
 import io.minestack.doublechest.model.network.Network;
 import io.minestack.doublechest.model.network.NetworkForcedHost;
+import io.minestack.doublechest.model.network.NetworkManualServerType;
 import io.minestack.doublechest.model.node.NetworkNode;
 import io.minestack.doublechest.model.pluginhandler.bungeetype.NetworkBungeeType;
 import io.minestack.doublechest.model.pluginhandler.bungeetype.NetworkBungeeTypeAddress;
@@ -109,8 +110,8 @@ public class MongoNetworkRepository extends MongoModelRepository<Network> {
             }
         }
 
-        if (dbNetwork.containsField("forcedHosts")) {
-            BasicDBList forcedHostList = (BasicDBList) dbNetwork.get("forcedHosts");
+        if (dbNetwork.containsField("forcedhosts")) {
+            BasicDBList forcedHostList = (BasicDBList) dbNetwork.get("forcedhosts");
 
             for (Object objForcedHost : forcedHostList) {
                 DBObject dbForcedHost = (DBObject) objForcedHost;
@@ -123,6 +124,22 @@ public class MongoNetworkRepository extends MongoModelRepository<Network> {
                 }
 
                 network.getForcedHosts().put(networkForcedHost.getHost(), networkForcedHost);
+            }
+        }
+
+        if (dbNetwork.containsField("manualservertypes")) {
+            BasicDBList manualservertypeList = (BasicDBList) dbNetwork.get("manualservertypes");
+
+            for (Object objManualServerType : manualservertypeList) {
+                DBObject dbManualServerType = (DBObject) objManualServerType;
+
+                NetworkManualServerType manualServerType = new NetworkManualServerType((ObjectId) dbManualServerType.get("_id"), (Date) dbManualServerType.get("created_at"));
+                manualServerType.setNetwork(network);
+                manualServerType.setName((String) dbManualServerType.get("name"));
+                manualServerType.setAddress((String) dbManualServerType.get("address"));
+                manualServerType.setPort(Integer.parseInt((String) dbManualServerType.get("port")));
+
+                network.getManualServerTypes().put(manualServerType.getName(), manualServerType);
             }
         }
 
