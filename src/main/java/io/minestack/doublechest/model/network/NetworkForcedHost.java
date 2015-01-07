@@ -20,6 +20,10 @@ public class NetworkForcedHost extends Model {
 
     @Getter
     @Setter
+    private NetworkManualServerType manualServerType;
+
+    @Getter
+    @Setter
     private Network network;
 
     public NetworkForcedHost(ObjectId id, Date created_at) {

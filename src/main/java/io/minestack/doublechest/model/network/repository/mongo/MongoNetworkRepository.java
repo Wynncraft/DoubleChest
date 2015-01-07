@@ -110,23 +110,6 @@ public class MongoNetworkRepository extends MongoModelRepository<Network> {
             }
         }
 
-        if (dbNetwork.containsField("forcedhosts")) {
-            BasicDBList forcedHostList = (BasicDBList) dbNetwork.get("forcedhosts");
-
-            for (Object objForcedHost : forcedHostList) {
-                DBObject dbForcedHost = (DBObject) objForcedHost;
-
-                NetworkForcedHost networkForcedHost = new NetworkForcedHost((ObjectId) dbForcedHost.get("_id"), (Date) dbForcedHost.get("created_at"));
-                networkForcedHost.setHost((String) dbForcedHost.get("host"));
-                networkForcedHost.setNetwork(network);
-                if (dbForcedHost.containsField("server_type_id")) {
-                    networkForcedHost.setServerType(network.getServerTypes().get(new ObjectId((String) dbForcedHost.get("server_type_id"))).getServerType());
-                }
-
-                network.getForcedHosts().put(networkForcedHost.getHost(), networkForcedHost);
-            }
-        }
-
         if (dbNetwork.containsField("manualservertypes")) {
             BasicDBList manualservertypeList = (BasicDBList) dbNetwork.get("manualservertypes");
 
@@ -139,7 +122,25 @@ public class MongoNetworkRepository extends MongoModelRepository<Network> {
                 manualServerType.setAddress((String) dbManualServerType.get("address"));
                 manualServerType.setPort(Integer.parseInt((String) dbManualServerType.get("port")));
 
-                network.getManualServerTypes().put(manualServerType.getName(), manualServerType);
+                network.getManualServerTypes().put(manualServerType.getId(), manualServerType);
+            }
+        }
+
+        if (dbNetwork.containsField("forcedhosts")) {
+            BasicDBList forcedHostList = (BasicDBList) dbNetwork.get("forcedhosts");
+
+            for (Object objForcedHost : forcedHostList) {
+                DBObject dbForcedHost = (DBObject) objForcedHost;
+
+                NetworkForcedHost networkForcedHost = new NetworkForcedHost((ObjectId) dbForcedHost.get("_id"), (Date) dbForcedHost.get("created_at"));
+                networkForcedHost.setHost((String) dbForcedHost.get("host"));
+                networkForcedHost.setNetwork(network);
+                if (dbForcedHost.containsField("server_type_id")) {
+                    networkForcedHost.setServerType(network.getServerTypes().get(new ObjectId((String) dbForcedHost.get("server_type_id"))).getServerType());
+                    networkForcedHost.setManualServerType(network.getManualServerTypes().get(new ObjectId((String) dbForcedHost.get("server_type_id"))));
+                }
+
+                network.getForcedHosts().put(networkForcedHost.getHost(), networkForcedHost);
             }
         }
 
