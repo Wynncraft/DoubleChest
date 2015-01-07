@@ -118,7 +118,9 @@ public class MongoNetworkRepository extends MongoModelRepository<Network> {
                 NetworkForcedHost networkForcedHost = new NetworkForcedHost((ObjectId) dbForcedHost.get("_id"), (Date) dbForcedHost.get("created_at"));
                 networkForcedHost.setHost((String) dbForcedHost.get("host"));
                 networkForcedHost.setNetwork(network);
-                networkForcedHost.setServerType(network.getServerTypes().get(new ObjectId((String) dbForcedHost.get("server_type_id"))).getServerType());
+                if (dbForcedHost.containsField("server_type_id")) {
+                    networkForcedHost.setServerType(network.getServerTypes().get(new ObjectId((String) dbForcedHost.get("server_type_id"))).getServerType());
+                }
 
                 network.getForcedHosts().put(networkForcedHost.getHost(), networkForcedHost);
             }
