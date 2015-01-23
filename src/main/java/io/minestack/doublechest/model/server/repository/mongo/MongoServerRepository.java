@@ -105,11 +105,14 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         return servers;
     }
 
-    public List<Server> getNetworkServerTypeServers(Network network, ServerType serverType) {
+    public List<Server> getNetworkServerTypeServers(Network network, ServerType serverType, boolean onlyActive) {
         List<Server> servers = new ArrayList<>();
 
         BasicDBObject query = new BasicDBObject("network_id", network.getId().toString());
         query.put("server_type_id", serverType.getId().toString());
+        if (onlyActive == true) {
+            query.put("number", new BasicDBObject("$gt", 0));
+        }
 
         DBCursor serversCursor = getDatabase().findMany("servers", query);
         while (serversCursor.hasNext()) {
