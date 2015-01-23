@@ -6,6 +6,7 @@ public enum PubSubExchanges {
     SERVER_STOP,
     BUNGEE_START,
     BUNGEE_STOP,
-    TELEPORT
+    TELEPORT,
+    GLOBAL_MESSAGE
 
 }
