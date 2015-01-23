@@ -92,7 +92,10 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
     public List<Server> getNetworkServers(Network network) {
         List<Server> servers = new ArrayList<>();
 
-        DBCursor serversCursor = getDatabase().findMany("servers", new BasicDBObject("network_id", network.getId().toString()));
+        BasicDBObject query = new BasicDBObject("network_id", network.getId().toString());
+        query.put("number", new BasicDBObject("$gt", 0));
+
+        DBCursor serversCursor = getDatabase().findMany("servers", query);
         while (serversCursor.hasNext()) {
             servers.add(getModel((ObjectId) serversCursor.next().get("_id")));
         }
