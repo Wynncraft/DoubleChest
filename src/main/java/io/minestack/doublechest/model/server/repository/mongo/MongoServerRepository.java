@@ -89,11 +89,13 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         return number;
     }
 
-    public List<Server> getNetworkServers(Network network) {
+    public List<Server> getNetworkServers(Network network, boolean onlyActive) {
         List<Server> servers = new ArrayList<>();
 
         BasicDBObject query = new BasicDBObject("network_id", network.getId().toString());
-        query.put("number", new BasicDBObject("$gt", 0));
+        if (onlyActive == true) {
+            query.put("number", new BasicDBObject("$gt", 0));
+        }
 
         DBCursor serversCursor = getDatabase().findMany("servers", query);
         while (serversCursor.hasNext()) {
