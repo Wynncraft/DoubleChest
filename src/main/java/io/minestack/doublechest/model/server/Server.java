@@ -10,6 +10,7 @@ import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class Server extends Model {
 
@@ -40,6 +41,9 @@ public class Server extends Model {
     @Getter
     @Setter
     private int players;
+
+    @Getter
+    private HashMap<String, ServerMetaData> metaData = new HashMap<>();
 
     @Getter
     private ArrayList<String> playerNames = new ArrayList<>();

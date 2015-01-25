@@ -10,6 +10,7 @@ import io.minestack.doublechest.model.network.Network;
 import io.minestack.doublechest.model.node.Node;
 import io.minestack.doublechest.model.pluginhandler.servertype.ServerType;
 import io.minestack.doublechest.model.server.Server;
+import io.minestack.doublechest.model.server.ServerMetaData;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
@@ -58,6 +59,18 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         BasicDBList dbPlayerList = (BasicDBList) dbServer.get("playerNames");
         for (Object object : dbPlayerList) {
             server.getPlayerNames().add((String) object);
+        }
+
+        BasicDBList metaDataList = (BasicDBList) dbServer.get("metaData");
+        for (Object metaDataObj : metaDataList) {
+            DBObject dbMetaData = (DBObject) metaDataObj;
+
+            ServerMetaData metaData = new ServerMetaData((ObjectId) dbMetaData.get("_id"), (Date) dbMetaData.get("created_at"));
+            metaData.setUpdated_at((Date) dbMetaData.get("updated_at"));
+            metaData.setKey((String) dbMetaData.get("key"));
+            metaData.setValue((String) dbMetaData.get("value"));
+
+            server.getMetaData().put(metaData.getKey(), metaData);
         }
 
         server.setNumber((int) dbServer.get("number"));
@@ -167,6 +180,11 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         dbServer.put("players", model.getPlayers());
         BasicDBList dbPlayerNames = model.getPlayerNames().stream().collect(Collectors.toCollection(BasicDBList::new));
         dbServer.put("playerNames", dbPlayerNames);
+
+        BasicDBList metaDataList = model.getMetaData().entrySet().stream().map(metaDataEntry ->
+                new BasicDBObject(metaDataEntry.getKey(), metaDataEntry.getValue().getValue())).collect(Collectors.toCollection(BasicDBList::new));
+        dbServer.put("metaData", metaDataList);
+
         dbServer.put("number", model.getNumber());
         getDatabase().updateDocument("servers", new BasicDBObject("_id", model.getId()), new BasicDBObject("$set", dbServer));
     }
@@ -187,6 +205,12 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         dbServer.put("port", model.getPort());
         dbServer.put("container", model.getContainerId());
         dbServer.put("players", model.getPlayers());
+        dbServer.put("playerNames", new BasicDBList());
+
+        BasicDBList metaDataList = model.getMetaData().entrySet().stream().map(metaDataEntry ->
+                new BasicDBObject(metaDataEntry.getKey(), metaDataEntry.getValue().getValue())).collect(Collectors.toCollection(BasicDBList::new));
+        dbServer.put("metaData", metaDataList);
+
         dbServer.put("number", model.getNumber());
 
         getDatabase().insert("servers", dbServer);
