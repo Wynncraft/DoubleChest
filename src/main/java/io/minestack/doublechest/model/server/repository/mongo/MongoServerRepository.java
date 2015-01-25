@@ -196,22 +196,18 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         dbServer.put("created_at", model.getCreated_at());
         dbServer.put("updated_at", model.getUpdated_at());
         dbServer.put("network_id", model.getNetwork().getId().toString());
-        if (model.getNode() != null) {
-            dbServer.put("node_id", model.getNode().getId().toString());
-        } else {
-            dbServer.put("node_id", null);
-        }
+        dbServer.put("node_id", null);
         dbServer.put("server_type_id", model.getServerType().getId().toString());
-        dbServer.put("port", model.getPort());
-        dbServer.put("container", model.getContainerId());
-        dbServer.put("players", model.getPlayers());
+        dbServer.put("port", 0);
+        dbServer.put("container", "NULL");
+        dbServer.put("players", 0);
         dbServer.put("playerNames", new BasicDBList());
 
         BasicDBList metaDataList = model.getMetaData().entrySet().stream().map(metaDataEntry ->
                 new BasicDBObject(metaDataEntry.getKey(), metaDataEntry.getValue().getValue())).collect(Collectors.toCollection(BasicDBList::new));
         dbServer.put("metaData", metaDataList);
 
-        dbServer.put("number", model.getNumber());
+        dbServer.put("number", 0);
 
         getDatabase().insert("servers", dbServer);
     }
