@@ -105,7 +105,7 @@ public class MongoBungeeRepository extends MongoModelRepository<Bungee> {
         dbBungee.put("node_id", model.getNode().getId().toString());
         dbBungee.put("node_public_address_id", model.getPublicAddress().getId().toString());
         dbBungee.put("bungee_type_id", model.getBungeeType().getId().toString());
-        dbBungee.put("container", model.getContainerId());
+        dbBungee.put("container", "NULL");
 
         getDatabase().insert("bungees", dbBungee);
     }
