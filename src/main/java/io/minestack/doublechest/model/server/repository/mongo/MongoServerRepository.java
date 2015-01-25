@@ -1,5 +1,6 @@
 package io.minestack.doublechest.model.server.repository.mongo;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -14,6 +15,7 @@ import org.bson.types.ObjectId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MongoServerRepository extends MongoModelRepository<Server> {
 
@@ -52,6 +54,12 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         server.setContainerId((String) dbServer.get("container"));
         server.setPort((int) dbServer.get("port"));
         server.setPlayers((int) dbServer.get("players"));
+
+        BasicDBList dbPlayerList = (BasicDBList) dbServer.get("playerNames");
+        for (Object object : dbPlayerList) {
+            server.getPlayerNames().add((String) object);
+        }
+
         server.setNumber((int) dbServer.get("number"));
 
         return server;
@@ -157,6 +165,8 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         dbServer.put("port", model.getPort());
         dbServer.put("container", model.getContainerId());
         dbServer.put("players", model.getPlayers());
+        BasicDBList dbPlayerNames = model.getPlayerNames().stream().collect(Collectors.toCollection(BasicDBList::new));
+        dbServer.put("playerNames", dbPlayerNames);
         dbServer.put("number", model.getNumber());
         getDatabase().updateDocument("servers", new BasicDBObject("_id", model.getId()), new BasicDBObject("$set", dbServer));
     }

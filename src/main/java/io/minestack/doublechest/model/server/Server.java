@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Server extends Model {
@@ -39,6 +40,9 @@ public class Server extends Model {
     @Getter
     @Setter
     private int players;
+
+    @Getter
+    private ArrayList<String> playerNames = new ArrayList<>();
 
     public Server(ObjectId id, Date created_at) {
         super(id, created_at);
