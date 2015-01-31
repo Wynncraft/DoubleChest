@@ -61,6 +61,8 @@ public class MongoBungeeTypeRepository extends MongoModelRepository<BungeeType> 
                 if (dbPluginHolderPlugin.containsField("pluginconfig_id")) {
                     pluginHolderPlugin.setConfig(pluginHolderPlugin.getPlugin().getConfigs().get(new ObjectId((String) dbPluginHolderPlugin.get("pluginconfig_id"))));
                 }
+
+                bungeeType.getPlugins().add(pluginHolderPlugin);
             }
         }
 
