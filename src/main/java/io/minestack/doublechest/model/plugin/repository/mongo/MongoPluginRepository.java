@@ -54,7 +54,7 @@ public class MongoPluginRepository extends MongoModelRepository<Plugin> {
             for (Object objVersion : versionList) {
                 DBObject dbVersion = (DBObject) objVersion;
 
-                PluginVersion pluginVersion = new PluginVersion((ObjectId) dbPlugin.get("_id"), (Date) dbVersion.get("created_at"));
+                PluginVersion pluginVersion = new PluginVersion((ObjectId) dbVersion.get("_id"), (Date) dbVersion.get("created_at"));
                 pluginVersion.setUpdated_at((Date) dbVersion.get("updated_at"));
                 pluginVersion.setVersion((String) dbVersion.get("version"));
                 pluginVersion.setDescription((String) dbVersion.get("description"));
