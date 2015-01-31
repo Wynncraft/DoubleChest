@@ -136,6 +136,8 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         }
 
         DBCursor serversCursor = getDatabase().findMany("servers", query);
+        serversCursor.sort(new BasicDBObject("number", 1));
+
         while (serversCursor.hasNext()) {
             servers.add(getModel((ObjectId) serversCursor.next().get("_id")));
         }

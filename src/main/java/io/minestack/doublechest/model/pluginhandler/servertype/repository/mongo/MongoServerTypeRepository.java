@@ -63,6 +63,8 @@ public class MongoServerTypeRepository extends MongoModelRepository<ServerType> 
                 if (dbPluginHolderPlugin.containsField("pluginconfig_id") == true) {
                     pluginHolderPlugin.setConfig(pluginHolderPlugin.getPlugin().getConfigs().get(new ObjectId((String) dbPluginHolderPlugin.get("pluginconfig_id"))));
                 }
+
+                serverType.getPlugins().add(pluginHolderPlugin);
             }
         }
 
@@ -77,6 +79,8 @@ public class MongoServerTypeRepository extends MongoModelRepository<ServerType> 
                     serverTypeWorld.setVersion(serverTypeWorld.getWorld().getVersions().get(new ObjectId((String) dbServerTypeWorld.get("worldversion_id"))));
                 }
                 serverTypeWorld.setDefaultWorld((boolean) dbServerTypeWorld.get("defaultWorld"));
+
+                serverType.getWorlds().add(serverTypeWorld);
             }
         }
 
