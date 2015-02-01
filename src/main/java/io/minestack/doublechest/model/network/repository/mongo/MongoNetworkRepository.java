@@ -147,6 +147,15 @@ public class MongoNetworkRepository extends MongoModelRepository<Network> {
         return network;
     }
 
+    public Network getModel(String network) {
+        DBObject query = new BasicDBObject("name", network);
+        DBObject dbServerType = getDatabase().findOne("networks", query);
+        if (dbServerType == null) {
+            return null;
+        }
+        return getModel((ObjectId) dbServerType.get("_id"));
+    }
+
     @Override
     public void saveModel(Network model) {
         throw new NotImplementedException();
