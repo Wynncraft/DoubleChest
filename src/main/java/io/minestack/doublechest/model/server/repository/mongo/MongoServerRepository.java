@@ -116,6 +116,7 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         BasicDBObject query = new BasicDBObject("network_id", network.getId().toString());
         if (onlyActive == true) {
             query.put("number", new BasicDBObject("$gt", 0));
+            query.put("port", new BasicDBObject("$gt", 0));
         }
 
         DBCursor serversCursor = getDatabase().findMany("servers", query);
@@ -133,6 +134,7 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         query.put("server_type_id", serverType.getId().toString());
         if (onlyActive == true) {
             query.put("number", new BasicDBObject("$gt", 0));
+            query.put("port", new BasicDBObject("$gt", 0));
         }
 
         DBCursor serversCursor = getDatabase().findMany("servers", query);
