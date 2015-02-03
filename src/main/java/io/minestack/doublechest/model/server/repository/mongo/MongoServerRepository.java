@@ -16,6 +16,7 @@ import org.bson.types.ObjectId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class MongoServerRepository extends MongoModelRepository<Server> {
@@ -61,16 +62,18 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
             server.getPlayerNames().add((String) object);
         }
 
-        BasicDBList metaDataList = (BasicDBList) dbServer.get("metaData");
-        for (Object metaDataObj : metaDataList) {
-            DBObject dbMetaData = (DBObject) metaDataObj;
+        if (dbServer.containsField("metaData")) {
+            BasicDBList metaDataList = (BasicDBList) dbServer.get("metaData");
+            for (Object metaDataObj : metaDataList) {
+                DBObject dbMetaData = (DBObject) metaDataObj;
 
-            ServerMetaData metaData = new ServerMetaData((ObjectId) dbMetaData.get("_id"), (Date) dbMetaData.get("created_at"));
-            metaData.setUpdated_at((Date) dbMetaData.get("updated_at"));
-            metaData.setKey((String) dbMetaData.get("key"));
-            metaData.setValue((String) dbMetaData.get("value"));
+                ServerMetaData metaData = new ServerMetaData((ObjectId) dbMetaData.get("_id"), (Date) dbMetaData.get("created_at"));
+                metaData.setUpdated_at((Date) dbMetaData.get("updated_at"));
+                metaData.setKey((String) dbMetaData.get("key"));
+                metaData.setValue((String) dbMetaData.get("value"));
 
-            server.getMetaData().put(metaData.getKey(), metaData);
+                server.getMetaData().put(metaData.getKey(), metaData);
+            }
         }
 
         server.setNumber((int) dbServer.get("number"));
@@ -185,8 +188,17 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         BasicDBList dbPlayerNames = model.getPlayerNames().stream().collect(Collectors.toCollection(BasicDBList::new));
         dbServer.put("playerNames", dbPlayerNames);
 
-        BasicDBList metaDataList = model.getMetaData().entrySet().stream().map(metaDataEntry ->
-                new BasicDBObject(metaDataEntry.getKey(), metaDataEntry.getValue().getValue())).collect(Collectors.toCollection(BasicDBList::new));
+        BasicDBList metaDataList = new BasicDBList();
+        for (Map.Entry<String, ServerMetaData> metaDataEntry: model.getMetaData().entrySet()) {
+            DBObject dbMetaData = new BasicDBObject();
+            dbMetaData.put("_id", metaDataEntry.getValue().getId());
+            dbMetaData.put("created_at", metaDataEntry.getValue().getCreated_at());
+            dbMetaData.put("updated_at", metaDataEntry.getValue().getUpdated_at());
+            dbMetaData.put("key", metaDataEntry.getValue().getKey());
+            dbMetaData.put("value", metaDataEntry.getValue().getValue());
+            metaDataList.add(dbMetaData);
+        }
+
         dbServer.put("metaData", metaDataList);
 
         dbServer.put("number", model.getNumber());
@@ -207,8 +219,16 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         dbServer.put("players", 0);
         dbServer.put("playerNames", new BasicDBList());
 
-        BasicDBList metaDataList = model.getMetaData().entrySet().stream().map(metaDataEntry ->
-                new BasicDBObject(metaDataEntry.getKey(), metaDataEntry.getValue().getValue())).collect(Collectors.toCollection(BasicDBList::new));
+        BasicDBList metaDataList = new BasicDBList();
+        for (Map.Entry<String, ServerMetaData> metaDataEntry: model.getMetaData().entrySet()) {
+            DBObject dbMetaData = new BasicDBObject();
+            dbMetaData.put("_id", metaDataEntry.getValue().getId());
+            dbMetaData.put("created_at", metaDataEntry.getValue().getCreated_at());
+            dbMetaData.put("updated_at", metaDataEntry.getValue().getUpdated_at());
+            dbMetaData.put("key", metaDataEntry.getValue().getKey());
+            dbMetaData.put("value", metaDataEntry.getValue().getValue());
+            metaDataList.add(dbMetaData);
+        }
         dbServer.put("metaData", metaDataList);
 
         dbServer.put("number", 0);
