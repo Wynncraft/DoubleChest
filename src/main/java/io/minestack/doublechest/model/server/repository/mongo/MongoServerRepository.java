@@ -13,11 +13,7 @@ import io.minestack.doublechest.model.server.Server;
 import io.minestack.doublechest.model.server.ServerMetaData;
 import org.bson.types.ObjectId;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class MongoServerRepository extends MongoModelRepository<Server> {
 
@@ -55,11 +51,10 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         server.setServerType(getDatabase().getServerTypeRepository().getModel(new ObjectId((String) dbServer.get("server_type_id"))));
         server.setContainerId((String) dbServer.get("container"));
         server.setPort((int) dbServer.get("port"));
-        server.setPlayers((int) dbServer.get("players"));
 
-        BasicDBList dbPlayerList = (BasicDBList) dbServer.get("playerNames");
-        for (Object object : dbPlayerList) {
-            server.getPlayerNames().add((String) object);
+        BasicDBList dbPlayers = (BasicDBList) dbServer.get("players");
+        for (String name : dbPlayers.keySet()) {
+            server.getPlayers().put(name, (UUID) dbPlayers.get(name));
         }
 
         if (dbServer.containsField("metaData")) {
@@ -184,9 +179,11 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         }
         dbServer.put("port", model.getPort());
         dbServer.put("container", model.getContainerId());
-        dbServer.put("players", model.getPlayers());
-        BasicDBList dbPlayerNames = model.getPlayerNames().stream().collect(Collectors.toCollection(BasicDBList::new));
-        dbServer.put("playerNames", dbPlayerNames);
+        BasicDBList players = new BasicDBList();
+        for (Map.Entry<String, UUID> player : model.getPlayers().entrySet()) {
+            players.put(player.getKey(), player.getValue());
+        }
+        dbServer.put("players", players);
 
         BasicDBList metaDataList = new BasicDBList();
         for (Map.Entry<String, ServerMetaData> metaDataEntry: model.getMetaData().entrySet()) {

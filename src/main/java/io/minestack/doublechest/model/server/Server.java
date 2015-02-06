@@ -8,9 +8,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class Server extends Model {
 
@@ -39,14 +39,10 @@ public class Server extends Model {
     private String containerId;
 
     @Getter
-    @Setter
-    private int players;
-
-    @Getter
     private HashMap<String, ServerMetaData> metaData = new HashMap<>();
 
     @Getter
-    private ArrayList<String> playerNames = new ArrayList<>();
+    private HashMap<String, UUID> players = new HashMap<>();
 
     public Server(ObjectId id, Date created_at) {
         super(id, created_at);
