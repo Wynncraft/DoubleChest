@@ -52,7 +52,7 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         server.setContainerId((String) dbServer.get("container"));
         server.setPort((int) dbServer.get("port"));
 
-        BasicDBList dbPlayers = (BasicDBList) dbServer.get("players");
+        BasicDBObject dbPlayers = (BasicDBObject) dbServer.get("players");
         for (String name : dbPlayers.keySet()) {
             server.getPlayers().put(name, (UUID) dbPlayers.get(name));
         }
@@ -179,11 +179,7 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         }
         dbServer.put("port", model.getPort());
         dbServer.put("container", model.getContainerId());
-        BasicDBList players = new BasicDBList();
-        for (Map.Entry<String, UUID> player : model.getPlayers().entrySet()) {
-            players.put(player.getKey(), player.getValue());
-        }
-        dbServer.put("players", players);
+        dbServer.put("players", new BasicDBObject(model.getPlayers()));
 
         BasicDBList metaDataList = new BasicDBList();
         for (Map.Entry<String, ServerMetaData> metaDataEntry: model.getMetaData().entrySet()) {
@@ -213,7 +209,7 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         dbServer.put("server_type_id", model.getServerType().getId().toString());
         dbServer.put("port", 0);
         dbServer.put("container", "NULL");
-        dbServer.put("players", new BasicDBList());
+        dbServer.put("players", new BasicDBObject());
 
         BasicDBList metaDataList = new BasicDBList();
         for (Map.Entry<String, ServerMetaData> metaDataEntry: model.getMetaData().entrySet()) {
