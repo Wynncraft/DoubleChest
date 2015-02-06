@@ -213,8 +213,7 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         dbServer.put("server_type_id", model.getServerType().getId().toString());
         dbServer.put("port", 0);
         dbServer.put("container", "NULL");
-        dbServer.put("players", 0);
-        dbServer.put("playerNames", new BasicDBList());
+        dbServer.put("players", new BasicDBList());
 
         BasicDBList metaDataList = new BasicDBList();
         for (Map.Entry<String, ServerMetaData> metaDataEntry: model.getMetaData().entrySet()) {
