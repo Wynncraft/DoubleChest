@@ -11,10 +11,12 @@ import io.minestack.doublechest.model.node.Node;
 import io.minestack.doublechest.model.pluginhandler.servertype.ServerType;
 import io.minestack.doublechest.model.server.Server;
 import io.minestack.doublechest.model.server.ServerMetaData;
+import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 
 import java.util.*;
 
+@Log4j2
 public class MongoServerRepository extends MongoModelRepository<Server> {
 
     public MongoServerRepository(MongoDatabase database) {
@@ -72,7 +74,129 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         }
 
         server.setNumber((int) dbServer.get("number"));
+        return server;
+    }
 
+    public Server getModel(ObjectId id, Network network) {
+        DBObject dbServer = getDatabase().findOne("servers", new BasicDBObject("_id", id));
+
+        if (dbServer == null) {
+            return null;
+        }
+
+        Server server = new Server((ObjectId) dbServer.get("_id"), (Date) dbServer.get("created_at"));
+        server.setUpdated_at((Date) dbServer.get("updated_at"));
+        server.setNetwork(network);
+        String node = (String) dbServer.get("node_id");
+        if (node != null) {
+            server.setNode(getDatabase().getNodeRepository().getModel(new ObjectId(node)));
+        }
+        server.setServerType(getDatabase().getServerTypeRepository().getModel(new ObjectId((String) dbServer.get("server_type_id"))));
+        server.setContainerId((String) dbServer.get("container"));
+        server.setPort((int) dbServer.get("port"));
+
+        BasicDBObject dbPlayers = (BasicDBObject) dbServer.get("players");
+        for (String name : dbPlayers.keySet()) {
+            server.getPlayers().put(name, (UUID) dbPlayers.get(name));
+        }
+
+        if (dbServer.containsField("metaData")) {
+            BasicDBList metaDataList = (BasicDBList) dbServer.get("metaData");
+            for (Object metaDataObj : metaDataList) {
+                DBObject dbMetaData = (DBObject) metaDataObj;
+
+                ServerMetaData metaData = new ServerMetaData((ObjectId) dbMetaData.get("_id"), (Date) dbMetaData.get("created_at"));
+                metaData.setUpdated_at((Date) dbMetaData.get("updated_at"));
+                metaData.setKey((String) dbMetaData.get("key"));
+                metaData.setValue((String) dbMetaData.get("value"));
+
+                server.getMetaData().put(metaData.getKey(), metaData);
+            }
+        }
+
+        server.setNumber((int) dbServer.get("number"));
+        return server;
+    }
+
+    public Server getModel(ObjectId id, ServerType serverType) {
+        DBObject dbServer = getDatabase().findOne("servers", new BasicDBObject("_id", id));
+
+        if (dbServer == null) {
+            return null;
+        }
+
+        Server server = new Server((ObjectId) dbServer.get("_id"), (Date) dbServer.get("created_at"));
+        server.setUpdated_at((Date) dbServer.get("updated_at"));
+        server.setNetwork(getDatabase().getNetworkRepository().getModel(new ObjectId((String) dbServer.get("network_id"))));
+        String node = (String) dbServer.get("node_id");
+        if (node != null) {
+            server.setNode(getDatabase().getNodeRepository().getModel(new ObjectId(node)));
+        }
+        server.setServerType(serverType);
+        server.setContainerId((String) dbServer.get("container"));
+        server.setPort((int) dbServer.get("port"));
+
+        BasicDBObject dbPlayers = (BasicDBObject) dbServer.get("players");
+        for (String name : dbPlayers.keySet()) {
+            server.getPlayers().put(name, (UUID) dbPlayers.get(name));
+        }
+
+        if (dbServer.containsField("metaData")) {
+            BasicDBList metaDataList = (BasicDBList) dbServer.get("metaData");
+            for (Object metaDataObj : metaDataList) {
+                DBObject dbMetaData = (DBObject) metaDataObj;
+
+                ServerMetaData metaData = new ServerMetaData((ObjectId) dbMetaData.get("_id"), (Date) dbMetaData.get("created_at"));
+                metaData.setUpdated_at((Date) dbMetaData.get("updated_at"));
+                metaData.setKey((String) dbMetaData.get("key"));
+                metaData.setValue((String) dbMetaData.get("value"));
+
+                server.getMetaData().put(metaData.getKey(), metaData);
+            }
+        }
+
+        server.setNumber((int) dbServer.get("number"));
+        return server;
+    }
+
+    public Server getModel(ObjectId id, Network network, ServerType serverType) {
+        DBObject dbServer = getDatabase().findOne("servers", new BasicDBObject("_id", id));
+
+        if (dbServer == null) {
+            return null;
+        }
+
+        Server server = new Server((ObjectId) dbServer.get("_id"), (Date) dbServer.get("created_at"));
+        server.setUpdated_at((Date) dbServer.get("updated_at"));
+        server.setNetwork(network);
+        String node = (String) dbServer.get("node_id");
+        if (node != null) {
+            server.setNode(getDatabase().getNodeRepository().getModel(new ObjectId(node)));
+        }
+        server.setServerType(serverType);
+        server.setContainerId((String) dbServer.get("container"));
+        server.setPort((int) dbServer.get("port"));
+
+        BasicDBObject dbPlayers = (BasicDBObject) dbServer.get("players");
+        for (String name : dbPlayers.keySet()) {
+            server.getPlayers().put(name, (UUID) dbPlayers.get(name));
+        }
+
+        if (dbServer.containsField("metaData")) {
+            BasicDBList metaDataList = (BasicDBList) dbServer.get("metaData");
+            for (Object metaDataObj : metaDataList) {
+                DBObject dbMetaData = (DBObject) metaDataObj;
+
+                ServerMetaData metaData = new ServerMetaData((ObjectId) dbMetaData.get("_id"), (Date) dbMetaData.get("created_at"));
+                metaData.setUpdated_at((Date) dbMetaData.get("updated_at"));
+                metaData.setKey((String) dbMetaData.get("key"));
+                metaData.setValue((String) dbMetaData.get("value"));
+
+                server.getMetaData().put(metaData.getKey(), metaData);
+            }
+        }
+
+        server.setNumber((int) dbServer.get("number"));
         return server;
     }
 
@@ -109,6 +233,7 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
     }
 
     public List<Server> getNetworkServers(Network network, boolean onlyActive) {
+
         List<Server> servers = new ArrayList<>();
 
         BasicDBObject query = new BasicDBObject("network_id", network.getId().toString());
@@ -119,7 +244,7 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
 
         DBCursor serversCursor = getDatabase().findMany("servers", query);
         while (serversCursor.hasNext()) {
-            servers.add(getModel((ObjectId) serversCursor.next().get("_id")));
+            servers.add(getModel((ObjectId) serversCursor.next().get("_id"), network));
         }
 
         return servers;
@@ -139,9 +264,8 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         serversCursor.sort(new BasicDBObject("number", 1));
 
         while (serversCursor.hasNext()) {
-            servers.add(getModel((ObjectId) serversCursor.next().get("_id")));
+            servers.add(getModel((ObjectId) serversCursor.next().get("_id"), network, serverType));
         }
-
         return servers;
     }
 
@@ -156,7 +280,7 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
         if (dbServer == null) {
             return null;
         }
-        return getModel((ObjectId) dbServer.get("_id"));
+        return getModel((ObjectId) dbServer.get("_id"), network, serverType);
     }
 
     public List<Server> getServerTypeServers(ServerType serverType) {
@@ -164,7 +288,7 @@ public class MongoServerRepository extends MongoModelRepository<Server> {
 
         DBCursor serversCursor = getDatabase().findMany("servers", new BasicDBObject("server_type_id", serverType.getId().toString()));
         while (serversCursor.hasNext()) {
-            servers.add(getModel((ObjectId) serversCursor.next().get("_id")));
+            servers.add(getModel((ObjectId) serversCursor.next().get("_id"), serverType));
         }
 
         return servers;

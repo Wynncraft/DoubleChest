@@ -32,6 +32,9 @@ public abstract class WorkerQueue {
             log.info("Connecting to Worker Queue "+queueName);
             channel.queueDeclarePassive(queueName);
         } catch (IOException e) {
+            if (channel.isOpen()) {
+                channel.close();
+            }
             channel = connection.createChannel();
             log.info("Creating Worker Queue "+ queueName);
             HashMap<String, Object> args = new HashMap<>();

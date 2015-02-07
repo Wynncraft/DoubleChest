@@ -29,6 +29,9 @@ public class PubSubPublisher {
             log.info("Connecting to PubSub Exchange " + exchangeName);
             channel.exchangeDeclarePassive(exchangeName);
         } catch (IOException e) {
+            if (channel.isOpen()) {
+                channel.close();
+            }
             channel = connection.createChannel();
             log.info("Creating PubSub Exchange " + exchangeName);
             HashMap<String, Object> args = new HashMap<>();

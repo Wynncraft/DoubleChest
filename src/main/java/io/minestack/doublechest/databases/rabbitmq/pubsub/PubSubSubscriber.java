@@ -32,6 +32,9 @@ public abstract class PubSubSubscriber {
             log.info("Connecting to Exchange "+exchangeName);
             channel.exchangeDeclarePassive(exchangeName);
         } catch (IOException e) {
+            if (channel.isOpen()) {
+                channel.close();
+            }
             channel = connection.createChannel();
             log.info("Creating Exchange "+exchangeName);
             HashMap<String, Object> args = new HashMap<>();

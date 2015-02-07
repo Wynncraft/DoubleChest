@@ -21,30 +21,34 @@ public class ServerCreatePublisher extends WorkerPublisher {
     }
 
     public void createServer(ServerType serverType, Network network) throws IOException {
-        Server server = new Server(new ObjectId(), new Date(System.currentTimeMillis()));
-        server.setNetwork(network);
-        server.setServerType(serverType);
-        server.setUpdated_at(new Date(System.currentTimeMillis() + 300000));
-        DoubleChest.INSTANCE.getMongoDatabase().getServerRepository().insertModel(server);
+        if (serverType != null && network != null) {
+            Server server = new Server(new ObjectId(), new Date(System.currentTimeMillis()));
+            server.setNetwork(network);
+            server.setServerType(serverType);
+            server.setUpdated_at(new Date(System.currentTimeMillis() + 300000));
+            DoubleChest.INSTANCE.getMongoDatabase().getServerRepository().insertModel(server);
 
-        JSONObject message = new JSONObject();
-        message.put("server", server.getId().toString());
-        publish(message);
+            JSONObject message = new JSONObject();
+            message.put("server", server.getId().toString());
+            publish(message);
+        }
         close();
     }
 
     public void createServer(ServerType serverType, Network network, HashMap<String, ServerMetaData> metaData) throws IOException {
-        Server server = new Server(new ObjectId(), new Date(System.currentTimeMillis()));
-        server.setNetwork(network);
-        server.setServerType(serverType);
-        server.setUpdated_at(new Date(System.currentTimeMillis() + 300000));
-        server.getMetaData().putAll(metaData);
+        if (serverType != null && network != null) {
+            Server server = new Server(new ObjectId(), new Date(System.currentTimeMillis()));
+            server.setNetwork(network);
+            server.setServerType(serverType);
+            server.setUpdated_at(new Date(System.currentTimeMillis() + 300000));
+            server.getMetaData().putAll(metaData);
 
-        DoubleChest.INSTANCE.getMongoDatabase().getServerRepository().insertModel(server);
+            DoubleChest.INSTANCE.getMongoDatabase().getServerRepository().insertModel(server);
 
-        JSONObject message = new JSONObject();
-        message.put("server", server.getId().toString());
-        publish(message);
+            JSONObject message = new JSONObject();
+            message.put("server", server.getId().toString());
+            publish(message);
+        }
         close();
     }
 }

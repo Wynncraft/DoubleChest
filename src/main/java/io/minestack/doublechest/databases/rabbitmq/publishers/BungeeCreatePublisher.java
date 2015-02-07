@@ -20,17 +20,19 @@ public class BungeeCreatePublisher extends WorkerPublisher {
     }
 
     public void createBungee(BungeeType bungeeType, Network network, NodePublicAddress nodePublicAddress) throws IOException {
-        Bungee bungee = new Bungee(new ObjectId(), new Date(System.currentTimeMillis()));
-        bungee.setBungeeType(bungeeType);
-        bungee.setNetwork(network);
-        bungee.setNode(nodePublicAddress.getNode());
-        bungee.setPublicAddress(nodePublicAddress);
-        bungee.setUpdated_at(new Date(System.currentTimeMillis() + 300000));
-        DoubleChest.INSTANCE.getMongoDatabase().getBungeeRepository().insertModel(bungee);
+        if (bungeeType != null && network != null && nodePublicAddress != null) {
+            Bungee bungee = new Bungee(new ObjectId(), new Date(System.currentTimeMillis()));
+            bungee.setBungeeType(bungeeType);
+            bungee.setNetwork(network);
+            bungee.setNode(nodePublicAddress.getNode());
+            bungee.setPublicAddress(nodePublicAddress);
+            bungee.setUpdated_at(new Date(System.currentTimeMillis() + 300000));
+            DoubleChest.INSTANCE.getMongoDatabase().getBungeeRepository().insertModel(bungee);
 
-        JSONObject message = new JSONObject();
-        message.put("bungee", bungee.getId().toString());
-        publish(message);
+            JSONObject message = new JSONObject();
+            message.put("bungee", bungee.getId().toString());
+            publish(message);
+        }
         close();
     }
 }

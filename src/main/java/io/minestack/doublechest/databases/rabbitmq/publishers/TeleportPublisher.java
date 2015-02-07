@@ -8,7 +8,7 @@ import io.minestack.doublechest.model.server.Server;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;import java.lang.String;
+import java.io.IOException;
 
 public class TeleportPublisher extends PubSubPublisher {
 
@@ -17,30 +17,34 @@ public class TeleportPublisher extends PubSubPublisher {
     }
 
     public void teleportPlayer(ServerType serverType, String... playerNames) throws IOException {
-        JSONObject jsonObject = new JSONObject();
+        if (serverType != null) {
+            JSONObject jsonObject = new JSONObject();
 
-        jsonObject.put("serverType", serverType.getId().toString());
-        if (playerNames.length == 1) {
-            jsonObject.put("player", playerNames[0]);
-        } else {
-            jsonObject.put("players", new JSONArray(playerNames));
+            jsonObject.put("serverType", serverType.getId().toString());
+            if (playerNames.length == 1) {
+                jsonObject.put("player", playerNames[0]);
+            } else {
+                jsonObject.put("players", new JSONArray(playerNames));
+            }
+
+            publish(jsonObject);
         }
-
-        publish(jsonObject);
         close();
     }
 
     public void teleportPlayer(Server server, String... playerNames) throws IOException{
-        JSONObject jsonObject = new JSONObject();
+        if (server != null) {
+            JSONObject jsonObject = new JSONObject();
 
-        jsonObject.put("server", server.getId().toString());
-        if (playerNames.length == 1) {
-            jsonObject.put("player", playerNames[0]);
-        } else {
-            jsonObject.put("players", new JSONArray(playerNames));
+            jsonObject.put("server", server.getId().toString());
+            if (playerNames.length == 1) {
+                jsonObject.put("player", playerNames[0]);
+            } else {
+                jsonObject.put("players", new JSONArray(playerNames));
+            }
+
+            publish(jsonObject);
         }
-
-        publish(jsonObject);
         close();
     }
 }
